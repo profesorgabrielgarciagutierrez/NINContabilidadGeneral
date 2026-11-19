@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contabilidad General · Semana 03</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- 1. Variables y base ---------- */
+:root{
+  --azul:#003366; --celeste:#87CEEB; --azul-claro:#E8F4FD; --texto:#1d1d1d;
+  --ok:#14532d; --ok-fondo:#e6f4ea; --mal:#7f1d1d; --mal-fondo:#fdecec; --borde:#c9d6e2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.6;color:var(--texto);background:#fff}
+h1,h2,h3,h4{font-family:Lora,Georgia,"Times New Roman",serif;color:var(--azul);line-height:1.25}
+h2{font-size:1.6rem;margin:.2rem 0 .6rem}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem}
+h4{font-size:1.05rem;margin:1.1rem 0 .4rem}
+p{margin:.6rem 0;max-width:72ch}
+ul,ol{max-width:72ch;padding-left:1.4rem}
+li{margin:.3rem 0}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:6px 10px;z-index:10}
+.meta{font-size:.92rem;color:#3b4a5a;margin:0 0 1rem}
+.tiempos{font-size:.95rem}
+
+/* ---------- 2. Encabezado y menú ---------- */
+header.cabecera{background:var(--azul);color:#fff;padding:14px 16px}
+header.cabecera h1{color:#fff;font-size:1.25rem;margin:0}
+header.cabecera p{margin:2px 0 0;font-size:.92rem;color:#e3eef8}
+nav.menu{background:var(--celeste);color:#000;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;border-bottom:1px solid #6fbcd9}
+nav.menu ul{display:flex;list-style:none;margin:0;padding:0;max-width:none}
+nav.menu li{margin:0}
+nav.menu button{font:inherit;font-size:.95rem;background:transparent;color:#000;border:0;padding:12px 14px;cursor:pointer;min-height:44px}
+nav.menu button:hover{background:rgba(255,255,255,.35)}
+nav.menu button[aria-selected="true"]{background:#fff;color:var(--azul);font-weight:700}
+
+main{padding:16px 16px 48px;max-width:860px;margin:0 auto}
+
+/* ---------- 3. Secciones y bloques ---------- */
+.pestana[hidden]{display:none}
+.concepto{border-left:5px solid var(--azul);padding:.6rem .9rem;margin:1rem 0;background:#f7fafd}
+.concepto h4{margin-top:.1rem}
+.ejemplo{background:var(--azul-claro);padding:.7rem .9rem;margin:1rem 0;border-radius:4px}
+.ejemplo h4{margin-top:.1rem}
+.nota-lateral{border:1px solid var(--borde);border-left:5px solid #2a7fb8;background:#fbfdff;padding:.7rem .9rem;margin:0 0 1.2rem;border-radius:4px}
+.nota-lateral h3{margin-top:.1rem}
+.nota-lateral p:first-of-type{margin-top:.2rem}
+.pausa{font-style:normal}
+.prompt{background:#f4f4f4;padding:.6rem .8rem;border-radius:4px}
+.ejercicio{border-top:1px solid var(--borde);margin-top:1.4rem;padding-top:.4rem}
+.ejercicio .tiempo{font-size:.92rem;color:#3b4a5a;margin:0}
+.ayuda{font-style:italic}
+.tabla-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;margin:.8rem 0;min-width:60%}
+caption{caption-side:top;text-align:left;font-weight:700;padding:4px 0;color:var(--azul);font-family:Lora,Georgia,serif}
+th,td{border:1px solid var(--borde);padding:6px 8px;vertical-align:top;text-align:left;min-width:110px}
+th{background:var(--azul-claro)}
+.referencias li{margin-bottom:.7rem;padding-left:1.4rem;text-indent:-1.4rem;list-style:none;max-width:72ch}
+.nota{font-size:.95rem;border-top:1px solid var(--borde);padding-top:.6rem}
+.calc{font-family:Consolas,"Courier New",monospace;font-size:.95rem;background:#f7f9fb;border:1px solid var(--borde);padding:.5rem .7rem;overflow-x:auto;white-space:pre;max-width:100%}
+.tcuenta{display:flex;flex-wrap:wrap;gap:12px;margin:.8rem 0}
+.tcuenta table{min-width:0;width:100%}
+
+/* ---------- 4. Solución desplegable ---------- */
+details.solucion{margin:.7rem 0;border:1px solid var(--azul);border-radius:4px;background:#fff}
+details.solucion>summary{cursor:pointer;padding:.55rem .8rem;font-weight:700;color:var(--azul);background:#eef5fb;min-height:44px;display:flex;align-items:center}
+details.solucion>*:not(summary){padding:0 .8rem}
+details.solucion[open]>summary{border-bottom:1px solid var(--borde)}
+details.solucion>*:last-child{padding-bottom:.8rem}
+
+/* ---------- 5. Evaluación ---------- */
+.quiz{margin-top:.5rem}
+.quiz .cabecera-eval{background:var(--azul-claro);padding:.7rem .9rem;border-radius:4px;margin-bottom:1rem}
+.quiz .progreso{font-weight:600;margin:.2rem 0}
+.quiz fieldset{border:1px solid var(--borde);border-radius:4px;padding:.7rem .9rem;margin:0 0 1rem}
+.quiz legend{font-weight:700;color:var(--azul);padding:0 .3rem;font-family:Lora,Georgia,serif}
+.quiz .insignia{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:10px;background:var(--azul);color:#fff;margin-right:6px;vertical-align:middle}
+.quiz .opts{display:grid;gap:6px;margin:.5rem 0}
+.quiz .opts label{display:flex;gap:10px;align-items:flex-start;padding:10px 10px;border:1px solid var(--borde);border-radius:4px;cursor:pointer;min-height:44px}
+.quiz .opts label:hover{background:#f5faff}
+.quiz .opts input{margin-top:5px;min-width:18px;min-height:18px}
+.quiz .letra{font-weight:700;color:var(--azul)}
+.quiz .fb{margin-top:.5rem;padding:.6rem .8rem;border-radius:4px;display:none}
+.quiz .fb.ok{display:block;background:var(--ok-fondo);color:var(--ok);border-left:5px solid var(--ok)}
+.quiz .fb.mal{display:block;background:var(--mal-fondo);color:var(--mal);border-left:5px solid var(--mal)}
+.quiz .gen{font-size:.93rem;margin-top:.4rem;color:#34434f;display:none}
+.quiz .gen.visible{display:block}
+.quiz .resultado{border:2px solid var(--azul);border-radius:4px;padding:.8rem 1rem;margin:1rem 0;background:#fff}
+.quiz .acciones{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0}
+.quiz button.btn{font:inherit;font-weight:600;padding:10px 14px;min-height:44px;border-radius:4px;border:2px solid var(--azul);background:#fff;color:var(--azul);cursor:pointer}
+.quiz button.btn.principal{background:var(--azul);color:#fff}
+.quiz button.btn[hidden]{display:none}
+.quiz .nota-practica{font-size:.93rem;color:#34434f}
+
+/* ---------- 6. Pie ---------- */
+footer{background:#f2f5f8;color:#2a3440;padding:14px 16px;font-size:.9rem;border-top:1px solid var(--borde)}
+footer p{margin:.2rem 0}
+
+/* ---------- 7. Pantallas estrechas ---------- */
+@media (max-width:420px){
+  body{font-size:16px}
+  main{padding:12px 12px 40px}
+  h2{font-size:1.4rem}
+  table{font-size:.92rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#principal">Ir al contenido</a>
+<header class="cabecera">
+  <h1>Contabilidad General</h1>
+  <p>Licenciatura en Negocios Internacionales · Ciclo II de 2026 · Semana 03: Ecuación contable, plan de cuentas, partida doble y asientos</p>
+</header>
+
+<nav class="menu" aria-label="Secciones de la semana">
+  <ul role="tablist">
+    <li><button type="button" role="tab" id="tab-intro" data-target="intro" aria-controls="intro" aria-selected="false" tabindex="-1">Repaso</button></li>
+    <li><button type="button" role="tab" id="tab-ses01" data-target="ses01" aria-controls="ses01" aria-selected="false" tabindex="-1">Sesión 01</button></li>
+    <li><button type="button" role="tab" id="tab-eval1" data-target="eval1" aria-controls="eval1" aria-selected="false" tabindex="-1">Evaluación 01</button></li>
+    <li><button type="button" role="tab" id="tab-ses02" data-target="ses02" aria-controls="ses02" aria-selected="false" tabindex="-1">Sesión 02</button></li>
+    <li><button type="button" role="tab" id="tab-eval2" data-target="eval2" aria-controls="eval2" aria-selected="false" tabindex="-1">Evaluación 02</button></li>
+    <li><button type="button" role="tab" id="tab-ses03" data-target="ses03" aria-controls="ses03" aria-selected="false" tabindex="-1">Sesión 03</button></li>
+    <li><button type="button" role="tab" id="tab-eval3" data-target="eval3" aria-controls="eval3" aria-selected="false" tabindex="-1">Evaluación 03</button></li>
+    <li><button type="button" role="tab" id="tab-reflexion" data-target="reflexion" aria-controls="reflexion" aria-selected="false" tabindex="-1">Reflexión</button></li>
+    <li><button type="button" role="tab" id="tab-ia" data-target="ia" aria-controls="ia" aria-selected="false" tabindex="-1">Actividad con IA</button></li>
+    <li><button type="button" role="tab" id="tab-biblio" data-target="biblio" aria-controls="biblio" aria-selected="false" tabindex="-1">Bibliografía</button></li>
+  </ul>
+</nav>
+
+<main id="principal">
+<section class="pestana" id="intro" data-panel="intro">
+<h2>Repaso · Lo que ya sabes de la información financiera</h2>
+<p class="meta">Semana 3 · Unidad 1 · Repaso de las semanas 1 y 2 y presentación de la semana</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Esta semana tienes una tarea concreta: pasar de las definiciones a los registros. En las semanas anteriores aprendiste qué son los activos, los pasivos, el patrimonio, los ingresos y los gastos, y viste que las cuentas tienen una naturaleza que determina si aumentan en el debe o en el haber. Ahora vas a usar esas ideas para escribir los movimientos que hace una empresa cuando compra, paga, cobra o financia sus operaciones.</p>
+<p>Al terminar la semana podrás explicar cómo se relacionan los tres elementos básicos del balance; leer un código de cuenta y decidir a qué clase pertenece; escribir asientos simples y compuestos con su glosa y su comprobación; y explicar por qué un registro puede cuadrar y, aun así, contener un error.</p>
+</div>
+
+<h3>1. Lo que necesitas recordar</h3>
+<p>Antes de empezar la primera sesión, repasa tres ideas de la semana 2. La primera es la definición de activo: un recurso económico controlado por la entidad como resultado de sucesos pasados. La segunda es la definición de pasivo: una obligación presente de transferir un recurso económico, originada en sucesos pasados. La tercera es la de patrimonio: lo que queda a los propietarios después de deducir los pasivos de los activos.</p>
+<p>También recuerda la idea de naturaleza. Una cuenta de activo o de gasto es deudora: aumenta con movimientos en el debe. Una cuenta de pasivo, de patrimonio o de ingreso es acreedora: aumenta con movimientos en el haber. Esa convención parece arbitraria al principio, pero resume la ecuación contable en la forma de registro, y la sesión 01 te mostrará por qué.</p>
+
+<h3>2. Cómo se organiza la semana</h3>
+<p>La semana tiene tres sesiones de 120 minutos de trabajo. Cada una avanza en el mismo orden: primero una situación que puedes reconocer, después una explicación con pausas para que razones por tu cuenta, luego ejemplos resueltos y cinco ejercicios con su solución, y al final una evaluación de práctica con al menos 15 preguntas.</p>
+<p>La <strong>sesión 01</strong> trabaja la ecuación contable: qué le ocurre al balance cuando la empresa realiza una operación. La <strong>sesión 02</strong> presenta el plan de cuentas, es decir, el catálogo de códigos con el que se nombran las cuentas, y la partida doble, que obliga a registrar cada operación en al menos dos cuentas. La <strong>sesión 03</strong> convierte todo eso en asientos: el registro formal de una operación en el libro diario, con su glosa y su comprobación.</p>
+
+<h3>3. Cómo estudiar esta semana</h3>
+<p>Las tres sesiones se apoyan unas en otras, así que conviene no saltarse ninguna. Te sugerimos una rutina sencilla. Antes de leer una solución, intenta el ejercicio por escrito, aunque tu respuesta sea incompleta. Después compárala con la solución y anota la diferencia: si el error fue de cálculo, de cuenta, de lado del debe o del haber, o de interpretación de la operación. Esa anotación vale más que releer la solución varias veces.</p>
+<p>Las soluciones están desplegadas bajo el botón «Ver solución razonada». Ábrelas solo cuando hayas escrito tu respuesta. Si una dificultad persiste, cada sesión indica qué sección o ejercicio conviene releer.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Naturaleza de una cuenta:</strong> lado en el que la cuenta aumenta (debe o haber).</li>
+<li><strong>Debe y haber:</strong> las dos columnas del registro contable; el lado izquierdo y el lado derecho de cada cuenta.</li>
+<li><strong>Clase de cuenta:</strong> el grupo amplio al que pertenece una cuenta: activo, pasivo, patrimonio, ingreso o gasto.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="ses01" data-panel="ses01">
+<h2>Sesión 01 · La ecuación contable: qué posee la empresa y quién lo financia</h2>
+<p class="meta">Semana 3 · Unidad 1 · Ecuación contable, efecto de las transacciones y comprobación del equilibrio (sesión global 07) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que el gerente de Confecciones Montubia S. A., una empresa que fabrica camisetas, quiere saber en una fecha determinada dos cosas: qué posee la empresa y quién lo ha financiado. Posee dinero en caja y en el banco, y ese dinero proviene de lo que los socios han dejado en la empresa. ¿Cómo se responden ambas preguntas de manera ordenada? La respuesta es una identidad que te acompañará durante toda la asignatura: lo que la empresa posee es igual a lo que debe más lo que pertenece a sus propietarios.</p>
+<p>Al terminar esta sesión podrás enunciar la ecuación contable y explicar cada término con las definiciones de la semana 2; calcular el patrimonio a partir de los activos y los pasivos; determinar el efecto de transacciones concretas sobre los tres elementos y comprobar que la ecuación siga equilibrada; y explicar por qué el equilibrio, por sí solo, no demuestra que el registro sea correcto.</p>
+<p>Para estudiar, trabaja cada tabla con lápiz y papel antes de comparar tus resultados con el texto. Si una suma no te cuadra, revisa primero qué partida cambió y en qué cantidad, antes de buscar el error en otra parte.</p>
+</div>
+
+<h3>1. Qué dice la ecuación</h3>
+<p>En la semana 2 definiste los elementos de los estados financieros. El activo es un recurso económico controlado por la entidad como resultado de sucesos pasados. El pasivo es una obligación presente de transferir un recurso económico, originada en sucesos pasados. El patrimonio es lo que queda a los propietarios después de deducir los pasivos de los activos. Si reordenas esa última frase, obtienes la ecuación contable:</p>
+<p><strong>Activo = Pasivo + Patrimonio</strong></p>
+<p>Léela como una afirmación sobre el origen de los recursos. Todo lo que la empresa controla tiene un origen: o lo debe a alguien (pasivo), o pertenece a los propietarios (patrimonio). La ecuación no es una opinión sobre la empresa ni una fórmula que haya que memorizar sin comprender. Es una consecuencia de las definiciones, y por eso puede usarse como control.</p>
+<p>Puedes imaginar la ecuación como una balanza de dos platillos. En el izquierdo están los recursos; en el derecho, quién los financió. La analogía explica por qué ambos lados deben pesar lo mismo, pero tiene un límite: la balanza no mide si cada peso está en el platillo correcto. Esa revisión la harás más adelante, cuando veas que una clasificación equivocada puede dejar la balanza en equilibrio.</p>
+<p>Conviene precisar cada término en la vida de una empresa. Los activos son los recursos que la empresa usa para operar, como dinero, mercaderías, derechos a cobrar y maquinaria. Los pasivos son las deudas con terceros: proveedores, bancos y cualquier persona a la que la empresa deba transferir recursos. El patrimonio es la parte de los recursos financiada por los propietarios. Aumenta con sus aportes y con los resultados positivos, y disminuye con los gastos y con las distribuciones que se hagan a los socios.</p>
+
+<h3>2. Un punto de partida: el balance de Montubia</h3>
+<p>Para practicar, tomemos la situación de Confecciones Montubia S. A. en una fecha determinada, después de que los socios hicieron sus dos aportes de la semana 2. Supongamos que la empresa tiene 20.000 dólares en caja y 15.000 dólares en su cuenta bancaria, lo que suma activos por 35.000 dólares. Supongamos también que todavía no debe nada a proveedores ni a bancos, es decir, pasivos por 0 dólares, y que no ha obtenido utilidades ni pérdidas hasta esa fecha. Con esos datos, el patrimonio es la diferencia entre activos y pasivos, y debe coincidir con el capital que aportaron los socios: 20.000 dólares en efectivo y 15.000 dólares depositados en el banco.</p>
+
+<div class="concepto">
+<h4>Cálculo 1. Calcular el patrimonio como diferencia</h4>
+<p><strong>Situación.</strong> Antes de registrar cualquier operación, el gerente necesita saber cuánto pertenece a los socios. Como el patrimonio no se mide directamente, debe obtenerse a partir de los otros dos elementos.</p>
+<p><strong>Supuesto didáctico.</strong> Los saldos de la tabla 1 son parte de la situación de estudio y se presentan como datos de esa fecha.</p>
+<p><strong>Qué buscamos.</strong> El patrimonio, en dólares.</p>
+<p><strong>Datos.</strong> Activos: caja 20.000 dólares y cuenta bancaria 15.000 dólares. Pasivos: ninguno, es decir, 0 dólares.</p>
+<p><strong>Procedimiento.</strong> Activos totales = 20.000 + 15.000 = 35.000 dólares. Pasivos totales = 0 dólares. Patrimonio = activos − pasivos = 35.000 − 0 = 35.000 dólares.</p>
+<p><strong>Comprobación.</strong> Reconstruye la ecuación completa: 35.000 = 0 + 35.000. Esta comprobación vuelve a sumar los tres elementos y verifica la igualdad entera.</p>
+<p><strong>Interpretación.</strong> Los socios tienen 35.000 dólares de interés residual en la empresa, igual al capital aportado, porque no hay utilidades acumuladas. El error que se evita es tratar ese capital como una deuda. Si los 35.000 dólares se registraran como pasivo, la ecuación seguiría cuadrando (35.000 = 35.000 + 0), pero el patrimonio quedaría en cero y los socios aparecerían como acreedores de la empresa. Esa es una anticipación de la sección 5: una ecuación equilibrada no garantiza un registro correcto.</p>
+</div>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 1. Balance de Confecciones Montubia S. A. en una fecha determinada (dólares; dato de la situación de estudio)</caption>
+<thead><tr><th>Elemento</th><th>Partida</th><th>Importe (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Activo</td><td>Caja</td><td>20.000</td></tr>
+<tr><td>Activo</td><td>Bancos</td><td>15.000</td></tr>
+<tr><td>Total activo</td><td></td><td>35.000</td></tr>
+<tr><td>Pasivo</td><td>Ninguno en esta fecha</td><td>0</td></tr>
+<tr><td>Total pasivo</td><td></td><td>0</td></tr>
+<tr><td>Patrimonio</td><td>Interés residual de los socios (capital aportado)</td><td>35.000</td></tr>
+<tr><td>Total pasivo más patrimonio</td><td></td><td>35.000</td></tr>
+</tbody></table></div>
+
+<p>La tabla 1 organiza el balance en tres bloques. Lee primero los totales de activo, pasivo y patrimonio, y después compara las dos cifras finales. Los activos suman 35.000 dólares; el pasivo, 0 dólares, y el patrimonio, 35.000 dólares. Esa igualdad es el hallazgo que conviene notar, porque la ecuación se cumple en esta fecha.</p>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: por qué la ecuación equilibra</h4>
+<p>La igualdad de la tabla 1 no es casual. Montubia tiene 35.000 dólares de recursos y los ha obtenido de una sola fuente: el dinero que aportaron sus socios. Como todo recurso tiene un origen, la suma de los orígenes debe ser igual a la suma de los recursos. Si el balance no cuadrara, sabrías que falta registrar algún origen o que alguna partida está mal valorada.</p>
+</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Antes de seguir, responde: si el contador hubiera registrado la caja en 18.000 dólares en lugar de 20.000, y el resto no cambiara, ¿cuál sería el total de activo? ¿Seguiría cumpliéndose la ecuación? Escribe el cálculo completo.</p>
+<p class="ayuda">Si el total de activo baja a 33.000 dólares, mientras el patrimonio sigue en 35.000 y el pasivo en 0, la ecuación deja de cuadrar. Ese desequilibrio es una señal de que algo está mal registrado; busca la partida que cambió.</p>
+</div>
+
+<h3>3. Cómo cambian los elementos con las transacciones</h3>
+<p>Una transacción es un suceso que modifica la situación económica de la empresa y que puede medirse en dinero. Cada transacción afecta al menos a dos partidas, y lo hace de modo que la ecuación siga cuadrando. Por eso conviene analizar cada operación con tres preguntas: qué recurso o derecho cambia, qué obligación cambia y si el patrimonio se modifica por un aporte de los socios o por un resultado.</p>
+<p>Tomemos cuatro operaciones de Montubia. Cada una se aplica sobre la situación de la tabla 1, y las cuatro se acumulan en el orden en que ocurren: el resultado de una sirve de punto de partida para la siguiente.</p>
+
+<div class="concepto">
+<h4>Operación 1. Compra de tela a crédito</h4>
+<p>Montubia compra tela por 4.000 dólares a un proveedor que le concede crédito. Recibe la tela en su bodega y el pago vence más adelante. Dos cosas cambian a la vez: aparece un activo nuevo por 4.000 dólares, la tela, que la empresa usará para producir, y aparece una deuda por 4.000 dólares con el proveedor. Observa que el activo no se paga todavía: la empresa recibe primero la tela y paga después.</p>
+</div>
+
+<div class="concepto">
+<h4>Operación 2. Aporte de un socio en efectivo</h4>
+<p>Un socio transfiere 5.000 dólares en efectivo a la empresa, sin obligación de devolverlos. La caja aumenta en 5.000 dólares y el patrimonio aumenta en la misma cantidad, porque el dinero aportado pasa a pertenecer a los propietarios. No hay pasivo nuevo, porque la empresa no debe devolver ese monto. Como en la semana 2, el aporte de un propietario se trata como patrimonio y no como ingreso.</p>
+</div>
+
+<div class="concepto">
+<h4>Operación 3. Pago parcial a un proveedor</h4>
+<p>Montubia paga 2.000 dólares a su proveedor de tela con dinero de caja. La caja disminuye en 2.000 dólares y la deuda con el proveedor, que es un pasivo, también disminuye en 2.000 dólares. El patrimonio no cambia, porque la empresa solo canceló parte de una deuda con dinero que ya tenía. Ninguna pérdida ni ningún gasto aparecen en esta operación.</p>
+</div>
+
+<div class="concepto">
+<h4>Operación 4. Pago de sueldos en efectivo</h4>
+<p>Montubia paga 1.500 dólares de sueldos a sus trabajadores con efectivo de caja. La caja disminuye en 1.500 dólares. El sueldo no crea un activo ni cancela una deuda; su contrapartida es una disminución del patrimonio, porque el sueldo del periodo es un gasto y los gastos reducen el interés residual de los propietarios. Compara esta operación con la 3: pagar una deuda no reduce el patrimonio, pero pagar un gasto sí. Las cuentas específicas de cada gasto las verás en la sesión 02.</p>
+</div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: seguir la ecuación operación por operación</h4>
+<p>La tabla 2 resume el efecto de las cuatro operaciones sobre los tres elementos. Lee la última columna: en cada fila, la suma de pasivo y patrimonio coincide con el activo. Eso significa que cada operación mantiene la igualdad, aunque modifique cada elemento de forma distinta. Fíjate sobre todo en las filas 3 y 4: en ambas la caja baja en la cantidad que se paga, pero una reduce el pasivo y la otra reduce el patrimonio.</p>
+</div>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 2. Efecto de las operaciones de Montubia sobre la ecuación contable (dólares; cada fila acumula la anterior)</caption>
+<thead><tr><th>Situación</th><th>Activo</th><th>Pasivo</th><th>Patrimonio</th><th>¿Activo = pasivo + patrimonio?</th></tr></thead>
+<tbody>
+<tr><td>Situación inicial (tabla 1)</td><td>35.000</td><td>0</td><td>35.000</td><td>Sí: 35.000 = 0 + 35.000</td></tr>
+<tr><td>1. Compra de tela a crédito</td><td>39.000</td><td>4.000</td><td>35.000</td><td>Sí: 39.000 = 4.000 + 35.000</td></tr>
+<tr><td>2. Aporte de un socio en efectivo</td><td>44.000</td><td>4.000</td><td>40.000</td><td>Sí: 44.000 = 4.000 + 40.000</td></tr>
+<tr><td>3. Pago parcial a un proveedor</td><td>42.000</td><td>2.000</td><td>40.000</td><td>Sí: 42.000 = 2.000 + 40.000</td></tr>
+<tr><td>4. Pago de sueldos en efectivo</td><td>40.500</td><td>2.000</td><td>38.500</td><td>Sí: 40.500 = 2.000 + 38.500</td></tr>
+</tbody></table></div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Observa qué cambia en la operación 3 y qué cambia en la operación 4. En ambas la caja disminuye en la cantidad pagada, pero una altera el pasivo y la otra el patrimonio. ¿Por qué? Explica la diferencia en una frase que mencione la deuda, el gasto y el patrimonio.</p>
+<p class="ayuda">Si respondiste que ambas operaciones reducen el patrimonio, revisa si cancelar una deuda produce un gasto. Compara la definición de gasto de la semana 2 con lo que ocurre en la operación 3.</p>
+</div>
+
+<h3>4. Una ecuación equilibrada con un ingreso</h3>
+<p>Los ingresos también modifican la ecuación, pero de una manera que conviene ver con calma. Tomemos Servicios Logísticos Andes Global S. A., una empresa de servicios vinculada con Negocios Internacionales que presta coordinación de importaciones y exportaciones. Supongamos que, en una fecha determinada, tiene 8.000 dólares en caja y equipo de oficina por 4.000 dólares, con 3.000 dólares de deuda a proveedores. Su patrimonio es, por tanto, de 9.000 dólares.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 3. Ecuación de Servicios Logísticos Andes Global S. A. antes y después de dos operaciones (dólares)</caption>
+<thead><tr><th>Situación</th><th>Caja</th><th>Cuentas por cobrar</th><th>Equipo de oficina</th><th>Total activo</th><th>Pasivo</th><th>Patrimonio</th></tr></thead>
+<tbody>
+<tr><td>Situación inicial</td><td>8.000</td><td>0</td><td>4.000</td><td>12.000</td><td>3.000</td><td>9.000</td></tr>
+<tr><td>A. Servicio facturado a crédito por 2.500</td><td>8.000</td><td>2.500</td><td>4.000</td><td>14.500</td><td>3.000</td><td>11.500</td></tr>
+<tr><td>B. Pago de arriendo de 700 en efectivo</td><td>7.300</td><td>2.500</td><td>4.000</td><td>13.800</td><td>3.000</td><td>10.800</td></tr>
+</tbody></table></div>
+
+<p>En la operación A, la empresa prestó un servicio y tiene derecho a recibir 2.500 dólares más adelante. Ese derecho a cobrar es un activo, porque la empresa lo controla como resultado de un servicio ya prestado. El ingreso aumenta el patrimonio en 2.500 dólares, así que la ecuación se mantiene: 14.500 = 3.000 + 11.500. Observa que el efectivo no cambió. El ingreso se reconoce al prestar el servicio y no al cobrarlo; es la misma distinción entre ingreso y cobro que viste en la semana 2, ahora traducida a la ecuación.</p>
+<p>En la operación B, el arriendo pagado en efectivo es un gasto, porque disminuye la caja y reduce el patrimonio en 700 dólares. La ecuación sigue en equilibrio: 13.800 = 3.000 + 10.800.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Si el servicio de 2.500 dólares se hubiera cobrado de inmediato en efectivo, ¿qué partidas habrían cambiado en la tabla 3? Indica cuál sería el total de activo y si la ecuación seguiría en equilibrio.</p>
+<p class="ayuda">Piensa en la partida de cuentas por cobrar, que ya no existiría, y en la caja, que aumentaría. Comprueba que el total de activo no cambia y que el patrimonio sigue aumentando en la misma cantidad.</p>
+</div>
+
+<h3>5. El equilibrio es necesario, pero no suficiente</h3>
+<p>Hasta aquí, la ecuación te ha servido para controlar que cada operación mantenga la igualdad. Ahora viene la advertencia más importante de la sesión: una ecuación equilibrada puede contener un error.</p>
+<p>Imagina que, además del capital, Montubia recibió de un banco un préstamo de 6.000 dólares en efectivo, que la empresa debe devolver, pero que el contador lo registró como un aporte más de los socios. Supongamos que la caja queda en 26.000 dólares (20.000 + 6.000), de modo que el activo total es 41.000 dólares. En el registro equivocado, el pasivo es 0 y el patrimonio es 41.000 dólares, y la suma de ambos sigue siendo 41.000 dólares. La igualdad se cumple, pero el pasivo está subestimado en 6.000 dólares y el patrimonio, sobrestimado en la misma cantidad.</p>
+<p>Este caso muestra por qué la ecuación no demuestra que el registro sea correcto. La ecuación detecta incoherencias de totales, pero no detecta una clasificación equivocada cuando el error está dentro de la propia identidad. Para descubrirlo necesitas el documento que respalda la operación y una pregunta sobre su naturaleza: un préstamo que debe devolverse es un pasivo, aunque en un registro se le llame aporte.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Una empresa registra la compra de un camión a crédito como si fuera una compra al contado, con un pago de caja. ¿Puede la ecuación quedar en equilibrio? ¿Qué error se ha cometido y en qué partida se nota?</p>
+<p class="ayuda">Cuando un registro cuadra, pregúntate qué partida debió cambiar y no cambió. Un camión comprado a crédito produce un activo y una obligación. Si solo se registra el pago de caja, la obligación desaparece del balance.</p>
+</div>
+
+<h3>6. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Escribe tu respuesta antes de abrir cada solución; las soluciones explican por qué la respuesta es esa y qué error suele conducir a otra. Trabaja de manera individual.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Calcular el patrimonio de Costa Verde</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás el patrimonio de Comercializadora Costa Verde Cía. Ltda. a una fecha determinada, justificando la clasificación de cada partida. Supongamos que tiene caja de 4.500 dólares; mercaderías de camisetas compradas para revender, por 12.000 dólares; proveedores por pagar, por 7.000 dólares; y un préstamo de los socios, que deberá devolver, por 5.000 dólares.</p>
+<p class="ayuda">Clasifica primero cada partida como activo o pasivo según su definición. Después calcula los totales y obtén el patrimonio como diferencia. Recuerda que el préstamo de los socios debe devolverse: es una obligación, aunque el prestamista sea un propietario.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Activos: caja (4.500) y mercaderías (12.000), que suman 16.500 dólares. La mercadería es un activo, porque la empresa la controla como resultado de una compra ya realizada y la adquirió para revenderla. Pasivos: proveedores (7.000) y préstamo de los socios (5.000), que suman 12.000 dólares. Patrimonio = 16.500 − 12.000 = 4.500 dólares.</p>
+<p><strong>Comprobación:</strong> 16.500 = 12.000 + 4.500. La igualdad confirma el cálculo, aunque no garantiza que cada partida esté bien clasificada.</p>
+<p><strong>Error frecuente:</strong> clasificar el préstamo de los socios como patrimonio, porque el prestamista es propietario. Lo decisivo es la obligación de devolver el dinero. Si ese error se cometiera, el patrimonio sería 9.500 dólares en lugar de 4.500.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El patrimonio es un resultado de la diferencia y no un dato independiente. Si la clasificación de una partida cambia, el patrimonio cambia en la misma cantidad.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. La ecuación de una empresa de servicios</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad aplicarás la ecuación contable a una empresa de servicios. Supongamos que, en otra fecha, Servicios Logísticos Andes Global S. A. tiene caja de 6.000 dólares, equipo de oficina de 9.000 dólares, cuentas por cobrar a clientes de 1.000 dólares, proveedores por pagar de 2.000 dólares y un préstamo bancario de 5.000 dólares. Determina el patrimonio y comprueba la ecuación.</p>
+<p class="ayuda">Suma solo los activos y solo los pasivos antes de restar. Anota cada suma en un borrador para no mezclar partidas de distinto elemento.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Activos: 6.000 + 9.000 + 1.000 = 16.000 dólares. Pasivos: 2.000 + 5.000 = 7.000 dólares. Patrimonio = 16.000 − 7.000 = 9.000 dólares.</p>
+<p><strong>Comprobación:</strong> 16.000 = 7.000 + 9.000. La igualdad se cumple, y el patrimonio coincide con el valor obtenido por diferencia.</p>
+<p><strong>Error frecuente:</strong> incluir la cuenta por cobrar entre los pasivos. La cuenta por cobrar es un derecho a recibir dinero, es decir, un activo.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La ecuación tiene tres términos, y cada uno debe provenir de la definición correcta. Antes de calcular, identifica a qué elemento pertenece cada partida.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. El efecto de cuatro operaciones sobre Costa Verde</h4>
+<p class="tiempo">Tiempo orientativo: 14 minutos · Trabajo individual</p>
+<p>En esta actividad determinarás el efecto de cuatro operaciones sobre la situación de Costa Verde del ejercicio 1, cuyo activo es 16.500 dólares, su pasivo 12.000 dólares y su patrimonio 4.500 dólares. Analiza cada operación desde la situación inicial, sin tomar en cuenta las demás. Las operaciones son: (a) compra de mercaderías al contado por 1.000 dólares; (b) pago de 800 dólares a un proveedor con efectivo de caja; (c) aporte de un socio en efectivo por 2.000 dólares; (d) pago de un arriendo de 600 dólares en efectivo.</p>
+<p class="ayuda">Para cada operación identifica qué partidas cambian, en qué sentido y si el cambio afecta al activo, al pasivo o al patrimonio. Verifica la ecuación después de cada una.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>(a) La mercadería aumenta 1.000 dólares y la caja disminuye en la misma cantidad. El activo total sigue en 16.500 dólares; el pasivo, en 12.000 y el patrimonio, en 4.500. Solo cambia la composición del activo. (b) La caja baja a 3.700 dólares y el proveedor se paga, de modo que el pasivo baja a 11.200 dólares. Activo 15.700 = 11.200 + 4.500. (c) La caja sube a 6.500 dólares y el aporte se incorpora al patrimonio, que pasa a 6.500 dólares. Activo 18.500 = 12.000 + 6.500. (d) La caja baja a 3.900 dólares y el arriendo es un gasto que reduce el patrimonio a 3.900 dólares. Activo 15.900 = 12.000 + 3.900.</p>
+<p><strong>Comprobación:</strong> en cada caso verifica la igualdad. En (a) el activo total no cambia, aunque cambian dos partidas del activo.</p>
+<p><strong>Error frecuente:</strong> pensar que toda compra aumenta el activo total. La compra al contado cambia la forma del activo, pero no su total. El error inverso es tratar el pago de un arriendo como un cambio del pasivo, lo que impide reconocer el gasto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Una operación puede cambiar solo un lado de la ecuación, pero siempre se refleja en al menos dos partidas. Analiza cada partida por separado y luego comprueba la igualdad.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Un registro equilibrado que no es correcto</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás por qué una ecuación equilibrada puede contener un error. Supongamos que Montubia recibió de un banco un préstamo de 6.000 dólares en efectivo, que debe devolver, y que el contador lo registró como un aporte de los socios. Antes de ese registro, la empresa tenía activos de 35.000 dólares, patrimonio de 35.000 dólares y ningún pasivo. Determina el pasivo y el patrimonio que aparecen en el registro, si la ecuación sigue equilibrada, qué error existe y cómo lo detectarías.</p>
+<p class="ayuda">Compara el pasivo que figura en el registro con el que existe en realidad. Pregúntate qué documento respaldaría la operación y si la empresa debe devolver el dinero.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>En el registro, el pasivo es 0 y el patrimonio es 41.000 dólares (35.000 + 6.000). La ecuación queda en equilibrio: 41.000 = 0 + 41.000. El error está en la clasificación: el préstamo es un pasivo, porque la empresa debe devolverlo. Por eso el pasivo está subestimado en 6.000 dólares y el patrimonio, sobrestimado en la misma cantidad. Con la clasificación correcta, el pasivo es 6.000 y el patrimonio 35.000: 41.000 = 6.000 + 35.000.</p>
+<p><strong>Comprobación:</strong> revisa el contrato o el documento que respalda la entrada de dinero. Si indica que el monto debe devolverse, la clasificación es un pasivo, sin importar el nombre con que se registró.</p>
+<p><strong>Error frecuente:</strong> concluir que el registro es correcto porque la ecuación cuadra. El equilibrio solo indica que los totales son coherentes entre sí.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un control de totales no revisa la naturaleza de cada partida. Para eso necesitas el documento que respalda la operación.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: el ingreso cobrado de contado</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>Supongamos que, en la tabla 3, el servicio de 2.500 dólares no se factura a crédito, sino que el cliente lo paga de inmediato en efectivo. El caso original sigue siendo el de la tabla 3. En esta variante compara el total de activo, la composición del activo y el patrimonio con los de la operación A.</p>
+<p class="ayuda">Identifica qué partida desaparece y cuál aumenta. Después comprueba si el patrimonio cambia.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>La caja sube a 10.500 dólares y las cuentas por cobrar desaparecen. El activo total es 14.500 dólares, igual que en la operación A, y el pasivo sigue en 3.000 dólares. El patrimonio es 11.500 dólares, también igual. Lo que cambia es la composición del activo: antes había un derecho a cobrar y ahora hay efectivo.</p>
+<p><strong>Comprobación:</strong> 14.500 = 3.000 + 11.500. La igualdad se mantiene en ambos casos.</p>
+<p><strong>Error frecuente:</strong> pensar que el ingreso aumenta solo cuando entra el efectivo. El ingreso se reconoce por el servicio prestado; el cobro determina la forma del activo, no el ingreso.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Dos operaciones pueden producir el mismo patrimonio y tener composiciones de activo diferentes. La ecuación no basta para distinguir la forma del activo, pero sí muestra que el efecto total es el mismo.</p></div>
+</div>
+
+<h3>7. Cierre de la sesión</h3>
+<p>Volvamos a la pregunta del gerente de Montubia: qué posee la empresa y quién lo ha financiado. La ecuación contable responde esa pregunta en dos partes: los activos muestran los recursos, y los pasivos y el patrimonio muestran los orígenes de esos recursos. Cada operación debe mantener la igualdad, y cada partida debe clasificarse según su definición, porque el equilibrio no revela por sí solo un error de naturaleza.</p>
+<p>Como tarea de transferencia, elige una operación de Confecciones Montubia que no hayas estudiado, por ejemplo la compra de un vehículo de reparto pagada en dos partes. Describe el efecto sobre cada elemento, verifica la ecuación y explica qué documento necesitarías para confirmar la clasificación.</p>
+<p>Para revisar por dificultad: si confundes el patrimonio con el efectivo, relee la sección 1 y el cálculo 1; si no reconoces cuándo una operación cambia solo la composición del activo, relee la operación 1 y el ejercicio 3; si dudas de la clasificación de un préstamo, relee la sección 5 y el ejercicio 4.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Ecuación contable:</strong> activo igual a pasivo más patrimonio; expresa que los recursos tienen un origen.</li>
+<li><strong>Transacción:</strong> suceso que modifica la situación económica de la empresa y puede medirse en dinero.</li>
+<li><strong>Interés residual:</strong> la parte de los recursos que queda a los propietarios después de deducir las obligaciones.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval1" data-panel="eval1" aria-labelledby="t-eval1">
+<h2 id="t-eval1">Evaluación de la sesión 01: la ecuación contable</h2>
+<p class="meta">Semana 3 · Unidad 1. Introducción a la contabilidad · 16 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="1"></div>
+</section>
+
+<section class="pestana" id="ses02" data-panel="ses02">
+<h2>Sesión 02 · El plan de cuentas y la partida doble</h2>
+<p class="meta">Semana 3 · Unidad 1 · Plan de cuentas, codificación y partida doble (sesión global 08) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que el contador de Comercializadora Costa Verde Cía. Ltda. recibe, en la misma semana, una factura de arriendo, un pago de sueldos, una compra de mercaderías y un cobro a un cliente. Si cada movimiento se anotara con palabras libres, cada persona que revise los registros tendría que interpretar un texto distinto para saber qué pasó, y dos personas podrían describir la misma operación de maneras incompatibles. Para evitarlo, la empresa usa un plan de cuentas: una lista ordenada de nombres y códigos con la que identifica cada recurso, obligación, ingreso y gasto.</p>
+<p>Al terminar esta sesión podrás describir la estructura de un plan de cuentas y leer un código; asignar la cuenta adecuada a una operación; y explicar la partida doble, es decir, por qué cada operación afecta al menos a dos cuentas y cómo comprobar que el total del debe iguala al total del haber. También podrás explicar por qué esa igualdad no demuestra, por sí sola, que el registro sea correcto.</p>
+<p>Para estudiar, lee el plan de la tabla 4 antes de avanzar. Cuando aparezca un código, busca su cuenta en la tabla. Cuando aparezca un movimiento, decide primero si es un movimiento de debe o de haber, y solo después escribe el código.</p>
+</div>
+
+<h3>1. Qué es un plan de cuentas</h3>
+<p>Un plan de cuentas es el catálogo ordenado de las cuentas que una entidad usa para registrar sus operaciones. Cada cuenta tiene un nombre que describe el recurso, la obligación, el ingreso o el gasto que representa, y un código numérico que la identifica sin ambigüedad. El plan es un instrumento de la empresa: puede adaptarse a sus operaciones, pero conviene que sea estable de un periodo a otro, para que los registros sean comparables.</p>
+<p>El código tiene una lógica que puedes leer. El primer dígito indica la clase de la cuenta: 1 para activos, 2 para pasivos, 3 para patrimonio, 4 para ingresos y 5 para gastos. El segundo dígito agrupa cuentas parecidas dentro de la clase: por ejemplo, 11 agrupa los activos corrientes (los que se recuperan o se usan en el corto plazo) y 12 agrupa los activos no corrientes (los de uso prolongado). Los dos últimos dígitos distinguen cada cuenta dentro de su grupo. Así, el código 1101 se lee como activo (1), activo corriente (11), caja (01).</p>
+<p>Esta codificación es un plan didáctico, construido para esta asignatura. No es una norma que deba aplicarse en todas las empresas. Su utilidad es mostrar que la clase de una cuenta determina su código y que, al revés, el código indica a qué clase pertenece. Ese vínculo te permitirá revisar rápidamente si un registro tiene sentido: si una cuenta de gasto aparece con un código que empieza por 2, algo está mal.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 4. Plan de cuentas didáctico utilizado en esta semana</caption>
+<thead><tr><th>Código</th><th>Cuenta</th><th>Clase</th><th>Naturaleza</th></tr></thead>
+<tbody>
+<tr><td>1101</td><td>Caja</td><td>Activo corriente</td><td>Deudora</td></tr>
+<tr><td>1102</td><td>Bancos</td><td>Activo corriente</td><td>Deudora</td></tr>
+<tr><td>1103</td><td>Cuentas por cobrar a clientes</td><td>Activo corriente</td><td>Deudora</td></tr>
+<tr><td>1104</td><td>Inventarios (materiales y mercaderías)</td><td>Activo corriente</td><td>Deudora</td></tr>
+<tr><td>1201</td><td>Maquinaria</td><td>Activo no corriente</td><td>Deudora</td></tr>
+<tr><td>1202</td><td>Equipo de oficina</td><td>Activo no corriente</td><td>Deudora</td></tr>
+<tr><td>2101</td><td>Proveedores por pagar</td><td>Pasivo</td><td>Acreedora</td></tr>
+<tr><td>2102</td><td>Sueldos por pagar</td><td>Pasivo</td><td>Acreedora</td></tr>
+<tr><td>2103</td><td>Préstamos por pagar</td><td>Pasivo</td><td>Acreedora</td></tr>
+<tr><td>3101</td><td>Capital social</td><td>Patrimonio</td><td>Acreedora</td></tr>
+<tr><td>3102</td><td>Utilidades acumuladas</td><td>Patrimonio</td><td>Acreedora</td></tr>
+<tr><td>4101</td><td>Ventas</td><td>Ingreso</td><td>Acreedora</td></tr>
+<tr><td>4102</td><td>Ingresos por servicios</td><td>Ingreso</td><td>Acreedora</td></tr>
+<tr><td>5101</td><td>Sueldos y beneficios</td><td>Gasto</td><td>Deudora</td></tr>
+<tr><td>5102</td><td>Arriendos</td><td>Gasto</td><td>Deudora</td></tr>
+<tr><td>5103</td><td>Servicios básicos</td><td>Gasto</td><td>Deudora</td></tr>
+<tr><td>5104</td><td>Intereses</td><td>Gasto</td><td>Deudora</td></tr>
+<tr><td>5105</td><td>Servicios contratados</td><td>Gasto</td><td>Deudora</td></tr>
+</tbody></table></div>
+
+<p>La tabla 4 contiene las dieciocho cuentas que usarás en esta semana. Obsérvala por columnas: la de código te dice la clase, la de clase confirma esa lectura, y la de naturaleza te indica en qué lado aumenta cada cuenta. Si las tres columnas dicen lo mismo para una cuenta, puedes usarla con confianza.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Sin mirar la tabla, indica a qué clase pertenece la cuenta 2103 y cuál es su naturaleza. Después explica cómo lo dedujiste a partir del código, sin memorizar la lista.</p>
+<p class="ayuda">El primer dígito indica la clase. Un código que empieza en 2 es un pasivo, y los pasivos son acreedores, como estudiaste en la semana 2.</p>
+</div>
+
+<h3>2. Cómo se relaciona el código con la naturaleza</h3>
+<p>La naturaleza de una cuenta indica en qué lado aumenta. Las cuentas de activo y de gasto son deudoras: aumentan con movimientos en el debe. Las cuentas de pasivo, de patrimonio y de ingreso son acreedoras: aumentan con movimientos en el haber. En la semana 2 esta convención se presentó como regla de registro; ahora la usarás para construir cada movimiento.</p>
+<p>La razón de esta convención se apoya en la ecuación de la sesión 01. Si los activos están a la izquierda de la igualdad y los pasivos y el patrimonio a la derecha, un aumento de activo se registra del lado izquierdo, que es el debe, y un aumento de pasivo o de patrimonio se registra del lado derecho, que es el haber. Los ingresos aumentan el patrimonio y por eso son acreedores; los gastos disminuyen el patrimonio y por eso son deudores. La convención no es arbitraria: resume la ecuación en la forma de registro.</p>
+
+<div class="concepto">
+<h4>Partida doble</h4>
+<p>La partida doble es el principio según el cual toda operación afecta al menos a dos cuentas, de manera que la suma de los movimientos del debe iguala la suma de los movimientos del haber. La razón es que cada recurso tiene un origen: si la caja aumenta, algo debe explicar ese aumento, como una venta, un aporte o un préstamo. Si una cuenta sube, otra cuenta registra el origen o la contrapartida de ese cambio.</p>
+<p>Observa que la partida doble es un principio de registro y no una opción. Cuando un movimiento se anota solo en una cuenta, la igualdad de la ecuación se rompe y el registro queda incompleto. Pero la igualdad de los movimientos es necesaria, no suficiente: puede haber un debe y un haber iguales y, aun así, una cuenta equivocada, como verás en la sección 4.</p>
+</div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: una compra al contado</h4>
+<p>Confecciones Montubia S. A. compra tela por 1.200 dólares y paga al contado con efectivo de caja. Antes de registrar, pregúntate qué recibió la empresa y qué entregó. Recibió tela, que controla y usará para producir: es un inventario, es decir, un activo (cuenta 1104), y su naturaleza es deudora. Entregó efectivo: la caja disminuye (cuenta 1101), y como es una disminución de un activo deudor, se registra en el haber. El movimiento queda así: debe en 1104 por 1.200 dólares y haber en 1101 por 1.200 dólares. El total del debe es igual al total del haber, y ambas partidas cambian en la forma que explica la ecuación: un activo aumenta y otro disminuye en la misma cantidad.</p>
+</div>
+
+<h3>3. Los movimientos en la práctica</h3>
+<p>La tabla 5 muestra cuatro operaciones de Montubia con su movimiento del debe y del haber. Son ejemplos independientes que no se acumulan entre sí: su propósito es practicar la asignación de códigos y la comprobación de la igualdad.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 5. Movimientos del debe y del haber de cuatro operaciones de Confecciones Montubia S. A. (dólares; ejemplos independientes)</caption>
+<thead><tr><th>Operación</th><th>Debe (código y cuenta)</th><th>Importe</th><th>Haber (código y cuenta)</th><th>Importe</th><th>¿Debe = haber?</th></tr></thead>
+<tbody>
+<tr><td>M1. Compra de tela al contado</td><td>1104 Inventarios</td><td>1.200</td><td>1101 Caja</td><td>1.200</td><td>Sí</td></tr>
+<tr><td>M2. Compra de tela a crédito</td><td>1104 Inventarios</td><td>2.500</td><td>2101 Proveedores por pagar</td><td>2.500</td><td>Sí</td></tr>
+<tr><td>M3. Pago a un proveedor desde el banco</td><td>2101 Proveedores por pagar</td><td>1.000</td><td>1102 Bancos</td><td>1.000</td><td>Sí</td></tr>
+<tr><td>M4. Pago de arriendo con efectivo</td><td>5102 Arriendos</td><td>400</td><td>1101 Caja</td><td>400</td><td>Sí</td></tr>
+</tbody></table></div>
+
+<p>Lee la tabla por filas, no por columnas. En cada fila, primero decide qué cuenta recibe el efecto y qué cuenta lo origina; después escribe el código. La última columna solo confirma la suma, y ya sabes que eso no basta.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>En la operación M2, ¿por qué la cuenta Proveedores por pagar aparece en el haber y no en el debe? Explica el razonamiento con la naturaleza de la cuenta y con la ecuación. Después indica en qué lado aparecería el pago de esa deuda en la operación M3.</p>
+<p class="ayuda">Pregúntate si la compra a crédito aumenta o disminuye la deuda con el proveedor. Después, pregúntate si el pago la aumenta o la disminuye.</p>
+</div>
+
+<h3>4. La igualdad y sus límites</h3>
+<p>En la tabla 5 la última columna indica que el debe iguala al haber en cada operación. Esa comprobación es útil: detecta muchos errores aritméticos y muestra que el registro tiene al menos un movimiento en cada lado. Sin embargo, no demuestra que las cuentas sean las correctas. Un movimiento puede estar bien sumado y aun así describir una operación distinta de la que ocurrió. Un caso típico es registrar una venta al contado como si fuera un gasto por sueldos: el debe y el haber coinciden, pero la empresa habría dicho algo falso sobre sus ingresos y sus gastos.</p>
+<p>Por eso el trabajo contable no termina cuando el debe y el haber coinciden. Primero identificas la operación; después, la cuenta que corresponde a cada recurso, obligación, ingreso o gasto según su naturaleza y su uso; y solo al final verificas la igualdad. El orden importa: la igualdad es la última comprobación, no la primera.</p>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: cuadrado y equivocado</h4>
+<p>Supongamos que Montubia vende camisetas al contado por 900 dólares y que el registro quedó así: debe en caja por 900 dólares y haber en la cuenta sueldos y beneficios por 900 dólares. El debe iguala al haber, pero la operación fue una venta, no un pago de sueldos. Lo correcto es el haber en la cuenta de ventas (4101), porque una venta es un ingreso que aumenta el patrimonio y su naturaleza es acreedora. El registro cuadrado estaba equivocado, y el error no se habría notado con una simple suma.</p>
+</div>
+
+<h3>5. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Antes de abrir cada solución, escribe tu respuesta, incluidos los códigos. Trabaja de manera individual.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Identificar la clase y la naturaleza a partir del código</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás la clase y la naturaleza de seis cuentas de Costa Verde, sin consultar la tabla 4 de forma directa. Las cuentas son: 1103 Cuentas por cobrar a clientes; 2101 Proveedores por pagar; 3101 Capital social; 4101 Ventas; 5103 Servicios básicos; 1104 Inventarios.</p>
+<p class="ayuda">Lee el primer dígito de cada código para obtener la clase. Después decide, con la naturaleza de cada clase, en qué lado aumenta.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>1103 es un activo, deudora: aumenta en el debe. 2101 es un pasivo, acreedora: aumenta en el haber. 3101 es patrimonio, acreedora: aumenta en el haber. 4101 es un ingreso, acreedora: aumenta en el haber. 5103 es un gasto, deudora: aumenta en el debe. 1104 es un activo, deudora: aumenta en el debe.</p>
+<p><strong>Comprobación:</strong> revisa que las cuentas de activo y de gasto sean deudoras, y que las de pasivo, patrimonio e ingreso sean acreedoras. Si una cuenta no cumple esa regla, vuelve a su código.</p>
+<p><strong>Error frecuente:</strong> pensar que la naturaleza depende del saldo de la cuenta en un momento dado. La naturaleza depende de la clase; un saldo puede quedar del lado contrario solo por un error o por un movimiento anormal.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El código indica la clase, y la clase indica la naturaleza. Con esa cadena puedes decidir el lado de cualquier movimiento antes de escribirlo.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Asignar código a cuentas nuevas</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad asignarás código a dos cuentas que el plan de la tabla 4 todavía no contiene, y justificarás la clase de cada una. Las cuentas son: «Equipo de reparto», un vehículo que Costa Verde usa para entregar mercaderías a sus clientes y que mantendrá durante varios años; e «Intereses por pagar», el interés que la empresa ha generado por un préstamo y que todavía no ha pagado.</p>
+<p class="ayuda">Para cada cuenta, pregúntate primero si es un recurso que la empresa controla, una obligación o un gasto. Después elige el grupo dentro de la clase y, por último, el número de la cuenta.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>«Equipo de reparto» es un recurso de uso prolongado, por lo que es un activo no corriente. Su código es 1203: clase 1 (activo), grupo 12 (activo no corriente) y número 03, siguiente a 1201 y 1202. «Intereses por pagar» es una obligación que la empresa debe pagar, por lo que es un pasivo. Su código es 2104: clase 2 (pasivo), grupo 21 (pasivo corriente) y número 04, siguiente a 2103.</p>
+<p><strong>Comprobación:</strong> confirma que el primer dígito coincide con la clase y que el número no repite un código existente.</p>
+<p><strong>Error frecuente:</strong> clasificar el equipo de reparto como gasto porque se pagó en efectivo. El pago determina cómo se financió la compra, pero el vehículo sigue siendo un recurso que la empresa usará en varios periodos.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El código responde a dos preguntas: a qué clase pertenece la cuenta y de qué grupo forma parte. La numeración interna solo distingue cuentas dentro del mismo grupo.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Partida doble para Servicios Logísticos Andes Global</h4>
+<p class="tiempo">Tiempo orientativo: 14 minutos · Trabajo individual</p>
+<p>En esta actividad elaborarás el movimiento del debe y del haber de tres operaciones de Servicios Logísticos Andes Global S. A., y comprobarás que cada uno cuadre: (a) pago de servicios básicos por 350 dólares en efectivo; (b) cobro de 1.200 dólares a un cliente que debía esa cantidad por un servicio ya prestado; (c) pago de sueldos por 900 dólares mediante transferencia desde la cuenta bancaria.</p>
+<p class="ayuda">Para cada operación identifica la cuenta que recibe el efecto y la cuenta que lo origina. Recuerda que el efectivo que sale se registra en el haber de la cuenta que lo entrega.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>(a) Debe en 5103 Servicios básicos por 350 dólares; haber en 1101 Caja por 350 dólares. El gasto aumenta en el debe y el efectivo disminuye en el haber. (b) Debe en 1101 Caja por 1.200 dólares; haber en 1103 Cuentas por cobrar por 1.200 dólares. El efectivo entra y el derecho a cobrar disminuye. (c) Debe en 5101 Sueldos y beneficios por 900 dólares; haber en 1102 Bancos por 900 dólares. El gasto aumenta y la cuenta bancaria disminuye.</p>
+<p><strong>Comprobación:</strong> en las tres operaciones el debe iguala al haber. En (b) no se registró ingreso, porque el servicio ya se había reconocido cuando se facturó; el cobro solo cambia la forma del activo.</p>
+<p><strong>Error frecuente:</strong> registrar el cobro de la operación (b) como ingreso. Ese error duplicaría el ingreso del servicio, que ya se reconoció en un momento anterior.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cada operación se analiza por separado: primero qué cuenta recibe el efecto y luego qué cuenta lo origina. La igualdad del debe y del haber es la comprobación final.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Un registro cuadrado que es incorrecto</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás el error en un registro de Montubia que cumple la igualdad. La venta de camisetas al contado por 900 dólares se registró como debe en caja por 900 dólares y haber en la cuenta 5101 Sueldos y beneficios por 900 dólares. Determina si el registro es correcto, qué cuenta debió usarse y qué efecto tiene el error sobre el resultado del periodo.</p>
+<p class="ayuda">Pregúntate qué ocurrió realmente en la operación y qué naturaleza tiene la cuenta que se usó. Después compara con la cuenta que corresponde a un ingreso.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>El registro no es correcto, aunque cuadre. La operación es una venta, por lo que el haber debe estar en 4101 Ventas, cuenta de ingreso y de naturaleza acreedora. Con el error, el ingreso queda sin registrar y se anota un gasto por sueldos que no existió. Si el error se mantiene, los ingresos del periodo se subestiman en 900 dólares y los gastos se sobrestiman en la misma cantidad; el resultado del periodo también queda mal presentado.</p>
+<p><strong>Comprobación:</strong> pregúntate qué cuenta reflejaría la venta si solo mirases el documento de venta. Si la respuesta es Ventas, la cuenta de sueldos está mal usada.</p>
+<p><strong>Error frecuente:</strong> aceptar el registro porque el debe y el haber son iguales. La igualdad no revela la clase de la cuenta.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La igualdad es una comprobación aritmética. La corrección depende de que cada cuenta corresponda a la operación que realmente ocurrió.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: otro medio de pago</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>Supongamos que Costa Verde paga un arriendo de 400 dólares con una transferencia desde su cuenta bancaria, en lugar de hacerlo con efectivo de caja, como en la operación M4 de la tabla 5. Indica qué cuenta cambia en el movimiento, cuál permanece igual y si el gasto sigue siendo el mismo.</p>
+<p class="ayuda">Compara los códigos de las cuentas que se usan para el efectivo y para el dinero depositado en el banco. Verifica si el gasto cambia de clase o de naturaleza.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>El debe sigue en 5102 Arriendos por 400 dólares: el gasto y su naturaleza deudora no cambian. Cambia el haber, que pasa de 1101 Caja a 1102 Bancos, porque el dinero sale de la cuenta bancaria y no de la caja. El importe, la clase de la operación y el efecto sobre el patrimonio no cambian.</p>
+<p><strong>Comprobación:</strong> debe 400 = haber 400. La igualdad se mantiene con la nueva cuenta.</p>
+<p><strong>Error frecuente:</strong> cambiar también el debe, como si el medio de pago modificara el gasto. El medio de pago afecta a la cuenta de efectivo, no a la naturaleza del arriendo.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cuando cambia una condición, identifica qué partida se ve afectada y cuál no. Un cambio en el medio de pago modifica la cuenta de dinero, no la de gasto.</p></div>
+</div>
+
+<h3>6. Cierre de la sesión</h3>
+<p>Volvamos al contador de Costa Verde. Con un plan de cuentas, cada operación tiene un nombre y un código que permiten reconocerla en cualquier registro. Con la partida doble, cada movimiento deja un rastro en dos cuentas, y el total del debe debe igualar al del haber. Pero esa igualdad se comprueba al final, después de identificar la operación y la cuenta correcta.</p>
+<p>Como tarea de transferencia, elige tres operaciones de cualquiera de las empresas de esta semana y, para cada una, escribe el código de las cuentas que intervienen, indica en qué lado va cada una y explica por qué. Después escribe una frase que diga qué comprobación hiciste, además de la igualdad.</p>
+<p>Para revisar por dificultad: si no asignas bien los códigos, relee la sección 1 y la tabla 4; si confundes el debe y el haber de una cuenta, relee la sección 2 y el ejercicio 1; si dudas de si una operación está bien registrada aunque cuadre, relee la sección 4 y el ejercicio 4.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Plan de cuentas:</strong> catálogo ordenado de las cuentas que usa una entidad, con su código.</li>
+<li><strong>Partida doble:</strong> principio según el cual cada operación afecta al menos a dos cuentas, con igualdad entre el debe y el haber.</li>
+<li><strong>Código de cuenta:</strong> número que identifica una cuenta; su primer dígito indica la clase.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval2" data-panel="eval2" aria-labelledby="t-eval2">
+<h2 id="t-eval2">Evaluación de la sesión 02: plan de cuentas y partida doble</h2>
+<p class="meta">Semana 3 · Unidad 1. Introducción a la contabilidad · 16 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="2"></div>
+</section>
+
+<section class="pestana" id="ses03" data-panel="ses03">
+<h2>Sesión 03 · Asientos contables: simples, compuestos y de apertura</h2>
+<p class="meta">Semana 3 · Unidad 1 · Asientos simples y compuestos, apertura y operación (sesión global 09) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que la gerente de Servicios Logísticos Andes Global S. A. compra mobiliario de oficina para su nueva sede. Una parte del valor se paga en efectivo y el resto queda pendiente con el proveedor. Antes de que el contador pueda registrar la operación en el libro diario, debe responder cuatro preguntas: qué recibió la empresa, para qué lo usará, qué entregó y qué obligación adquirió. Cuando esas respuestas están claras, el asiento contable es la forma ordenada de escribirlas.</p>
+<p>Al terminar esta sesión podrás distinguir un asiento simple de uno compuesto; redactar un asiento con sus cuentas, importes, debe, haber y glosa; elaborar un asiento de apertura a partir de un balance inicial; y analizar una misma operación desde la perspectiva de dos empresas, identificando sus registros opuestos. Podrás explicar, además, que los asientos de ajuste y de cierre existen, sin desarrollarlos todavía.</p>
+<p>Para estudiar, escribe cada asiento antes de leer la solución. Antes de dar por terminado un asiento, pregúntate qué operación describe la glosa y si las cuentas corresponden a esa operación, aunque el debe y el haber ya coincidan.</p>
+</div>
+
+<h3>1. Del movimiento al asiento</h3>
+<p>En la sesión 02 viste que cada operación se registra en al menos dos cuentas, con un movimiento en el debe y otro en el haber. El asiento contable es el registro formal de esos movimientos en el libro diario. Un asiento contiene la fecha, las cuentas afectadas con sus importes, la glosa que describe la operación y la comprobación de igualdad entre el debe y el haber.</p>
+<p>La glosa es una explicación breve de lo ocurrido. Suele comenzar con «P/R», abreviatura de «por», seguida del motivo de la operación. Por ejemplo: «P/R compra de mobiliario de oficina, en parte al contado y en parte a crédito». La glosa no sustituye al documento que respalda la operación; sirve para que cualquier persona entienda el asiento sin tener que reconstruir la operación desde cero.</p>
+
+<div class="concepto">
+<h4>Asiento simple y asiento compuesto</h4>
+<p>Un asiento simple tiene una cuenta en el debe y una cuenta en el haber, por el mismo importe. Es el caso de una operación que afecta a dos partidas, como un pago de caja a un proveedor. Un asiento compuesto tiene más de dos cuentas, con al menos dos cuentas en el debe o en el haber. Aparece cuando una operación afecta a tres o más partidas, como una compra que se paga en parte al contado y en parte a crédito. En ambos casos, la suma del debe debe igualar la suma del haber. La forma del asiento cambia, pero la regla es la misma.</p>
+</div>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 6. Reglas de aumento y disminución según la naturaleza de la cuenta (convención de registro)</caption>
+<thead><tr><th>Clase de cuenta</th><th>Naturaleza</th><th>Aumenta con</th><th>Disminuye con</th></tr></thead>
+<tbody>
+<tr><td>Activo</td><td>Deudora</td><td>Debe</td><td>Haber</td></tr>
+<tr><td>Gasto</td><td>Deudora</td><td>Debe</td><td>Haber</td></tr>
+<tr><td>Pasivo</td><td>Acreedora</td><td>Haber</td><td>Debe</td></tr>
+<tr><td>Patrimonio</td><td>Acreedora</td><td>Haber</td><td>Debe</td></tr>
+<tr><td>Ingreso</td><td>Acreedora</td><td>Haber</td><td>Debe</td></tr>
+</tbody></table></div>
+
+<p>La tabla 6 es la herramienta central de esta sesión. Antes de escribir cualquier asiento, búscala y decide, para cada cuenta, si aumenta o disminuye. Después traduce ese aumento o disminución al lado correspondiente. Ese proceso de dos pasos evita la mayoría de los errores de lado.</p>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: leer un asiento simple</h4>
+<p>Supongamos que Costa Verde paga 800 dólares a un proveedor con efectivo de caja. El asiento tendrá dos cuentas. La caja es un activo deudor que disminuye, así que se registra en el haber por 800 dólares. El proveedor es un pasivo acreedor que también disminuye, así que se registra en el debe por 800 dólares. El asiento es simple y se lee así: debe en Proveedores por pagar por 800 dólares; haber en Caja por 800 dólares; glosa: P/R pago parcial a proveedor con efectivo de caja. La igualdad se cumple, y cada lado tiene su explicación en la tabla 6.</p>
+</div>
+
+<h3>2. El asiento de apertura</h3>
+<p>Cuando una empresa empieza un periodo, sus cuentas ya tienen saldos que vienen del periodo anterior. El asiento de apertura registra esos saldos en el libro diario para que el nuevo periodo parta de la situación real. Su contenido es el balance inicial: los activos van al debe, y los pasivos y el patrimonio van al haber. Por la ecuación de la sesión 01, la suma del debe y la del haber deben coincidir.</p>
+<p>Para practicarlo, tomemos la situación inicial de Comercializadora Costa Verde Cía. Ltda., que estudiaste en la sesión 01: caja de 4.500 dólares, mercaderías de 12.000 dólares, proveedores por pagar de 7.000 dólares, un préstamo de los socios de 5.000 dólares y un patrimonio de 4.500 dólares, que corresponde al capital social.</p>
+
+<div class="calc">Asiento 1. Apertura de Comercializadora Costa Verde Cía. Ltda.
+Fecha: inicio del periodo.
+Debe:  1101 Caja ........................................ 4.500
+       1104 Inventarios (mercaderías) ............. 12.000
+Haber: 2101 Proveedores por pagar ..................  7.000
+       2103 Préstamos por pagar (socios) ..........  5.000
+       3101 Capital social ........................  4.500
+Glosa: P/R saldos iniciales de la comercializadora.
+Comprobación: debe 16.500 = haber 16.500 (7.000 + 5.000 + 4.500).</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>En el asiento 1, ¿por qué el préstamo de los socios aparece en el haber, aunque lo hayan dado los propietarios de la empresa? Explica la respuesta con la naturaleza de la cuenta y con la ecuación.</p>
+<p class="ayuda">Pregúntate si la empresa debe devolver el préstamo y qué clase de cuenta es una obligación. Después compara con el capital social, que sí corresponde al patrimonio.</p>
+</div>
+
+<h3>3. Un asiento compuesto de operación</h3>
+<p>Ahora analicemos la operación de Servicios Logísticos Andes Global S. A. que se planteó en la apertura de la sesión. La empresa compra mobiliario de oficina por 3.000 dólares: paga 1.000 dólares de caja y deja 2.000 dólares pendientes con el proveedor. Antes de escribir el asiento, debes responder qué recibió la empresa y para qué lo usará.</p>
+<p>La empresa recibió mobiliario que utilizará en su propia oficina durante varios años. No lo tiene para venderlo, sino para operar. Por tanto, es un activo de uso y su cuenta es Equipo de oficina (1202), de naturaleza deudora. Entregó efectivo, que es un activo deudor que disminuye, y contrajo una obligación con el proveedor por 2.000 dólares, que es un pasivo acreedor que aumenta. La operación tiene tres cuentas, por lo que el asiento es compuesto.</p>
+
+<div class="calc">Asiento 2. Compra de mobiliario de oficina, en parte al contado y en parte a crédito (Servicios Logísticos Andes Global S. A.)
+Fecha: fecha de la compra.
+Debe:  1202 Equipo de oficina ........................ 3.000
+Haber: 1101 Caja ....................................... 1.000
+       2101 Proveedores por pagar ..................... 2.000
+Glosa: P/R compra de mobiliario de oficina, 1.000 al contado y 2.000 a crédito.
+Comprobación: debe 3.000 = haber 3.000 (1.000 + 2.000).</div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: por qué no es un gasto</h4>
+<p>Un error frecuente consiste en registrar el mobiliario como gasto del periodo, porque se pagó en parte en efectivo. El gasto disminuye el patrimonio y se consume en el periodo; el mobiliario, en cambio, seguirá prestando servicio a la empresa en los periodos siguientes. Por eso es un activo. Lo que se consumirá con el tiempo es el valor del mobiliario, y ese consumo se registrará en la unidad 3 como depreciación. Aquí solo lo anticipamos.</p>
+</div>
+
+<h3>4. La misma operación desde dos perspectivas</h3>
+<p>Muchas operaciones involucran a dos empresas. Cada una registra la operación desde su propia posición, y los asientos son opuestos en parte. Tomemos un servicio de coordinación logística que Costa Verde paga de contado a Andes Global por 1.000 dólares. Costa Verde no vende ese servicio; lo consume para su propia operación. Andes Global lo presta y recibe efectivo. Antes de escribir los asientos, identifica la perspectiva de cada empresa: una es compradora del servicio y la otra es prestadora.</p>
+
+<div class="calc">Asiento 3. Registro de Comercializadora Costa Verde Cía. Ltda. como compradora del servicio
+Debe:  5105 Servicios contratados ...................... 1.000
+Haber: 1101 Caja .................................... 1.000
+Glosa: P/R pago de contado por servicio de coordinación logística.
+Comprobación: debe 1.000 = haber 1.000.
+
+Asiento 4. Registro de Servicios Logísticos Andes Global S. A. como prestadora del servicio
+Debe:  1101 Caja ...................................... 1.000
+Haber: 4102 Ingresos por servicios .................. 1.000
+Glosa: P/R cobro de contado por servicio de coordinación logística prestado.
+Comprobación: debe 1.000 = haber 1.000.</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Compara los asientos 3 y 4. ¿Por qué el servicio es un gasto para una empresa y un ingreso para la otra? ¿Qué cuenta aparece en ambos asientos y en qué lado figura en cada uno?</p>
+<p class="ayuda">Piensa en quién recibe el servicio y quién lo presta. La cuenta de caja aparece en ambas empresas, pero en lados opuestos, porque una entrega efectivo y la otra lo recibe.</p>
+</div>
+
+<h3>5. Lo que todavía no desarrollamos: ajustes y cierre</h3>
+<p>Los asientos de ajuste se registran al final de un periodo para reconocer partidas que todavía no están registradas, como un gasto que se ha generado pero no se ha pagado, o un ingreso que se ha devengado pero no se ha cobrado. Los asientos de cierre trasladan los saldos de las cuentas de ingresos y de gastos al patrimonio, para que el periodo nuevo comience sin saldos de resultado.</p>
+<p>Ambos tipos de asiento se estudiarán en las unidades 3 y 4. Esta sesión solo te pide reconocer que existen, que también se registran en el libro diario y que no forman parte de los asientos de operación de esta semana. Es una anticipación no evaluable: no necesitas dominarla todavía.</p>
+
+<h3>6. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Antes de abrir cada solución, escribe tu asiento completo: cuentas, códigos, importes, debe y haber, glosa y comprobación. Trabaja de manera individual.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Un asiento simple</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad redactarás el asiento de un pago de Costa Verde: paga 800 dólares a un proveedor con efectivo de caja. Escribe el asiento simple con sus códigos, importes y glosa, y justifica el lado de cada cuenta.</p>
+<p class="ayuda">Pregúntate primero qué cuenta disminuye y de qué clase es. Después pregúntate si la deuda con el proveedor disminuye o aumenta.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<div class="calc">Asiento 5.
+Debe:  2101 Proveedores por pagar ...................... 800
+Haber: 1101 Caja ........................................ 800
+Glosa: P/R pago parcial a proveedor con efectivo de caja.
+Comprobación: debe 800 = haber 800.</div>
+<p>La caja es un activo deudor que disminuye, por lo que se registra en el haber. La deuda con el proveedor es un pasivo acreedor que disminuye, por lo que se registra en el debe.</p>
+<p><strong>Error frecuente:</strong> registrar la caja en el debe porque «sale dinero», o poner al proveedor en el haber porque «se paga». Un pago reduce la deuda y reduce el efectivo, así que ambos lados se invierten respecto de una compra.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un asiento simple se construye con dos preguntas: qué cuenta cambia y en qué sentido. Con la tabla 6 puedes determinar el lado de cada una.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Un asiento compuesto con equipo de reparto</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad redactarás el asiento de Servicios Logísticos Andes Global S. A. al comprar un equipo de reparto por 6.000 dólares: paga 2.000 dólares al contado con caja y deja 4.000 dólares pendientes con el proveedor. Usa la cuenta 1203 Equipo de reparto, que definiste en la sesión 02.</p>
+<p class="ayuda">Identifica qué recibe la empresa, para qué lo usará y si es un activo o un gasto. Después separa los dos medios de pago en dos cuentas distintas del haber.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<div class="calc">Asiento 6.
+Debe:  1203 Equipo de reparto ........................ 6.000
+Haber: 1101 Caja ........................................ 2.000
+       2101 Proveedores por pagar ..................... 4.000
+Glosa: P/R compra de equipo de reparto, 2.000 al contado y 4.000 a crédito.
+Comprobación: debe 6.000 = haber 6.000 (2.000 + 4.000).</div>
+<p>El equipo se usará para entregar mercaderías durante varios años, así que es un activo de uso de la empresa. La caja disminuye en 2.000 dólares y la deuda con el proveedor aumenta en 4.000 dólares. Como hay tres cuentas, el asiento es compuesto.</p>
+<p><strong>Error frecuente:</strong> poner 6.000 dólares en el haber de Proveedores. El proveedor solo ha dado crédito por 4.000 dólares; los otros 2.000 dólares se pagaron en efectivo.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>En un asiento compuesto, el lado que recibe el efecto suele ser una sola cuenta, mientras que el lado que lo origina puede dividirse en varias. Lo importante es que la suma de cada lado sea la misma.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Los aportes iniciales de Montubia</h4>
+<p class="tiempo">Tiempo orientativo: 14 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás el capital inicial de Confecciones Montubia S. A., de 35.000 dólares. Los socios hicieron dos aportes en operaciones distintas: 20.000 dólares en efectivo, que entraron a la caja, y 15.000 dólares depositados en el banco. Como son operaciones distintas, redacta un asiento para cada aporte, usa las cuentas de la tabla 4 y comprueba la igualdad de cada uno.</p>
+<p class="ayuda">Pregúntate qué recurso recibió la empresa en cada aporte y qué cuenta lo registra del lado del patrimonio. El capital es patrimonio, así que aumenta en el haber.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<div class="calc">Asiento 7. Primer aporte de los socios de Confecciones Montubia S. A., en efectivo
+Fecha: la del primer aporte.
+Debe:  1101 Caja ........................................ 20.000
+Haber: 3101 Capital social ............................. 20.000
+Glosa: P/R primer aporte de capital de los socios, en efectivo.
+Comprobación: debe 20.000 = haber 20.000.
+
+Asiento 8. Segundo aporte de los socios de Confecciones Montubia S. A., depositado en el banco
+Fecha: la del segundo aporte, que es una operación distinta.
+Debe:  1102 Bancos ..................................... 15.000
+Haber: 3101 Capital social ............................. 15.000
+Glosa: P/R segundo aporte de capital de los socios, depositado en la cuenta bancaria.
+Comprobación: debe 15.000 = haber 15.000.</div>
+<p>Cada aporte se registra en su propia operación, con su propia fecha y su propia cuenta de activo. Juntos suman 35.000 dólares de capital social. En este inicio la empresa todavía no tiene deudas, así que el balance inicial está formado solo por activos y patrimonio: 20.000 dólares en caja, 15.000 dólares en bancos y 35.000 dólares de capital. El asiento de apertura es, en realidad, la ecuación contable escrita en forma de registro.</p>
+<p><strong>Error frecuente:</strong> poner el capital social en el debe porque es lo que se aportó. El capital es patrimonio y aumenta en el haber, aunque el dinero aportado haya entrado a la caja.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La apertura no es una operación nueva: refleja lo que ya existía. Por eso sus lados se deducen de la ecuación y no de la historia de cada compra.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Perspectiva de la compradora y de la prestadora</h4>
+<p class="tiempo">Tiempo orientativo: 14 minutos · Trabajo individual</p>
+<p>En esta actividad redactarás los asientos de las dos empresas en una operación de servicio. Supongamos que, en el caso de los asientos 3 y 4, Costa Verde no paga de contado el servicio de 1.000 dólares, sino que lo recibe a crédito. Redacta el asiento de Costa Verde y el de Andes Global, e indica qué cambia respecto de los asientos 3 y 4.</p>
+<p class="ayuda">Mantén la misma perspectiva en cada asiento: la compradora consume un servicio y la prestadora lo factura. Pregúntate qué cuenta sustituye a la caja en ambos casos.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<div class="calc">Asiento 9. Costa Verde Cía. Ltda., compradora a crédito
+Debe:  5105 Servicios contratados ...................... 1.000
+Haber: 2101 Proveedores por pagar ..................... 1.000
+Glosa: P/R servicio de coordinación logística recibido a crédito.
+Comprobación: debe 1.000 = haber 1.000.
+
+Asiento 10. Servicios Logísticos Andes Global S. A., prestadora a crédito
+Debe:  1103 Cuentas por cobrar a clientes ............. 1.000
+Haber: 4102 Ingresos por servicios .................... 1.000
+Glosa: P/R servicio de coordinación logística prestado a crédito.
+Comprobación: debe 1.000 = haber 1.000.</div>
+<p>Lo que cambia es la cuenta que representa el medio de pago: en lugar de caja, Costa Verde registra una deuda con su proveedor, y Andes Global registra un derecho a cobrar. El gasto y el ingreso son los mismos, porque el servicio se prestó en el mismo periodo.</p>
+<p><strong>Error frecuente:</strong> cambiar también la cuenta de gasto o de ingreso. Si el servicio es el mismo, la naturaleza de la operación no cambia; solo cambia la forma de pago.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Una misma operación puede tener asientos opuestos en dos empresas. Cada asiento debe explicarse desde la perspectiva de quien lo registra.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Un asiento equilibrado que describe otra operación</h4>
+<p class="tiempo">Tiempo orientativo: 14 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás un error en un asiento de Montubia. El contador redactó el siguiente asiento con la glosa «P/R compra al contado de tela por 500 dólares», pero las cuentas son: Debe 2101 Proveedores por pagar, 500 dólares; Haber 1101 Caja, 500 dólares. Determina si el asiento está equilibrado, qué operación describe realmente y qué asiento debió registrarse.</p>
+<p class="ayuda">Compara las cuentas del asiento con lo que dice la glosa. Pregúntate qué pasa con la deuda con el proveedor cuando se paga y qué pasa con una compra al contado.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>El asiento está equilibrado: debe 500 y haber 500. Pero describe un pago a proveedor, no una compra al contado. Una compra al contado aumenta el inventario en el debe (1104) y disminuye la caja en el haber (1101). El asiento registrado disminuye una deuda que no existía, lo que haría parecer que Montubia pagó una deuda antigua.</p>
+<div class="calc">Asiento 11. Asiento que debió registrarse.
+Debe:  1104 Inventarios ................................ 500
+Haber: 1101 Caja ........................................ 500
+Glosa: P/R compra al contado de tela por 500 dólares.
+Comprobación: debe 500 = haber 500.</div>
+<p><strong>Comprobación:</strong> pregúntate qué recibió la empresa y qué entregó. La respuesta indica las cuentas, y la glosa debe coincidir con la operación que describen.</p>
+<p><strong>Error frecuente:</strong> aceptar el asiento porque cuadra y la glosa parece razonable. La glosa y las cuentas deben describir la misma operación; si no lo hacen, el registro está mal aunque la suma sea correcta.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La igualdad del debe y del haber no revela el tipo de operación. Para confirmarlo, compara las cuentas con la glosa y con el documento que respalda la operación.</p></div>
+</div>
+
+<h3>7. Cierre de la sesión</h3>
+<p>Volvamos a la gerente de Servicios Logísticos Andes Global. Antes de registrar la compra del mobiliario, debía saber qué recibió la empresa, para qué lo usará y qué obligación nació. Con esa información, el asiento compuesto muestra el efecto en cada cuenta y su igualdad: 3.000 dólares de activo de uso, 1.000 dólares de caja y 2.000 dólares de deuda. El asiento de apertura y el asiento de operación siguen la misma lógica: la ecuación de la sesión 01 se escribe en forma de registro.</p>
+<p>Como tarea de transferencia, escribe dos asientos para una misma operación de cualquiera de las empresas de esta semana: uno desde la perspectiva de quien vende o presta, y otro desde la de quien compra o consume. Indica en cada uno la glosa, la comprobación y la razón de cada cuenta.</p>
+<p>Para revisar por dificultad: si no sabes en qué lado va una cuenta, relee la tabla 6 y el ejemplo del pago a proveedor; si el asiento cuadra pero no te convence, relee el ejercicio 5 y compara la glosa con las cuentas; si dudas de si un movimiento es gasto o activo, relee el ejemplo del mobiliario.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Asiento:</strong> registro formal de una operación en el libro diario, con cuentas, importes, glosa y comprobación.</li>
+<li><strong>Glosa:</strong> explicación breve de la operación registrada, que suele comenzar con «P/R».</li>
+<li><strong>Asiento de apertura:</strong> registro del balance inicial con el que comienza un periodo.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval3" data-panel="eval3" aria-labelledby="t-eval3">
+<h2 id="t-eval3">Evaluación de la sesión 03: asientos contables</h2>
+<p class="meta">Semana 3 · Unidad 1. Introducción a la contabilidad · 16 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="3"></div>
+</section>
+
+<section class="pestana" id="reflexion" data-panel="reflexion">
+<h2>Reflexión</h2>
+<p class="meta">Semana 3 · Unidad 1 · Reflexiones sin respuesta correcta ni calificación</p>
+
+<h3>Un registro puede cuadrar y aun así estar mal</h3>
+<p>Es común creer que una cuenta está bien porque las sumas coinciden. Esta semana viste que la igualdad es necesaria, pero no suficiente: un préstamo puede registrarse como aporte y la ecuación seguirá en equilibrio. Piensa en alguna situación de tu vida diaria en la que alguien te haya asegurado que todo estaba bien porque los números cuadraban. ¿Qué otra información habrías necesitado para confirmarlo?</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Qué diferencia hay, en tu experiencia, entre que algo esté correcto y que solo parezca correcto?</p>
+
+<h3>La forma y la sustancia de una operación</h3>
+<p>Un contrato puede llamar «aporte» a lo que en realidad es una deuda que debe devolverse. El plan de cuentas y la partida doble no resuelven ese problema por sí solos: exigen decidir qué es la operación antes de elegir la cuenta. Esa decisión tiene consecuencias para quien registra, para quien recibe la información y para quien toma decisiones con ella.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿En qué situación has visto que el nombre que se le dio a algo no coincidía con lo que realmente ocurría, y cómo lo descubriste?</p>
+
+<h3>El código que nadie ve</h3>
+<p>Un plan de cuentas parece un detalle técnico, pero define qué se puede medir y cómo se compara la información de un periodo con otro. Si dos personas usan códigos distintos para la misma cuenta, sus registros no son comparables, aunque ambas actúen de buena fe. La coherencia del sistema es una responsabilidad compartida.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Qué ventajas y qué riesgos tiene que una organización defina reglas comunes para registrar la información, en lugar de dejar que cada persona la describa libremente?</p>
+
+<h3>Responsabilidad de quien firma el asiento</h3>
+<p>Cuando un asiento se registra en el lado equivocado, muchas veces hay una confusión sobre la naturaleza de la cuenta y no una intención de engañar. Aun así, sus efectos pueden alcanzar a socios, bancos y trabajadores que toman decisiones con esos registros. Distinguir un error técnico de una omisión deliberada exige revisar el documento que respalda la operación y preguntar qué ocurrió realmente.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Qué debería hacer una persona que descubre que un asiento ya registrado describe mal una operación, si corregirlo puede incomodar a su superior?</p>
+</section>
+
+<section class="pestana" id="ia" data-panel="ia">
+<h2>Actividad con IA</h2>
+<p class="meta">Semana 3 · Unidad 1 · Actividad individual de contraste y verificación</p>
+
+<p>Esta actividad te pide usar un asistente de inteligencia artificial para explicar la ecuación contable y después comprobar su respuesta con el material. La respuesta de la IA no es una fuente verificada por sí sola: su valor está en que la contrastes con lo estudiado.</p>
+
+<h4>1. Trabajo inicial propio</h4>
+<p>Antes de usar la IA, escribe en tres o cuatro frases qué significa la ecuación activo igual a pasivo más patrimonio, y da un ejemplo de una operación que cambie el activo sin cambiar el patrimonio. No consultes el material todavía.</p>
+
+<h4>2. Prompt exacto</h4>
+<div class="prompt">Explícame la ecuación contable activo igual a pasivo más patrimonio. Usa una pequeña empresa que compra tela a crédito y después paga una parte con efectivo. Para cada operación, indica qué partidas cambian, en qué sentido y si la ecuación sigue en equilibrio. No uses jerga sin definirla.</div>
+
+<h4>3. Contraste con el material</h4>
+<p>Compara la respuesta de la IA con tu trabajo inicial y con la tabla 2 de la sesión 01. Identifica una coincidencia, una diferencia y una frase que te parezca imprecisa o incompleta.</p>
+
+<h4>4. Verificación</h4>
+<p>Verifica al menos una afirmación. Toma la situación de la tabla 1 de la sesión 01, aplica la compra de tela a crédito por 4.000 dólares y recalcula el activo, el pasivo y el patrimonio. Comprueba si la ecuación sigue en equilibrio. Si la IA mencionó un importe o un sentido de cambio distinto, registra la diferencia.</p>
+
+<h4>5. Justificación</h4>
+<p>Escribe un párrafo que indique qué aceptaste de la respuesta, qué corregiste y qué rechazaste, con la razón de cada decisión. Debe apoyarse en la sesión 01 y no en la autoridad de la IA.</p>
+
+<h4>6. Lista de autoevaluación</h4>
+<ul>
+<li>Escribí mi respuesta inicial antes de consultar la IA.</li>
+<li>Contrasté la respuesta con la tabla 2 y con el ejercicio 4 de la sesión 01.</li>
+<li>Recalculé la ecuación después de la compra a crédito y verifiqué la igualdad.</li>
+<li>Justifiqué qué acepté, corregí y rechacé.</li>
+<li>No introduje datos personales, tributarios ni bancarios reales en el prompt.</li>
+</ul>
+</section>
+
+<section class="pestana" id="biblio" data-panel="biblio">
+<h2>Bibliografía</h2>
+<p class="meta">Referencias verificadas en APA 7 y ordenadas alfabéticamente</p>
+
+<ul class="referencias">
+<li>International Accounting Standards Board. (2018). <em>Conceptual Framework for Financial Reporting</em>. IFRS Foundation. https://www.ifrs.org/content/dam/ifrs/publications/html-standards/english/2024/issued/cf.html</li>
+<li>International Accounting Standards Board. (2024). <em>IAS 1 Presentation of Financial Statements</em>. IFRS Foundation. https://www.ifrs.org/content/dam/ifrs/publications/html-standards/english/2024/issued/ias1.html</li>
+</ul>
+
+<p class="nota">Se recomienda verificar cada referencia en Google Scholar (scholar.google.com) o en el repositorio institucional antes de citar en trabajos académicos. La vigencia de las normas contables debe confirmarse en las fuentes oficiales de cada organismo emisor, ya que Google Scholar no sustituye esa verificación.</p>
+</section>
+</main>
+
+<footer>
+  <p>Universidad de Guayaquil · Facultad de Ciencias Administrativas · Paralelo NIN-SVE-1-19 · Docente: Gabriel Francisco García Gutiérrez.</p>
+  <p>Las empresas Confecciones Montubia S. A., Comercializadora Costa Verde Cía. Ltda. y Servicios Logísticos Andes Global S. A. son ficticias. Sus cifras y hechos son supuestos didácticos.</p>
+  <p>Las puntuaciones de las evaluaciones de práctica no son notas oficiales del examen parcial.</p>
+</footer>
+
+<script>
+/* ==========================================================
+   1. Datos de evaluación (generados desde ej_semana.json)
+   ========================================================== */
+const EVALUACIONES = [{"sesion": 1, "titulo": "Evaluación de la sesión 01: la ecuación contable", "items": [{"tipo": "Teórica", "pregunta": "¿Qué expresa la ecuación contable?", "opciones": ["Patrimonio = activo + pasivo.", "Activo = pasivo − patrimonio.", "Pasivo = activo + patrimonio.", "Activo = pasivo + patrimonio."], "correcta": 3, "retro": ["Incorrecto. El patrimonio no se suma a los activos: es lo que queda después de deducir los pasivos. Revisa la sección 1.", "Incorrecto. Restar el patrimonio de los pasivos no corresponde a las definiciones del marco. Revisa la sección 1.", "Incorrecto. El pasivo es una obligación y no puede igualar a los activos más el patrimonio. Revisa la sección 1.", "CORRECTO. Los recursos (activos) tienen dos orígenes: las deudas (pasivos) y el interés de los propietarios (patrimonio)."], "general": "La ecuación expresa que todo recurso tiene un origen: deudas o interés de los propietarios. Revisa la sección 1."}, {"tipo": "Teórica", "pregunta": "En la ecuación contable, ¿qué es el patrimonio?", "opciones": ["La suma de todos los activos de la empresa.", "El efectivo disponible en los bancos.", "El interés residual de los propietarios después de deducir los pasivos.", "La utilidad obtenida en el último año."], "correcta": 2, "retro": ["Incorrecto. La suma de los activos es el total de recursos, no la parte que pertenece a los propietarios.", "Incorrecto. El efectivo es un activo; el patrimonio depende de todos los activos y de todos los pasivos.", "CORRECTO. Es la definición que usaste en la sesión 01: lo que queda después de deducir los pasivos.", "Incorrecto. La utilidad acumulada puede formar parte del patrimonio, pero no lo define por completo."], "general": "El patrimonio es un residuo: activos menos pasivos. Revisa la sección 1."}, {"tipo": "Teórica", "pregunta": "¿Por qué la ecuación contable sirve como control de coherencia?", "opciones": ["Porque demuestra que todas las cuentas están bien clasificadas.", "Porque cada operación debe mantener la igualdad entre los recursos y sus orígenes.", "Porque obliga a usar un único código para cada cuenta.", "Porque reemplaza a los documentos que respaldan la operación."], "correcta": 1, "retro": ["Incorrecto. La igualdad detecta incoherencias de totales, pero no demuestra que cada partida esté bien clasificada.", "CORRECTO. Cada recurso tiene un origen, y toda operación debe conservar esa correspondencia. Revisa las secciones 1 y 5.", "Incorrecto. El código de cuenta pertenece al plan de cuentas, no a la ecuación.", "Incorrecto. Los documentos respaldan la operación; la ecuación no los sustituye."], "general": "La igualdad controla totales, no la naturaleza de cada partida. Revisa la sección 5."}, {"tipo": "Teórica", "pregunta": "¿Qué efecto produce sobre la ecuación una compra de tela a crédito por 4.000 dólares?", "opciones": ["Aumenta el activo y el pasivo en la misma cantidad.", "Aumenta el patrimonio y no cambia el activo.", "Disminuye el pasivo y aumenta el patrimonio.", "No cambia ningún elemento de la ecuación."], "correcta": 0, "retro": ["CORRECTO. La empresa recibe un recurso y adquiere una obligación por el mismo importe; la ecuación se mantiene. Revisa la operación 1.", "Incorrecto. El patrimonio no cambia, porque la compra a crédito no es un aporte ni un resultado. Revisa la operación 1.", "Incorrecto. La compra a crédito aumenta la deuda con el proveedor; no la disminuye. Revisa la operación 1.", "Incorrecto. La compra produce un recurso nuevo y una obligación nueva. Revisa la operación 1."], "general": "Una compra a crédito aumenta activo y pasivo en la misma cantidad. Revisa la operación 1."}, {"tipo": "Teórica", "pregunta": "Un socio transfiere 5.000 dólares en efectivo a la empresa, sin obligación de devolverlos. ¿Qué elemento aumenta?", "opciones": ["El pasivo, porque el socio podría reclamar el dinero.", "El ingreso del periodo, porque entra efectivo.", "El patrimonio, porque el dinero pertenece a los propietarios.", "El gasto, porque el dinero se usará en la operación."], "correcta": 2, "retro": ["Incorrecto. Sin obligación presente de devolver recursos no hay pasivo; una posibilidad de reclamo futuro no lo crea.", "Incorrecto. Un aporte de los propietarios no es un ingreso; los ingresos provienen de la actividad de la empresa.", "CORRECTO. Sin obligación de devolver, el aporte aumenta el interés residual de los propietarios. Revisa la operación 2.", "Incorrecto. Un gasto disminuye el patrimonio, mientras que el aporte lo aumenta. Revisa la operación 2."], "general": "Un aporte sin obligación de devolverlo aumenta el patrimonio. Revisa la operación 2."}, {"tipo": "Análisis", "pregunta": "Montubia paga con caja 2.000 dólares a su proveedor de tela. ¿Qué ocurre con la ecuación?", "opciones": ["La caja y el patrimonio disminuyen en 2.000 dólares.", "La caja aumenta y el pasivo disminuye en 2.000 dólares.", "El activo no cambia, porque el dinero sale de un banco.", "La caja y el pasivo disminuyen en 2.000 dólares, y el patrimonio no cambia."], "correcta": 3, "retro": ["Incorrecto. El pago de una deuda no reduce el patrimonio; la caja sí disminuye, pero el interés residual de los socios no cambia.", "Incorrecto. La caja no aumenta: el dinero sale de la empresa para pagar la cuota.", "Incorrecto. El activo sí cambia, porque la caja disminuye al salir el dinero.", "CORRECTO. Al pagar una deuda, el activo y el pasivo bajan en la misma cantidad y el patrimonio se mantiene. Revisa la operación 3."], "general": "Pagar una deuda reduce el activo y el pasivo en la misma cantidad. Revisa la operación 3."}, {"tipo": "Análisis", "pregunta": "Montubia paga en efectivo los sueldos del mes. ¿Qué elemento de la ecuación se reduce por esa operación?", "opciones": ["El patrimonio, porque el sueldo es un gasto que disminuye el interés residual, y la caja baja en la misma cantidad.", "El pasivo, porque la empresa paga una deuda.", "El activo, porque se gasta el efectivo, y el patrimonio queda igual.", "Ningún elemento, porque el sueldo no afecta la ecuación."], "correcta": 0, "retro": ["CORRECTO. El sueldo es un gasto: disminuye el patrimonio y la caja baja en la misma cantidad. Revisa la operación 4.", "Incorrecto. El pago de sueldos no cancela una deuda registrada; es un gasto del periodo. Revisa la operación 4.", "Incorrecto. Si el activo baja y el patrimonio no lo hace, la ecuación deja de cuadrar. Revisa la operación 4.", "Incorrecto. La ecuación sí cambia: la caja disminuye y el patrimonio disminuye en la misma cantidad. Revisa la operación 4."], "general": "Un gasto reduce el patrimonio; un pago de deuda reduce el pasivo. Revisa la operación 4."}, {"tipo": "Análisis", "pregunta": "Costa Verde tiene activos por 16.500 dólares y pasivos por 12.000 dólares. ¿Cuál es su patrimonio?", "opciones": ["28.500 dólares.", "12.000 dólares.", "4.500 dólares.", "16.500 dólares."], "correcta": 2, "retro": ["Incorrecto. Sumar activos y pasivos no da el patrimonio; el patrimonio es la diferencia entre ambos.", "Incorrecto. El patrimonio no coincide con el total de pasivos; es el residuo de los activos después de deducir las deudas.", "CORRECTO. 16.500 − 12.000 = 4.500 dólares. Revisa el ejercicio 1 de esta sesión.", "Incorrecto. El total de activos representa los recursos, no el interés de los propietarios."], "general": "El patrimonio se obtiene restando los pasivos de los activos."}, {"tipo": "Análisis", "pregunta": "Servicios Logísticos Andes Global presta un servicio y lo factura a crédito por 2.500 dólares. ¿Qué elementos aumentan?", "opciones": ["La caja y el pasivo, por 2.500 dólares.", "Las cuentas por cobrar y el patrimonio, por 2.500 dólares.", "El patrimonio, por 2.500 dólares, y el gasto, por la misma cantidad.", "Solo las cuentas por cobrar, porque no hay ingreso sin cobro."], "correcta": 1, "retro": ["Incorrecto. No hay entrada de caja, porque el cliente todavía no paga, y la venta no modifica el pasivo.", "CORRECTO. El servicio genera un derecho a cobrar, que es un activo, y un ingreso que aumenta el patrimonio. Revisa la operación A de la tabla 3.", "Incorrecto. Un servicio prestado produce un ingreso, no un gasto. Revisa la tabla 3.", "Incorrecto. El ingreso se reconoce al prestar el servicio, aunque el cobro sea posterior. Revisa la distinción entre ingreso y cobro en la sección 4."], "general": "Ingreso y cobro son hechos distintos. Revisa la operación A de la tabla 3."}, {"tipo": "Análisis", "pregunta": "El mismo servicio se cobra de inmediato en efectivo. ¿Qué cambia respecto del caso a crédito?", "opciones": ["El patrimonio disminuye, porque el efectivo pertenece a los socios.", "El pasivo aumenta, porque la caja debe a los propietarios.", "La ecuación deja de cuadrar, porque el activo cambia.", "El activo cambia de composición, pero su total y el patrimonio no cambian."], "correcta": 3, "retro": ["Incorrecto. El patrimonio no disminuye por el cobro; el ingreso se reconoció al prestar el servicio y su monto es el mismo.", "Incorrecto. La caja no es un pasivo: el cobro no genera una deuda con los socios.", "Incorrecto. El activo sigue en equilibrio con el pasivo y el patrimonio; la igualdad se mantiene.", "CORRECTO. Cambia la forma del activo: la caja sustituye a la cuenta por cobrar. Revisa el ejercicio 5."], "general": "El cobro cambia la forma del activo; el ingreso ya se había reconocido. Revisa el ejercicio 5."}, {"tipo": "Análisis", "pregunta": "Montubia tiene un préstamo bancario de 6.000 dólares que aparece registrado en su balance como aporte de los socios. ¿Cuál es la evaluación correcta?", "opciones": ["El registro es correcto porque la ecuación cuadra.", "El pasivo está subestimado y el patrimonio sobrestimado, aunque la igualdad se cumpla.", "El activo debe disminuir en 6.000 dólares.", "La ecuación deja de cuadrar y el registro debe anularse."], "correcta": 1, "retro": ["Incorrecto. La igualdad es necesaria, pero no demuestra que cada partida esté bien clasificada.", "CORRECTO. El préstamo debe devolverse, por lo que es un pasivo; registrarlo como patrimonio altera ambas partidas. Revisa la sección 5 y el ejercicio 4.", "Incorrecto. El activo no cambia por la clasificación del origen: el efectivo recibido sigue en la empresa.", "Incorrecto. En este caso la ecuación sí cuadra; el error está en la naturaleza de la operación."], "general": "Una ecuación equilibrada puede tener partidas mal clasificadas. Revisa la sección 5."}, {"tipo": "Análisis", "pregunta": "Una empresa compra un camión a crédito y lo registra como si se hubiera pagado con caja. ¿Qué error es más probable?", "opciones": ["Se omite la obligación presente con el proveedor.", "Se omite el activo y se registra un ingreso.", "El patrimonio aumenta, porque el camión pertenece a los socios.", "No hay error, porque la caja y el camión suman lo mismo."], "correcta": 0, "retro": ["CORRECTO. Si la compra fue a crédito, la caja no debió disminuir y falta el pasivo con el proveedor. La ecuación puede seguir cuadrando con ese error, como viste en la sección 5. Revisa la operación 1.", "Incorrecto. El camión es un activo que debe reconocerse; no es un ingreso.", "Incorrecto. El camión es un bien que controla la empresa, y no pertenece a los socios.", "Incorrecto. La igualdad puede cumplirse aun con un error de clasificación; no garantiza que no exista."], "general": "La ecuación puede cuadrar aunque falte una obligación. Revisa la sección 5."}, {"tipo": "Teórica", "pregunta": "Según la semana 2, ¿qué es un activo?", "opciones": ["Una obligación de pagar a los proveedores.", "El interés residual de los propietarios.", "Un recurso económico presente controlado por la entidad como resultado de sucesos pasados.", "Un ingreso que aumenta el patrimonio."], "correcta": 2, "retro": ["Incorrecto. Eso describe un pasivo, que es una obligación presente de transferir recursos.", "Incorrecto. Eso describe el patrimonio, que es lo que queda después de deducir los pasivos.", "CORRECTO. Es la definición de activo que recuerdas de la semana 2 y que retomaste en la sección 1 de esta sesión.", "Incorrecto. Un ingreso es un aumento del patrimonio por la actividad de la empresa, no un recurso controlado."], "general": "Activo es un recurso controlado que surge de sucesos pasados. Revisa la sección 1 de esta sesión."}, {"tipo": "Análisis", "pregunta": "La gerencia de Montubia aprobó un presupuesto para comprar maquinaria el próximo año. No hay contrato firmado, no se ha entregado nada y no se ha pagado. ¿Qué corresponde registrar?", "opciones": ["Un activo por el valor previsto de la maquinaria.", "Ni activo ni pasivo, porque no existe un recurso controlado ni una obligación presente.", "Un pasivo por el valor de la compra prevista.", "Un gasto por el valor de la compra prevista."], "correcta": 1, "retro": ["Incorrecto. El presupuesto no da control sobre un recurso, porque la empresa todavía no tiene la maquinaria.", "CORRECTO. Sin recurso controlado ni obligación presente nacida de un suceso pasado, no hay activo ni pasivo. Revisa la sección 1.", "Incorrecto. Un pasivo requiere una obligación presente, y un presupuesto aprobado no la crea.", "Incorrecto. Un gasto requiere una transacción que disminuya el patrimonio, y aquí no ha ocurrido ninguna."], "general": "Un presupuesto no genera activo ni pasivo. Revisa la sección 1."}, {"tipo": "Teórica", "pregunta": "¿Por qué un ingreso no es lo mismo que un cobro?", "opciones": ["El ingreso se reconoce al prestar el servicio o entregar el bien, aunque el cobro llegue después.", "El ingreso solo existe cuando el cliente paga en efectivo.", "El cobro siempre crea un ingreso del periodo.", "Los ingresos no afectan al patrimonio porque se cobran en la caja."], "correcta": 0, "retro": ["CORRECTO. El ingreso aumenta el patrimonio cuando la empresa cumple su parte; el cobro es una entrada de efectivo que puede ocurrir antes o después. Revisa la operación A de la tabla 3.", "Incorrecto. El cobro no es la condición del ingreso: un servicio prestado a crédito también genera ingreso.", "Incorrecto. El cobro de un derecho ya registrado reduce la cuenta por cobrar; no crea un ingreso nuevo.", "Incorrecto. Los ingresos aumentan el patrimonio. Revisa la sección 4."], "general": "El ingreso depende de la prestación; el cobro, de la entrada de efectivo. Revisa la sección 4."}, {"tipo": "Análisis", "pregunta": "Montubia, después de recibir un préstamo bancario de 6.000 dólares en efectivo, tiene activos por 41.000 dólares y un patrimonio de 35.000 dólares. ¿Cuánto suman sus pasivos?", "opciones": ["76.000 dólares.", "41.000 dólares.", "35.000 dólares.", "6.000 dólares."], "correcta": 3, "retro": ["Incorrecto. Sumar activos y patrimonio no corresponde a la ecuación; los pasivos se obtienen por diferencia.", "Incorrecto. Si los pasivos fueran 41.000 dólares, el patrimonio sería cero.", "Incorrecto. Esa cifra es el patrimonio, no los pasivos.", "CORRECTO. Pasivo = activo − patrimonio = 41.000 − 35.000 = 6.000 dólares. Revisa la sección 1."], "general": "El pasivo se obtiene restando el patrimonio de los activos. Revisa la sección 1."}]}, {"sesion": 2, "titulo": "Evaluación de la sesión 02: plan de cuentas y partida doble", "items": [{"tipo": "Teórica", "pregunta": "¿Qué indica el primer dígito del código de una cuenta en el plan didáctico?", "opciones": ["La clase de la cuenta: activo, pasivo, patrimonio, ingreso o gasto.", "El número de la cuenta dentro de su grupo.", "La fecha en que se abrió la cuenta.", "El importe máximo que puede registrar la cuenta."], "correcta": 0, "retro": ["CORRECTO. En el plan didáctico, 1 es activo, 2 pasivo, 3 patrimonio, 4 ingreso y 5 gasto. Revisa la sección 1.", "Incorrecto. El número dentro del grupo se encuentra en los dos últimos dígitos, no en el primero.", "Incorrecto. El código no registra fechas; la fecha corresponde al asiento.", "Incorrecto. El plan no limita importes; cada cuenta sirve para cualquier monto."], "general": "El primer dígito indica la clase de la cuenta. Revisa la sección 1."}, {"tipo": "Teórica", "pregunta": "¿Qué cuenta corresponde al código 1202?", "opciones": ["Caja, por ser una cuenta de efectivo.", "Equipo de oficina, un activo no corriente.", "Proveedores por pagar, un pasivo.", "Ventas, un ingreso."], "correcta": 1, "retro": ["Incorrecto. La caja tiene el código 1101.", "CORRECTO. 1 es activo, 12 es activo no corriente y 02 es equipo de oficina. Revisa la tabla 4.", "Incorrecto. Los proveedores pertenecen al pasivo, con códigos que empiezan por 2.", "Incorrecto. Las ventas son un ingreso, con códigos que empiezan por 4."], "general": "Se lee el código por clase, grupo y número. Revisa la tabla 4."}, {"tipo": "Teórica", "pregunta": "¿Qué es la partida doble?", "opciones": ["Registrar cada operación dos veces en la misma cuenta.", "Registrar cada operación solo cuando se cobra en efectivo.", "Afectar al menos dos cuentas, de modo que el total del debe iguale el total del haber.", "Usar dos planes de cuentas diferentes para cada empresa."], "correcta": 2, "retro": ["Incorrecto. Repetir el mismo movimiento en una sola cuenta no es partida doble; cada operación afecta cuentas distintas.", "Incorrecto. La partida doble no depende del cobro: toda operación se registra en al menos dos cuentas.", "CORRECTO. Así se define el principio: al menos dos cuentas y la igualdad entre el debe y el haber. Revisa la sección 2.", "Incorrecto. Cada entidad usa un plan de cuentas; la partida doble es un principio de registro."], "general": "Partida doble: al menos dos cuentas y debe igual a haber. Revisa la sección 2."}, {"tipo": "Análisis", "pregunta": "Montubia compra tela al contado por 1.200 dólares. ¿Qué cuentas se afectan y en qué lado?", "opciones": ["Debe en Caja y haber en Inventarios.", "Debe en Proveedores por pagar y haber en Caja.", "Debe en Inventarios y haber en Proveedores por pagar.", "Debe en Inventarios y haber en Caja."], "correcta": 3, "retro": ["Incorrecto. Así se registraría una salida de tela y una entrada de dinero; ocurre lo contrario en esta compra.", "Incorrecto. Pagar un proveedor no corresponde a una compra al contado: no hay deuda que se reduzca.", "Incorrecto. Una compra al contado no crea deuda con el proveedor; esa cuenta aparece solo en compras a crédito.", "CORRECTO. El inventario aumenta en el debe y la caja disminuye en el haber. Revisa la operación M1 de la tabla 5."], "general": "La compra al contado aumenta inventario y disminuye caja. Revisa la tabla 5."}, {"tipo": "Análisis", "pregunta": "En una compra a crédito de 2.500 dólares, ¿en qué lado de Proveedores por pagar se registra la operación?", "opciones": ["En el debe, porque la deuda disminuye.", "No se registra en Proveedores, porque no hay salida de caja.", "En ambos lados por mitad.", "En el haber, porque la deuda aumenta."], "correcta": 3, "retro": ["Incorrecto. La deuda disminuye en el debe solo cuando se paga; aquí se origina una nueva deuda.", "Incorrecto. La deuda sí se registra aunque no haya salida de caja: la compra genera la obligación.", "Incorrecto. Un importe no se divide en mitades; cada movimiento va en un solo lado de cada cuenta.", "CORRECTO. Proveedores por pagar es una cuenta acreedora: su aumento va en el haber. Revisa la operación M2 de la tabla 5."], "general": "Un pasivo aumenta en el haber. Revisa la tabla 5."}, {"tipo": "Análisis", "pregunta": "Costa Verde paga 800 dólares a un proveedor con efectivo de caja. ¿En qué lado de Proveedores por pagar se registra el pago?", "opciones": ["En el haber, porque la caja disminuye.", "En el haber, porque la deuda aumenta.", "En el debe, porque la deuda disminuye.", "No se registra en Proveedores, porque el pago se hizo en caja."], "correcta": 2, "retro": ["Incorrecto. El haber de la caja corresponde a la cuenta de caja; Proveedores requiere su propio análisis.", "Incorrecto. Aumentar la deuda ocurre con una compra a crédito, no con un pago.", "CORRECTO. Proveedores por pagar es acreedora: su disminución va en el debe. Revisa la operación M3 de la tabla 5.", "Incorrecto. El pago sí afecta a Proveedores, porque reduce la obligación con el proveedor."], "general": "Un pago reduce el pasivo y se registra en el debe. Revisa la tabla 5."}, {"tipo": "Análisis", "pregunta": "Servicios Logísticos Andes Global paga 350 dólares de servicios básicos con efectivo. ¿Qué código usa el gasto?", "opciones": ["5101, porque es un gasto de sueldos.", "5103, porque corresponde a servicios básicos.", "1101, porque es el efectivo que se usa.", "4102, porque es un servicio."], "correcta": 1, "retro": ["Incorrecto. El código 5101 corresponde a sueldos y beneficios.", "CORRECTO. Los servicios básicos corresponden a la cuenta 5103, de naturaleza deudora. Revisa la tabla 4.", "Incorrecto. La caja tiene código 1101, pero es la cuenta que entrega el efectivo, no el gasto.", "Incorrecto. El código 4102 es ingresos por servicios; la empresa los cobra, no los paga."], "general": "Cada gasto tiene su propio código de cuenta. Revisa la tabla 4."}, {"tipo": "Análisis", "pregunta": "Costa Verde cobra 600 dólares a un cliente que le debía esa cantidad. ¿Qué movimiento corresponde?", "opciones": ["Debe en Caja y haber en Cuentas por cobrar a clientes.", "Debe en Cuentas por cobrar a clientes y haber en Caja.", "Debe en Caja y haber en Ventas.", "Debe en Ventas y haber en Caja."], "correcta": 0, "retro": ["CORRECTO. El efectivo entra en el debe de Caja y el derecho a cobrar disminuye en el haber. Revisa la operación (b) del ejercicio 3.", "Incorrecto. Ese movimiento aumentaría el derecho a cobrar y sacaría dinero de la caja; el cobro hace lo contrario.", "Incorrecto. El cobro no es una nueva venta: el ingreso se reconoció antes.", "Incorrecto. Registrar una salida de caja no describe un cobro."], "general": "El cobro aumenta la caja y disminuye las cuentas por cobrar. Revisa el ejercicio 3."}, {"tipo": "Análisis", "pregunta": "Montubia registra una venta al contado con debe en Caja y haber en Sueldos y beneficios. ¿Qué error existe?", "opciones": ["Ninguno, porque el registro cuadra.", "La cuenta del haber debe ser Ventas, un ingreso de naturaleza acreedora.", "La cuenta del debe debe ser Proveedores por pagar.", "La venta debe registrarse en el debe de Sueldos y beneficios."], "correcta": 1, "retro": ["Incorrecto. El registro cuadra, pero la igualdad no revela la clase de la cuenta usada.", "CORRECTO. La venta es un ingreso, de naturaleza acreedora; debe ir en el haber de 4101 Ventas. Revisa el ejercicio 4.", "Incorrecto. La caja, no proveedores, recibe el efectivo cobrado en la venta.", "Incorrecto. Sueldos y beneficios es un gasto deudor; no es el lugar donde se registra un ingreso."], "general": "Un registro puede cuadrar y tener una cuenta equivocada. Revisa el ejercicio 4."}, {"tipo": "Análisis", "pregunta": "Costa Verde paga un arriendo de 400 dólares con transferencia desde su cuenta bancaria, en lugar de hacerlo con caja. ¿Qué cambia en el asiento?", "opciones": ["El haber pasa de Caja a Bancos, y el debe sigue en Arriendos.", "El debe pasa a Bancos y el haber sigue en Caja.", "El gasto cambia a pasivo, porque aún no se pagó.", "Nada cambia, porque ambos son efectivo."], "correcta": 0, "retro": ["CORRECTO. Solo cambia la cuenta de la que sale el dinero: Bancos en lugar de Caja. El gasto sigue en el debe. Revisa el ejercicio 5.", "Incorrecto. El dinero sale de la cuenta bancaria, por lo que Bancos va en el haber y no en el debe.", "Incorrecto. El pago ya se realizó; no hay pasivo nuevo ni cambio en la clase del gasto.", "Incorrecto. Caja y Bancos son cuentas distintas, y el registro debe usar la cuenta por la que sale el dinero."], "general": "El medio de pago cambia la cuenta de efectivo, no la naturaleza del gasto. Revisa el ejercicio 5."}, {"tipo": "Análisis", "pregunta": "¿Qué código corresponde a un vehículo de reparto que la empresa usará durante varios años?", "opciones": ["5105, porque es un servicio contratado.", "2104, porque es una deuda.", "1103, porque es un derecho a cobrar.", "1203, por ser un activo no corriente de uso."], "correcta": 3, "retro": ["Incorrecto. El vehículo no es un servicio contratado, sino un recurso de uso de la empresa.", "Incorrecto. El vehículo no es una deuda; la deuda sería un pasivo separado.", "Incorrecto. El vehículo no genera un derecho a cobrar; ese derecho se refiere a clientes.", "CORRECTO. Es un activo de uso: grupo 12 y número 03. Revisa la sección 1 y el ejercicio 2."], "general": "El código se asigna según la clase y el grupo del recurso. Revisa el ejercicio 2."}, {"tipo": "Análisis", "pregunta": "¿En qué cuenta del plan debe registrarse un interés pagado durante el año por un préstamo bancario?", "opciones": ["1103, porque el banco es un cliente.", "2103, porque el préstamo es un pasivo.", "5104, porque es un gasto por intereses.", "4102, porque es un ingreso por servicios."], "correcta": 2, "retro": ["Incorrecto. El banco no es un cliente: la empresa le debe dinero.", "Incorrecto. La cuenta 2103 registra el préstamo, no el interés que se paga por él.", "CORRECTO. El interés es un gasto del periodo: clase 5, grupo 51 y cuenta 04. Revisa la tabla 4.", "Incorrecto. Un ingreso por servicios no se relaciona con el interés que paga la empresa."], "general": "Los intereses pagados son gastos del periodo. Revisa la tabla 4."}, {"tipo": "Teórica", "pregunta": "¿Qué demuestra que el debe y el haber de un asiento sean iguales?", "opciones": ["Que todas las cuentas están bien clasificadas.", "Que el importe de cada cuenta es el correcto según el documento.", "Que la suma de los movimientos está bien hecha, aunque las cuentas podrían no ser las adecuadas.", "Que el asiento corresponde al periodo correcto."], "correcta": 2, "retro": ["Incorrecto. La igualdad no prueba la clasificación; una cuenta equivocada puede cuadrar.", "Incorrecto. La igualdad no verifica documentos; los importes se comprueban con el respaldo.", "CORRECTO. Solo confirma la aritmética del registro; la clase de cuenta y el periodo deben revisarse aparte. Revisa la sección 4.", "Incorrecto. El periodo depende de la fecha del asiento y del documento, no de la igualdad."], "general": "La igualdad prueba la suma, no la clasificación. Revisa la sección 4."}, {"tipo": "Análisis", "pregunta": "Servicios Logísticos Andes Global cobra de contado un servicio y la caja aumenta en 1.000 dólares. ¿Cuál es el asiento?", "opciones": ["Debe en 4102 Ingresos por servicios y haber en 1101 Caja.", "Debe en 1101 Caja y haber en 5105 Servicios contratados.", "Debe en 1101 Caja y haber en 2101 Proveedores por pagar.", "Debe en 1101 Caja y haber en 4102 Ingresos por servicios."], "correcta": 3, "retro": ["Incorrecto. Así se registraría un cobro que disminuye la caja, lo que no ocurre aquí.", "Incorrecto. 5105 es un gasto por servicios contratados; Andes Global presta el servicio, no lo contrata.", "Incorrecto. Un cobro de contado no aumenta la deuda con proveedores.", "CORRECTO. La caja aumenta en el debe, porque entra efectivo, y el ingreso por servicios se registra en el haber, porque el servicio ya fue prestado. Revisa el ejercicio 5 de la sesión 01."], "general": "Un cobro de contado por servicio: caja en el debe e ingreso en el haber. Revisa el ejercicio 5 de la sesión 01."}, {"tipo": "Análisis", "pregunta": "Un registro cuadra, pero una cuenta de gasto aparece en lugar de la cuenta de ingreso correcta. ¿Qué se puede concluir?", "opciones": ["Que la igualdad no basta para confirmar que el registro es correcto.", "Que el registro está bien porque el debe iguala al haber.", "Que el error solo afecta a la caja.", "Que el registro debe anularse en todos los casos."], "correcta": 0, "retro": ["CORRECTO. La igualdad es necesaria, pero la clasificación debe verificarse con la operación y el documento. Revisa la sección 4 y el ejercicio 4.", "Incorrecto. Que el registro iguale no demuestra que las cuentas sean correctas.", "Incorrecto. Un error de cuenta puede afectar al ingreso, al gasto y al resultado, no solo a la caja.", "Incorrecto. No siempre debe anularse; muchas veces basta con corregir la cuenta equivocada."], "general": "La igualdad no revela una cuenta equivocada. Revisa la sección 4."}, {"tipo": "Análisis", "pregunta": "Un asiento tiene debe en Inventarios por 500 dólares y haber en Proveedores por pagar por 500 dólares, con la glosa «compra de tela a crédito». ¿Cuál es la evaluación?", "opciones": ["Es incorrecto, porque el inventario debe ir en el haber.", "Es correcto, porque la compra a crédito aumenta inventario en el debe y proveedores en el haber.", "Es incorrecto, porque la compra a crédito debe usar caja.", "Es correcto, porque el debe y el haber coinciden, sin importar la glosa."], "correcta": 1, "retro": ["Incorrecto. El inventario aumenta, y su aumento va en el debe.", "CORRECTO. Es la misma lógica de la compra a crédito de la operación M2 de la tabla 5. Revisa esa operación.", "Incorrecto. Una compra a crédito no usa caja; la caja solo interviene cuando hay pago.", "Incorrecto. La glosa y las cuentas deben describir la misma operación; la igualdad no basta."], "general": "La glosa y las cuentas deben describir la misma operación. Revisa la tabla 5."}]}, {"sesion": 3, "titulo": "Evaluación de la sesión 03: asientos contables", "items": [{"tipo": "Teórica", "pregunta": "¿Qué diferencia hay entre un asiento simple y un asiento compuesto?", "opciones": ["El simple tiene más cuentas que el compuesto.", "El compuesto no requiere igualdad entre el debe y el haber.", "El simple tiene dos cuentas, y el compuesto tiene tres o más.", "La diferencia depende de la fecha del asiento."], "correcta": 2, "retro": ["Incorrecto. Es al revés: el compuesto es el que tiene más cuentas.", "Incorrecto. Todo asiento, simple o compuesto, debe cumplir la igualdad entre el debe y el haber.", "CORRECTO. El simple tiene dos cuentas y el compuesto tres o más, siempre con igualdad. Revisa la sección 1.", "Incorrecto. La fecha no determina el tipo de asiento; lo define el número de cuentas."], "general": "El tipo de asiento depende del número de cuentas. Revisa la sección 1."}, {"tipo": "Teórica", "pregunta": "¿Qué información debe explicar la glosa de un asiento?", "opciones": ["Una explicación breve de la operación que describe lo ocurrido.", "El nombre del banco donde la empresa tiene su cuenta.", "Solo el código de la cuenta de caja.", "El total de la ecuación contable de la empresa."], "correcta": 0, "retro": ["CORRECTO. La glosa explica en pocas palabras la operación registrada. Revisa la sección 1.", "Incorrecto. El banco puede aparecer en las cuentas, pero la glosa describe la operación completa.", "Incorrecto. La glosa describe la operación completa, no solo una cuenta.", "Incorrecto. La ecuación no se escribe en la glosa; el registro describe la operación."], "general": "La glosa explica la operación. Revisa la sección 1."}, {"tipo": "Análisis", "pregunta": "Servicios Logísticos Andes Global compra mobiliario por 3.000 dólares: paga 1.000 con caja y deja 2.000 con el proveedor. ¿Qué cuenta va en el debe?", "opciones": ["1101 Caja, porque sale efectivo.", "2101 Proveedores por pagar, porque hay deuda.", "5101 Sueldos y beneficios, porque es una compra.", "1202 Equipo de oficina, porque es un activo de uso."], "correcta": 3, "retro": ["Incorrecto. La caja sale: su disminución va en el haber.", "Incorrecto. La deuda aumenta: su aumento va en el haber.", "Incorrecto. El mobiliario no es un sueldo ni un gasto del periodo.", "CORRECTO. El mobiliario es un activo de uso y aumenta en el debe. Revisa el asiento 2."], "general": "El activo de uso aumenta en el debe. Revisa el asiento 2."}, {"tipo": "Análisis", "pregunta": "Costa Verde paga 800 dólares a un proveedor con efectivo de caja. ¿Cuál es el asiento?", "opciones": ["Debe en Caja y haber en Proveedores por pagar.", "Debe en Proveedores por pagar y haber en Caja.", "Debe en Inventarios y haber en Caja.", "Debe en Caja y haber en Inventarios."], "correcta": 1, "retro": ["Incorrecto. Eso registraría una deuda nueva, lo contrario de un pago.", "CORRECTO. La deuda disminuye en el debe y la caja disminuye en el haber. Revisa el asiento 5.", "Incorrecto. Una compra al contado aumenta inventario, pero el pago de una deuda no lo hace.", "Incorrecto. La caja aumenta en el debe solo si recibe efectivo, lo que no ocurre aquí."], "general": "Un pago a proveedor debita la deuda y acredita la caja. Revisa el asiento 5."}, {"tipo": "Análisis", "pregunta": "En el asiento de apertura de una empresa, ¿en qué lado se registra el capital social?", "opciones": ["En el debe, porque es dinero aportado.", "En el haber, porque es patrimonio.", "En el debe, porque la caja lo recibió.", "No se registra en el asiento de apertura."], "correcta": 1, "retro": ["Incorrecto. Que el dinero haya entrado a la caja no cambia la clasificación del capital; la caja va en el debe y el capital en el haber.", "CORRECTO. El patrimonio aumenta en el haber. Revisa el asiento 1 y el ejercicio 3.", "Incorrecto. La caja, no el capital, va en el debe.", "Incorrecto. El capital social forma parte del balance inicial y debe registrarse en la apertura."], "general": "El patrimonio va en el haber del asiento de apertura. Revisa el asiento 1."}, {"tipo": "Análisis", "pregunta": "Montubia registra el primer aporte de sus socios: 20.000 dólares en efectivo que entran a la caja, en una operación propia. ¿Cuál es el asiento correcto?", "opciones": ["Debe en Capital social y haber en Caja, por 20.000 dólares.", "Debe en Caja y haber en Préstamos por pagar, por 20.000 dólares.", "Debe en Caja y haber en Ingresos por ventas, por 20.000 dólares.", "Debe en Caja y haber en Capital social, por 20.000 dólares."], "correcta": 3, "retro": ["Incorrecto. Así se invertirían los lados: la caja aumenta en el debe y el capital, en el haber.", "Incorrecto. El aporte de los socios no crea una deuda; es capital, que pertenece a los propietarios.", "Incorrecto. Un aporte de capital no es un ingreso; los ingresos provienen de la actividad. Revisa el asiento 7.", "CORRECTO. La caja aumenta en el debe, porque entra efectivo, y el capital social aumenta en el haber, porque es patrimonio. Revisa el asiento 7."], "general": "El aporte en efectivo de los socios se registra en Caja (debe) y Capital social (haber). Revisa el asiento 7."}, {"tipo": "Análisis", "pregunta": "Un gasto de servicios básicos se paga con caja. ¿Qué cuenta va en el debe?", "opciones": ["5103 Servicios básicos.", "1101 Caja.", "2101 Proveedores por pagar.", "4101 Ventas."], "correcta": 0, "retro": ["CORRECTO. El gasto aumenta en el debe y la caja disminuye en el haber. Revisa la tabla 6.", "Incorrecto. La caja sale: su disminución se registra en el haber.", "Incorrecto. En un pago de contado de servicios no hay deuda con proveedores.", "Incorrecto. Una venta es un ingreso y no corresponde al pago de un servicio."], "general": "El gasto pagado al contado aumenta en el debe. Revisa la tabla 6."}, {"tipo": "Análisis", "pregunta": "Costa Verde cobra 600 dólares a un cliente. ¿En qué lado de Cuentas por cobrar a clientes se registra el cobro?", "opciones": ["En el debe, porque el cliente paga.", "No aparece, porque el cobro se registra solo en Ventas.", "En el haber, porque el derecho a cobrar disminuye.", "En ambos lados por igual."], "correcta": 2, "retro": ["Incorrecto. El debe de cuentas por cobrar aumentaría el derecho; cuando el cliente paga, el derecho disminuye.", "Incorrecto. El cobro sí afecta a cuentas por cobrar, porque reduce el derecho.", "CORRECTO. El activo deudor disminuye en el haber, y la caja, en el debe. Revisa la operación (b) del ejercicio 3 de la sesión 02.", "Incorrecto. Un mismo importe no se registra en ambos lados de la misma cuenta."], "general": "El cobro reduce las cuentas por cobrar. Revisa la sesión 02."}, {"tipo": "Análisis", "pregunta": "Servicios Logísticos Andes Global presta un servicio y lo cobra de contado. ¿Qué asiento registra la empresa?", "opciones": ["Debe en Ingresos por servicios y haber en Caja.", "Debe en Caja y haber en Servicios contratados.", "Debe en Servicios contratados y haber en Caja.", "Debe en Caja y haber en Ingresos por servicios."], "correcta": 3, "retro": ["Incorrecto. Así se registraría una disminución de la caja y del ingreso, lo contrario de un cobro.", "Incorrecto. Servicios contratados es un gasto de la empresa que compra el servicio, no de la que lo presta.", "Incorrecto. Esa es la perspectiva de la compradora, que paga el servicio.", "CORRECTO. La caja aumenta en el debe y el ingreso en el haber. Revisa el asiento 4."], "general": "Quien presta el servicio registra el ingreso en el haber. Revisa el asiento 4."}, {"tipo": "Análisis", "pregunta": "Costa Verde compra mercaderías a crédito por 1.500 dólares. ¿Cuál es el asiento?", "opciones": ["Debe en Proveedores por pagar y haber en Inventarios.", "Debe en Inventarios y haber en Proveedores por pagar, por 1.500 dólares.", "Debe en Inventarios y haber en Caja.", "Debe en Servicios contratados y haber en Proveedores por pagar."], "correcta": 1, "retro": ["Incorrecto. Así se reduciría una deuda y se disminuiría el inventario, lo contrario de una compra.", "CORRECTO. El inventario aumenta en el debe y la deuda aumenta en el haber. Revisa la tabla 6.", "Incorrecto. La compra a crédito no usa caja; la caja solo interviene al pagar.", "Incorrecto. Las mercaderías son inventario, no un gasto, porque se revenderán."], "general": "Compra a crédito de mercaderías: inventario en el debe y proveedores en el haber. Revisa la tabla 6."}, {"tipo": "Teórica", "pregunta": "¿Qué se anticipa, sin desarrollarlo, sobre los asientos de ajuste?", "opciones": ["Que sustituyen a los asientos de operación del periodo.", "Que solo existen en las empresas de servicios.", "Que se usan para reconocer partidas que aún no se han registrado al final del periodo.", "Que no tienen debe ni haber."], "correcta": 2, "retro": ["Incorrecto. Los ajustes no sustituyen a las operaciones: se agregan al final del periodo.", "Incorrecto. Los ajustes pueden existir en cualquier empresa que tenga partidas pendientes de reconocer.", "CORRECTO. Así se anticipa su función; su desarrollo corresponde a las unidades 3 y 4. Revisa la sección 5.", "Incorrecto. Todo asiento tiene debe y haber, incluidos los de ajuste."], "general": "Los ajustes se estudian en las unidades 3 y 4. Revisa la sección 5."}, {"tipo": "Teórica", "pregunta": "¿En qué lado aumenta una cuenta de ingreso?", "opciones": ["En el haber.", "En el debe.", "En ambos lados a la vez.", "Depende del saldo de la caja."], "correcta": 0, "retro": ["CORRECTO. Los ingresos son acreedores: aumentan en el haber. Revisa la tabla 6.", "Incorrecto. El debe disminuye un ingreso, no lo aumenta.", "Incorrecto. Una cuenta no aumenta en ambos lados a la vez.", "Incorrecto. El saldo de caja no determina la naturaleza de un ingreso."], "general": "Los ingresos aumentan en el haber. Revisa la tabla 6."}, {"tipo": "Análisis", "pregunta": "Un asiento tiene debe en Proveedores por pagar por 500 dólares y haber en Caja por 500 dólares, con la glosa «compra al contado de tela». ¿Qué error existe?", "opciones": ["La glosa no describe la operación que registran las cuentas.", "Ninguno, porque el debe y el haber son iguales.", "La caja debió ir en el debe.", "Proveedores debió ir en el haber."], "correcta": 0, "retro": ["CORRECTO. El asiento cuadra, pero describe un pago a proveedor y no una compra de contado. Revisa el ejercicio 5.", "Incorrecto. La igualdad no garantiza que la glosa y las cuentas coincidan.", "Incorrecto. En una compra al contado la caja va en el haber, como ya está registrada.", "Incorrecto. Proveedores por pagar en el debe corresponde a un pago; en la compra de contado no debía intervenir."], "general": "La glosa y las cuentas deben describir la misma operación. Revisa el ejercicio 5."}, {"tipo": "Análisis", "pregunta": "Costa Verde recibe un servicio de coordinación logística a crédito por 1.000 dólares. ¿Qué asiento registra?", "opciones": ["Debe en Cuentas por cobrar y haber en Ingresos por servicios.", "Debe en Servicios contratados y haber en Caja.", "Debe en Servicios contratados y haber en Proveedores por pagar.", "Debe en Proveedores por pagar y haber en Servicios contratados."], "correcta": 2, "retro": ["Incorrecto. Esa es la perspectiva de la empresa que presta el servicio y lo factura.", "Incorrecto. Un pago de caja no corresponde a una compra a crédito.", "CORRECTO. El gasto aumenta en el debe y la deuda con el proveedor en el haber. Revisa el ejercicio 4.", "Incorrecto. Esa operación reduciría una deuda y el gasto, lo contrario de una compra."], "general": "La compradora a crédito registra gasto y deuda. Revisa el ejercicio 4."}, {"tipo": "Análisis", "pregunta": "¿Por qué no basta con la fecha y el importe en un asiento?", "opciones": ["Porque la fecha basta para saber qué operación se registró.", "Porque el importe sin cuenta tiene valor por sí solo.", "Porque la fecha reemplaza al documento de respaldo.", "Porque el asiento debe explicar qué operación se registró y de qué documento proviene."], "correcta": 3, "retro": ["Incorrecto. La fecha indica cuándo ocurrió la operación, pero no qué ocurrió.", "Incorrecto. El importe necesita una cuenta y una explicación para tener sentido contable.", "Incorrecto. La fecha no sustituye al documento que respalda la operación.", "CORRECTO. La glosa y el respaldo permiten reconocer la operación. Revisa la sección 1."], "general": "El asiento debe explicar la operación y su respaldo. Revisa la sección 1."}, {"tipo": "Análisis", "pregunta": "En el asiento de la compra de servicio a crédito, ¿qué cuenta de Costa Verde aparece en el haber?", "opciones": ["Caja, porque la empresa pagó.", "Proveedores por pagar, porque el servicio quedó a crédito.", "Servicios contratados, porque el servicio se usó.", "Ingresos por servicios, porque es una compra."], "correcta": 1, "retro": ["Incorrecto. No hay pago de caja: el servicio quedó a crédito.", "CORRECTO. La deuda con el proveedor aumenta en el haber. Revisa el asiento 9.", "Incorrecto. Servicios contratados es el gasto, que va en el debe.", "Incorrecto. Ingresos por servicios pertenece a la empresa que presta el servicio, no a la que lo compra."], "general": "El gasto se debita y la deuda se acredita. Revisa el asiento 9."}]}];
+
+/* ==========================================================
+   2. Navegación por pestañas
+   ========================================================== */
+(function () {
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('[data-panel]'));
+
+  function mostrar(id, enfocar) {
+    panels.forEach(p => { p.hidden = (p.dataset.panel !== id); });
+    tabs.forEach(t => {
+      const activa = t.dataset.target === id;
+      t.setAttribute('aria-selected', activa ? 'true' : 'false');
+      t.tabIndex = activa ? 0 : -1;
+      if (activa && enfocar) t.focus();
+    });
+    const panel = document.querySelector('[data-panel="' + id + '"]');
+    if (panel) {
+      const titulo = panel.querySelector('h2');
+      if (titulo) { titulo.setAttribute('tabindex', '-1'); titulo.focus({ preventScroll: true }); }
+    }
+    try { history.replaceState(null, '', '#' + id); } catch (e) { /* vista previa sin permiso para cambiar la URL: se ignora */ }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => mostrar(t.dataset.target, false));
+    t.addEventListener('keydown', e => {
+      let j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (j !== null) { e.preventDefault(); tabs[j].focus(); mostrar(tabs[j].dataset.target, true); }
+    });
+  });
+
+  const inicial = (location.hash || '').replace('#', '');
+  mostrar(panels.some(p => p.dataset.panel === inicial) ? inicial : 'intro', false);
+})();
+
+/* ==========================================================
+   3. Evaluaciones de práctica
+   Cada evaluación se dibuja desde EVALUACIONES. Las respuestas
+   se guardan solo en memoria de la pestaña mientras esté abierta.
+   ========================================================== */
+(function () {
+  const LETRAS = ['a', 'b', 'c', 'd'];
+
+  function dibujar(ev, raiz) {
+    const n = ev.items.length;
+    let respuestas = Array(n).fill(null);
+    const nombre = 'ev' + ev.sesion + '-';
+
+    raiz.innerHTML = '';
+
+    // 3.1 Cabecera
+    const cab = document.createElement('div');
+    cab.className = 'cabecera-eval';
+    cab.innerHTML = '<p class="nota-practica">' + (ev.diagnostica
+      ? 'Esta prueba es diagnóstica y formativa: no tiene nota. Sirve para identificar qué conviene repasar.'
+      : 'Esta evaluación es de práctica. Sus respuestas le muestran qué comprende y qué conviene revisar; no sustituye a las evaluaciones oficiales.') + '</p>';
+    const prog = document.createElement('p');
+    prog.className = 'progreso';
+    prog.setAttribute('aria-live', 'polite');
+    cab.appendChild(prog);
+    raiz.appendChild(cab);
+
+    // 3.2 Preguntas
+    const formulario = document.createElement('form');
+    formulario.setAttribute('novalidate', 'novalidate');
+    formulario.addEventListener('submit', e => e.preventDefault());
+    raiz.appendChild(formulario);
+
+    ev.items.forEach((it, i) => {
+      const fs = document.createElement('fieldset');
+      const leyenda = document.createElement('legend');
+      leyenda.innerHTML = 'Pregunta ' + (i + 1) + ' de ' + n;
+      fs.appendChild(leyenda);
+
+      const badge = document.createElement('span');
+      badge.className = 'insignia';
+      badge.textContent = '[' + it.tipo + ']';
+      fs.appendChild(badge);
+
+      const enun = document.createElement('p');
+      enun.textContent = it.pregunta;
+      fs.appendChild(enun);
+
+      const opts = document.createElement('div');
+      opts.className = 'opts';
+      it.opciones.forEach((texto, k) => {
+        const id = nombre + 'p' + i + '-' + k;
+        const etiqueta = document.createElement('label');
+        etiqueta.setAttribute('for', id);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = nombre + 'p' + i;
+        radio.id = id;
+        radio.value = String(k);
+        const letra = document.createElement('span');
+        letra.className = 'letra';
+        letra.textContent = LETRAS[k] + ')';
+        const txt = document.createElement('span');
+        txt.textContent = texto;
+        etiqueta.appendChild(radio);
+        etiqueta.appendChild(letra);
+        etiqueta.appendChild(txt);
+        opts.appendChild(etiqueta);
+        radio.addEventListener('change', () => elegir(i, k));
+      });
+      fs.appendChild(opts);
+
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.setAttribute('aria-live', 'polite');
+      fs.appendChild(fb);
+
+      const gen = document.createElement('p');
+      gen.className = 'gen';
+      gen.textContent = 'Idea que conviene recordar: ' + it.general;
+      fs.appendChild(gen);
+
+      formulario.appendChild(fs);
+    });
+
+    // 3.3 Resultado y acciones
+    const resultado = document.createElement('div');
+    resultado.className = 'resultado';
+    resultado.setAttribute('aria-live', 'polite');
+    raiz.appendChild(resultado);
+
+    const acciones = document.createElement('div');
+    acciones.className = 'acciones';
+    const btnReintento = document.createElement('button');
+    btnReintento.type = 'button';
+    btnReintento.className = 'btn principal';
+    btnReintento.textContent = 'Intentar nuevamente';
+    btnReintento.hidden = true;
+    btnReintento.addEventListener('click', () => reiniciar(false));
+    const btnReinicio = document.createElement('button');
+    btnReinicio.type = 'button';
+    btnReinicio.className = 'btn';
+    btnReinicio.textContent = 'Reiniciar cuestionario';
+    btnReinicio.addEventListener('click', () => reiniciar(true));
+    acciones.appendChild(btnReintento);
+    acciones.appendChild(btnReinicio);
+    raiz.appendChild(acciones);
+
+    // 3.4 Lógica de respuesta
+    function elegir(i, k) {
+      if (bloqueado) return;
+      respuestas[i] = k;
+      const it = ev.items[i];
+      const fieldset = formulario.querySelectorAll('fieldset')[i];
+      const fb = fieldset.querySelector('.fb');
+      const gen = fieldset.querySelector('.gen');
+      const acierto = (k === it.correcta);
+      fb.className = 'fb ' + (acierto ? 'ok' : 'mal');
+      fb.textContent = it.retro[k];
+      gen.classList.add('visible');
+      actualizar();
+    }
+
+    // 3.5 Cálculo de progreso, aciertos y bloqueo
+    let bloqueado = false;
+    function actualizar() {
+      const contestadas = respuestas.filter(x => x !== null).length;
+      const aciertos = respuestas.reduce((s, x, i) => s + (x === ev.items[i].correcta ? 1 : 0), 0);
+      prog.textContent = 'Respondidas: ' + contestadas + ' de ' + n + '. Aciertos hasta ahora: ' + aciertos + '.';
+
+      if (contestadas < n) {
+        bloqueado = false;
+        resultado.innerHTML = '';
+        btnReintento.hidden = true;
+        return;
+      }
+
+      // Evaluación completa: se bloquea la edición hasta reiniciar.
+      bloqueado = true;
+      formulario.querySelectorAll('input').forEach(inp => inp.disabled = true);
+      const porcentaje = Math.round((aciertos / n) * 100);
+      const nota = (aciertos / n * 10).toFixed(1).replace('.', ',');
+      let texto = '<strong>Resultado: ' + aciertos + ' de ' + n + ' respuestas correctas (' + porcentaje + ' %).</strong>';
+      if (ev.diagnostica) {
+        texto += '<br>Esta prueba no tiene calificación. Revise las preguntas erradas con sus retroalimentaciones.';
+      } else {
+        texto += '<br>Puntaje de práctica: ' + nota + ' sobre 10. No es una nota oficial.';
+      }
+      if (aciertos < n) {
+        texto += '<br>Revise las preguntas erradas y, si lo desea, intente nuevamente con las mismas preguntas en el mismo orden.';
+        btnReintento.hidden = false;
+      } else {
+        texto += '<br>Respondió todas las preguntas correctamente. No es necesario repetir el cuestionario.';
+        btnReintento.hidden = true;
+      }
+      resultado.innerHTML = texto;
+    }
+
+    // 3.6 Reinicio y reintento
+    function reiniciar(completo) {
+      respuestas = Array(n).fill(null);
+      bloqueado = false;
+      formulario.querySelectorAll('input').forEach(inp => { inp.disabled = false; inp.checked = false; });
+      formulario.querySelectorAll('.fb').forEach(f => { f.className = 'fb'; f.textContent = ''; });
+      formulario.querySelectorAll('.gen').forEach(g => g.classList.remove('visible'));
+      btnReintento.hidden = true;
+      resultado.innerHTML = '';
+      actualizar();
+      if (completo) {
+        const primera = formulario.querySelector('input');
+        if (primera) primera.focus();
+      }
+    }
+
+    actualizar();
+  }
+
+  document.querySelectorAll('.quiz[data-eval]').forEach(raiz => {
+    const num = parseInt(raiz.dataset.eval, 10);
+    const ev = EVALUACIONES.find(e => e.sesion === num);
+    if (ev) dibujar(ev, raiz);
+  });
+})();
+</script>
+</body>
+</html>

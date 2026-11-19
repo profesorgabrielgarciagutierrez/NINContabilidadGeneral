@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contabilidad General · Semana 01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- 1. Variables y base ---------- */
+:root{
+  --azul:#003366; --celeste:#87CEEB; --azul-claro:#E8F4FD; --texto:#1d1d1d;
+  --ok:#14532d; --ok-fondo:#e6f4ea; --mal:#7f1d1d; --mal-fondo:#fdecec; --borde:#c9d6e2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.6;color:var(--texto);background:#fff}
+h1,h2,h3,h4{font-family:Lora,Georgia,"Times New Roman",serif;color:var(--azul);line-height:1.25}
+h2{font-size:1.6rem;margin:.2rem 0 .6rem}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem}
+h4{font-size:1.05rem;margin:1.1rem 0 .4rem}
+p{margin:.6rem 0;max-width:72ch}
+ul,ol{max-width:72ch;padding-left:1.4rem}
+li{margin:.3rem 0}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:6px 10px;z-index:10}
+.meta{font-size:.92rem;color:#3b4a5a;margin:0 0 1rem}
+.tiempos{font-size:.95rem}
+
+/* ---------- 2. Encabezado y menú ---------- */
+header.cabecera{background:var(--azul);color:#fff;padding:14px 16px}
+header.cabecera h1{color:#fff;font-size:1.25rem;margin:0}
+header.cabecera p{margin:2px 0 0;font-size:.92rem;color:#e3eef8}
+nav.menu{background:var(--celeste);color:#000;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;border-bottom:1px solid #6fbcd9}
+nav.menu ul{display:flex;list-style:none;margin:0;padding:0;max-width:none}
+nav.menu li{margin:0}
+nav.menu button{font:inherit;font-size:.95rem;background:transparent;color:#000;border:0;padding:12px 14px;cursor:pointer;min-height:44px}
+nav.menu button:hover{background:rgba(255,255,255,.35)}
+nav.menu button[aria-selected="true"]{background:#fff;color:var(--azul);font-weight:700}
+
+main{padding:16px 16px 48px;max-width:860px;margin:0 auto}
+
+/* ---------- 3. Secciones y bloques ---------- */
+.pestana[hidden]{display:none}
+.concepto{border-left:5px solid var(--azul);padding:.6rem .9rem;margin:1rem 0;background:#f7fafd}
+.concepto h4{margin-top:.1rem}
+.ejemplo{background:var(--azul-claro);padding:.7rem .9rem;margin:1rem 0;border-radius:4px}
+.ejemplo h4{margin-top:.1rem}
+.nota-lateral{border:1px solid var(--borde);border-left:5px solid #2a7fb8;background:#fbfdff;padding:.7rem .9rem;margin:0 0 1.2rem;border-radius:4px}
+.nota-lateral h3{margin-top:.1rem}
+.nota-lateral p:first-of-type{margin-top:.2rem}
+.pausa{font-style:normal}
+.prompt{background:#f4f4f4;padding:.6rem .8rem;border-radius:4px}
+.ejercicio{border-top:1px solid var(--borde);margin-top:1.4rem;padding-top:.4rem}
+.ejercicio .tiempo{font-size:.92rem;color:#3b4a5a;margin:0}
+.ayuda{font-style:italic}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:.8rem 0}
+caption{caption-side:top;text-align:left;font-weight:700;padding:4px 0;color:var(--azul);font-family:Lora,Georgia,serif}
+th,td{border:1px solid var(--borde);padding:6px 8px;vertical-align:top;text-align:left;min-width:120px}
+th{background:var(--azul-claro)}
+.referencias li{margin-bottom:.7rem;padding-left:1.4rem;text-indent:-1.4rem;list-style:none;max-width:72ch}
+.nota{font-size:.95rem;border-top:1px solid var(--borde);padding-top:.6rem}
+
+/* ---------- 4. Solución desplegable ---------- */
+details.solucion{margin:.7rem 0;border:1px solid var(--azul);border-radius:4px;background:#fff}
+details.solucion>summary{cursor:pointer;padding:.55rem .8rem;font-weight:700;color:var(--azul);background:#eef5fb;min-height:44px;display:flex;align-items:center}
+details.solucion>*:not(summary){padding:0 .8rem}
+details.solucion[open]>summary{border-bottom:1px solid var(--borde)}
+details.solucion>*:last-child{padding-bottom:.8rem}
+
+/* ---------- 5. Evaluación ---------- */
+.quiz{margin-top:.5rem}
+.quiz .cabecera-eval{background:var(--azul-claro);padding:.7rem .9rem;border-radius:4px;margin-bottom:1rem}
+.quiz .progreso{font-weight:600;margin:.2rem 0}
+.quiz fieldset{border:1px solid var(--borde);border-radius:4px;padding:.7rem .9rem;margin:0 0 1rem}
+.quiz legend{font-weight:700;color:var(--azul);padding:0 .3rem;font-family:Lora,Georgia,serif}
+.quiz .insignia{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:10px;background:var(--azul);color:#fff;margin-right:6px;vertical-align:middle}
+.quiz .opts{display:grid;gap:6px;margin:.5rem 0}
+.quiz .opts label{display:flex;gap:10px;align-items:flex-start;padding:10px 10px;border:1px solid var(--borde);border-radius:4px;cursor:pointer;min-height:44px}
+.quiz .opts label:hover{background:#f5faff}
+.quiz .opts input{margin-top:5px;min-width:18px;min-height:18px}
+.quiz .letra{font-weight:700;color:var(--azul)}
+.quiz .fb{margin-top:.5rem;padding:.6rem .8rem;border-radius:4px;display:none}
+.quiz .fb.ok{display:block;background:var(--ok-fondo);color:var(--ok);border-left:5px solid var(--ok)}
+.quiz .fb.mal{display:block;background:var(--mal-fondo);color:var(--mal);border-left:5px solid var(--mal)}
+.quiz .gen{font-size:.93rem;margin-top:.4rem;color:#34434f;display:none}
+.quiz .gen.visible{display:block}
+.quiz .resultado{border:2px solid var(--azul);border-radius:4px;padding:.8rem 1rem;margin:1rem 0;background:#fff}
+.quiz .acciones{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0}
+.quiz button.btn{font:inherit;font-weight:600;padding:10px 14px;min-height:44px;border-radius:4px;border:2px solid var(--azul);background:#fff;color:var(--azul);cursor:pointer}
+.quiz button.btn.principal{background:var(--azul);color:#fff}
+.quiz button.btn[hidden]{display:none}
+.quiz .nota-practica{font-size:.93rem;color:#34434f}
+
+/* ---------- 6. Pie ---------- */
+footer{background:#f2f5f8;color:#2a3440;padding:14px 16px;font-size:.9rem;border-top:1px solid var(--borde)}
+footer p{margin:.2rem 0}
+
+/* ---------- 7. Pantallas estrechas ---------- */
+@media (max-width:420px){
+  body{font-size:16px}
+  main{padding:12px 12px 40px}
+  h2{font-size:1.4rem}
+  table{font-size:.92rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#principal">Ir al contenido</a>
+<header class="cabecera">
+  <h1>Contabilidad General</h1>
+  <p>Licenciatura en Negocios Internacionales · Ciclo II de 2026 · Semana 01: Introducción a la contabilidad</p>
+</header>
+
+<nav class="menu" aria-label="Secciones de la semana">
+  <ul role="tablist">
+    <li><button type="button" role="tab" id="tab-intro" data-target="intro" aria-controls="intro" aria-selected="false" tabindex="-1">Introducción</button></li>
+    <li><button type="button" role="tab" id="tab-ses01" data-target="ses01" aria-controls="ses01" aria-selected="false" tabindex="-1">Sesión 01</button></li>
+    <li><button type="button" role="tab" id="tab-eval1" data-target="eval1" aria-controls="eval1" aria-selected="false" tabindex="-1">Evaluación 01</button></li>
+    <li><button type="button" role="tab" id="tab-ses02" data-target="ses02" aria-controls="ses02" aria-selected="false" tabindex="-1">Sesión 02</button></li>
+    <li><button type="button" role="tab" id="tab-eval2" data-target="eval2" aria-controls="eval2" aria-selected="false" tabindex="-1">Evaluación 02</button></li>
+    <li><button type="button" role="tab" id="tab-ses03" data-target="ses03" aria-controls="ses03" aria-selected="false" tabindex="-1">Sesión 03</button></li>
+    <li><button type="button" role="tab" id="tab-eval3" data-target="eval3" aria-controls="eval3" aria-selected="false" tabindex="-1">Evaluación 03</button></li>
+    <li><button type="button" role="tab" id="tab-reflexion" data-target="reflexion" aria-controls="reflexion" aria-selected="false" tabindex="-1">Reflexión</button></li>
+    <li><button type="button" role="tab" id="tab-ia" data-target="ia" aria-controls="ia" aria-selected="false" tabindex="-1">Actividad con IA</button></li>
+    <li><button type="button" role="tab" id="tab-biblio" data-target="biblio" aria-controls="biblio" aria-selected="false" tabindex="-1">Bibliografía</button></li>
+  </ul>
+</nav>
+
+<main id="principal">
+<section class="pestana" id="intro" data-panel="intro" aria-labelledby="t-intro">
+<h2 id="t-intro">Conocimientos cotidianos de partida</h2>
+<p class="meta">Semana 1 · Unidad 1 · Introducción a la contabilidad</p>
+
+<p>Imagina una empresa dedicada a la confección, a la gastronomía, a la venta de servicios o a la venta de celulares. Al terminar la semana tiene dinero en su cuenta bancaria, o quizá no tiene. ¿Eso significa que la empresa va bien? ¿Significa que va mal? Para responder necesitas conocer de dónde y cómo se han producido los ingresos y los egresos de dinero, y qué compromisos que tiene la empresa. Esa es la pregunta que abre el curso, y esta semana aprenderás a formularla de manera ordenada.</p>
+
+<p>Antes de estudiar contabilidad conviene reconocer algo que ya practicas. Cuando compras un almuerzo, pagas con un billete y recibes cambio, registras mentalmente un hecho económico: salió dinero de tu bolsillo, recibiste un bien o un servicio y conociste el valor de la operación. Cuando una tienda de barrio anota en un cuaderno lo que le deben sus clientes, hace algo parecido a la contabilidad, aunque sin un método común. La contabilidad organiza ese mismo tipo de registro con criterios, documentos y reglas, para que cualquier persona pueda comprender la situación de una organización sin haber estado presente en cada operación.</p>
+
+<p>Durante este ciclo seguirás una situación de estudio que involucra a tres empresas de una misma cadena de negocios. Imaginemos que esas empresas existen solo dentro de este curso: sus nombres, sus cantidades y sus cifras son supuestos creados para aprender, y no describen a empresas reales. Cada vez que aparezca una cifra nueva, el texto te indicará si es un dato del caso o un supuesto que introducimos para explicar un punto.</p>
+
+<ul>
+<li><strong>Confecciones Montubia S. A.</strong> es una empresa manufacturera. Compra materiales, fabrica camisetas y vende parte de ellas.</li>
+<li><strong>Comercializadora Costa Verde Cía. Ltda.</strong> (compañía de responsabilidad limitada) compra camisetas terminadas para revenderlas.</li>
+<li><strong>Servicios Logísticos Andes Global S. A.</strong> es una empresa de servicios vinculada con Negocios Internacionales. Coordina operaciones de importación y exportación.</li>
+</ul>
+
+<p>Cada sesión de la semana empieza con una situación del caso, avanza con explicaciones y ejemplos, te pide intentar algunas respuestas antes de mostrarlas y termina con una evaluación de práctica. Las soluciones están ocultas en desplegables que abres cuando quieras revisar tu razonamiento. Puedes leer el material en el orden de las pestañas o volver a una sesión cuando la necesites.</p>
+
+<p>La primera pregunta que conviene hacerte es esta: si alguien quisiera saber si Confecciones Montubia va bien, ¿qué información necesitaría? Probablemente pensaría en el dinero disponible, en las deudas, en lo que le deben, en lo que la empresa produce y vende y en los gastos que realiza. Esa intuición ya describe el trabajo de la contabilidad. Lo que sigue es precisar cada elemento y aprender a registrarlo con método.</p>
+</section>
+
+
+<section class="pestana" id="ses01" data-panel="ses01" aria-labelledby="t-ses01">
+<h2 id="t-ses01">Sesión 01: la contabilidad como sistema de información</h2>
+<p class="meta">Semana 1 · Unidad 1 · Introducción a la contabilidad · Sesión global 01 · Trabajo individual</p>
+
+<aside class="nota-lateral" aria-labelledby="ap01">
+<h3 id="ap01">Antes de empezar</h3>
+<p>Imagina una empresa dedicada a la confección, a la gastronomía, a la venta de servicios o a la venta de celulares. Al terminar la semana tiene dinero en su cuenta bancaria, o quizá no tiene. ¿Eso significa que la empresa va bien? ¿Significa que va mal? Para responder necesitas conocer de dónde provienen los ingresos y los egresos de dinero, y qué compromisos tiene la empresa. En esta sesión aprenderás a hacer esas preguntas de forma ordenada.</p>
+<p>De igual manera, aprenderás a identificar si un suceso es un hecho económico de una entidad, a distinguir la empresa de su propietario y a explicar qué función cumple un documento fuente.</p>
+<p>Recuerda solamente dos ideas de la introducción: una empresa es una unidad distinta de las personas que la poseen, y las operaciones dejan rastros que pueden verificarse. Lee con lápiz y papel a mano. Cuando aparezca una pausa, intenta responder antes de seguir.</p>
+<p class="tiempos"><strong>Distribución orientativa (120 minutos):</strong> apertura 5 · explicación con pausas 40 · cinco ejercicios 50 · evaluación y revisión 20 · cierre 5.</p>
+</aside>
+
+<h3>Qué hace la contabilidad</h3>
+<p>La contabilidad responde precisamente a la pregunta con la que empezamos: ¿de dónde vino el dinero y qué compromisos tiene la empresa? Puede definirse como un sistema de información que identifica, mide, registra y comunica los hechos económicos de una entidad, para que sus usuarios puedan tomar decisiones.</p>
+<p>Cada palabra de esa definición cumple una función. <em>Identificar</em> significa reconocer qué sucesos pertenecen a la entidad. <em>Medir</em> es expresar esos sucesos en una unidad común, normalmente la moneda en que la empresa opera; en Ecuador, el dólar de los Estados Unidos. <em>Registrar</em> es anotarlos de forma ordenada y verificable. <em>Comunicar</em> es presentar esa información a quienes la necesitan. Si falta cualquiera de estas etapas, la información queda incompleta o pierde utilidad.</p>
+
+<div class="concepto">
+<h4>Concepto: sistema de información</h4>
+<p>Un sistema es un conjunto de partes que trabajan juntas para lograr un fin. La contabilidad es un sistema porque recibe datos (documentos, operaciones, saldos), los procesa con criterios y produce información (estados, reportes y comprobaciones). Su utilidad depende de que cada etapa sea confiable: un registro mal respaldado contamina el informe que se elabora después. Un sistema bien organizado no asegura por sí mismo información correcta; esa calidad depende de que los datos de entrada sean verificables.</p>
+</div>
+
+<h3>Entidad y hecho económico</h3>
+<p>Antes de registrar cualquier operación debes responder dos preguntas: <strong>¿quién registra?</strong> y <strong>¿qué ocurrió?</strong> La primera define la <em>entidad</em>, es decir, la unidad económica identificable sobre la que se lleva la contabilidad. La segunda define el <em>hecho económico</em>: todo suceso que afecta o puede afectar los recursos, las obligaciones o el patrimonio de la entidad, y que puede medirse en dinero.</p>
+
+<div class="concepto">
+<h4>Concepto: entidad</h4>
+<p>La entidad es el punto de vista desde el cual se registran las operaciones. Confecciones Montubia S. A. es una entidad: sus cuentas describen lo que la empresa tiene, lo que debe y cuánto vale su patrimonio, y no lo que tiene su propietario. El propietario es una persona distinta, aunque controle la empresa y aunque haya aportado el capital. Esta separación se llama separación patrimonial y es una de las ideas más importantes del curso.</p>
+<p>Conviene precisar un límite. La separación contable es un criterio de registro: sirve para analizar cada operación desde la entidad, incluso cuando el negocio no está constituido como sociedad. La separación jurídica, en cambio, depende de la forma legal que adopte la entidad y de lo que establezca la normativa vigente, y la estudiarás en la sesión 02. Por eso, en una operación concreta, la pregunta decisiva no es de quién es la cuenta bancaria, sino qué operación se realizó y para qué recurso.</p>
+</div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado</h4>
+<p>Montubia vende 50 camisetas a un comercio y entrega una factura. Por ahora no necesitas el precio: basta con reconocer el hecho. La operación ocurre dentro de la entidad, afecta sus recursos (le corresponde cobrar) y puede medirse en dólares: es un hecho económico de Montubia.</p>
+<p>Ahora imagina que el propietario compra un celular para uso personal con su tarjeta. El celular no pasa a ser un recurso de la empresa, y el pago no es un gasto de Montubia, aunque el propietario sea quien dirige la empresa. El primer suceso pertenece a la entidad; el segundo, al patrimonio personal.</p>
+</div>
+
+<p><strong>Pausa de razonamiento.</strong> Antes de seguir, prueba: ¿la compra del celular afecta los recursos de Montubia? Escribe tu respuesta y después compárala con la definición de entidad. Pregúntate si la empresa es dueña de los bienes personales de quien la dirige, y qué condición de la definición estarías dejando de lado si respondiste lo contrario.</p>
+
+<h3>El documento fuente</h3>
+<p>Ninguna operación debería registrarse sin una evidencia. Esa evidencia es el <em>documento fuente</em>: una factura, un comprobante de pago, un contrato o una nota de crédito que describe el hecho, lo fecha, identifica a las partes y muestra el importe. El documento fuente no es el registro contable; es el respaldo que permite verificarlo. Una comparación ayuda a entender su papel: un recibo de supermercado permite comprobar qué se compró, cuándo y por cuánto. Esa comparación tiene un alcance preciso. El recibo prueba la operación, pero no dice si la compra fue conveniente ni cómo debe registrarse; esas dos preguntas se responden después, con el registro y el análisis. Sin el documento, cualquier cifra es una afirmación sin prueba.</p>
+
+<p>La Tabla 1 resume las etapas que sigue una operación desde que ocurre hasta que sirve para decidir. Léela pensando en la venta de camisetas.</p>
+
+<table>
+<caption>Tabla 1. Etapas del sistema contable</caption>
+<thead><tr><th scope="col">Etapa</th><th scope="col">Pregunta que responde</th><th scope="col">Ejemplo en Montubia</th></tr></thead>
+<tbody>
+<tr><td>1. Hecho económico</td><td>¿Qué ocurrió y afecta a la entidad?</td><td>Venta de 50 camisetas a un comercio.</td></tr>
+<tr><td>2. Documento fuente</td><td>¿Qué evidencia respalda el hecho?</td><td>Factura emitida con fecha, partes e importe.</td></tr>
+<tr><td>3. Identificación y medición</td><td>¿Qué recursos u obligaciones cambian y cuánto valen en dinero?</td><td>La empresa tiene derecho a cobrar el valor de la factura.</td></tr>
+<tr><td>4. Registro</td><td>¿Cómo queda anotado de forma ordenada?</td><td>Anotación en los libros de la entidad (se estudiará en la semana 5).</td></tr>
+<tr><td>5. Comunicación</td><td>¿Qué informe recibe cada usuario?</td><td>Informes para la gerencia, el banco y el SRI.</td></tr>
+<tr><td>6. Decisión</td><td>¿Qué puede hacer el usuario con esa información?</td><td>La gerencia decide si aumenta la producción.</td></tr>
+</tbody>
+</table>
+
+<h3>Efectivo, utilidad y situación completa</h3>
+<p>Una de las confusiones más frecuentes al empezar la contabilidad es creer que registrar el dinero es suficiente. El efectivo es un recurso importante, pero no resume la situación económica. Una empresa puede tener mucho dinero porque recibió un préstamo, y no porque haya ganado. Otra puede tener poco efectivo y, sin embargo, tener derechos a cobrar y una operación rentable. Por eso la contabilidad registra también lo que la empresa tiene a su favor y lo que debe.</p>
+
+<div class="ejemplo">
+<h4>Contraste</h4>
+<p>Si el saldo bancario de Montubia subió 10.000 dólares, la pregunta correcta no es «¿ganó la empresa?», sino «¿por qué subió?». Si el aumento proviene de la venta de camisetas, puede corresponder a una ganancia futura, aunque aún no se haya cobrado todo. Si proviene de un préstamo, el dinero aumentó, pero la empresa también debe devolverlo. Si proviene de un aporte del propietario, aumentó el patrimonio de la empresa, pero no hubo utilidad. El mismo saldo puede tener tres significados distintos.</p>
+</div>
+
+<h3>Para qué sirve la información</h3>
+<p>La contabilidad no toma decisiones: describe la situación y sus cambios. Quien decide es el usuario, con base en esa descripción. Un gerente puede decidir si produce más camisetas; un banco, si concede un crédito; un organismo de control, si una entidad cumple sus obligaciones. Para que la decisión sea razonable, la información debe ser verificable, correctamente clasificada y completa. Esta última exigencia explica por qué se registran también los derechos a cobrar y las obligaciones de pago, no solo el dinero.</p>
+
+<div class="concepto">
+<h4>Concepto: unidad monetaria</h4>
+<p>Las operaciones se expresan en una unidad común, el dólar, para poder sumarlas y compararlas. Así se puede agregar la venta de camisetas, el pago de un servicio y el salario de un trabajador. Sin embargo, esta convención tiene límites: no todo lo valioso para una empresa puede expresarse en dinero de manera confiable, y la contabilidad se ocupa de los hechos que sí pueden medirse.</p>
+</div>
+
+<p><strong>Pausa de razonamiento.</strong> Un compañero afirma: «Si la cuenta bancaria creció, la empresa ganó dinero; por tanto, la contabilidad es solo un control de caja». Antes de continuar, escribe qué errores encuentras en esa afirmación. Después compara tu lista con el contraste de Montubia y pregúntate qué recurso se está tomando como si fuera toda la situación de la empresa.</p>
+
+<h3>Ejercicios guiados</h3>
+<p>Los ejercicios siguientes son individuales. Escribe tu respuesta antes de abrir la solución. Si tu respuesta difiere, no la borres: compara los criterios y busca el punto en que te separaste de la solución.</p>
+
+<article class="ejercicio" id="s01-e1">
+<h4>Ejercicio 1. ¿Hecho económico o no?</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad clasificarás sucesos según afecten o no a la entidad Confecciones Montubia y justificarás cada decisión con el criterio de hecho económico.</p>
+<p><strong>Enunciado.</strong> Indica si cada suceso es un hecho económico de Confecciones Montubia (sí o no) y explica por qué.</p>
+<ol>
+<li>La empresa compra 200 metros de tela con factura a crédito.</li>
+<li>El propietario firma una carta de recomendación para un amigo.</li>
+<li>Un cliente paga en efectivo una compra de camisetas.</li>
+<li>Un trabajador comenta en redes sociales que le gusta la empresa.</li>
+</ol>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Pregúntate si el suceso modifica los recursos, las obligaciones o el patrimonio de la entidad, y si puede expresarse en dólares. Si la respuesta es afirmativa en ambas condiciones, es un hecho económico.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ol>
+<li><strong>Sí.</strong> La empresa recibe tela (un recurso) y asume una obligación de pago. El importe puede medirse en dólares y la factura respalda el hecho.</li>
+<li><strong>No.</strong> La carta es un suceso personal del propietario. No modifica los recursos ni las obligaciones de la empresa y no es una operación de la entidad.</li>
+<li><strong>Sí.</strong> La venta modifica los recursos de la empresa (entra efectivo) y puede medirse en dólares.</li>
+<li><strong>No.</strong> El comentario no altera recursos ni obligaciones de la entidad.</li>
+</ol>
+<p><strong>Comprobación.</strong> Cada respuesta afirmativa identifica un cambio en la situación económica de Montubia y un importe. Cada negativa identifica un suceso que no afecta esa situación o que pertenece a otra persona.</p>
+<p><strong>Orientación según errores.</strong> Si clasificaste la carta como hecho económico porque implica al propietario, revisa la separación patrimonial: que una persona relacionada con la empresa intervenga no basta. Si descartaste la compra a crédito por no haber pagado, recuerda que la obligación también es un cambio en la situación de la entidad.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Los dos criterios son independientes: el suceso debe afectar a la entidad y debe poder medirse. Sirve para separar lo que pertenece a la empresa de lo que pertenece a las personas.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s01-e2">
+<h4>Ejercicio 2. Separar la empresa de su propietario</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad identificarás las operaciones que corresponden a la empresa y las que corresponden al propietario, y justificarás la separación con la definición de entidad.</p>
+<p><strong>Enunciado.</strong> El propietario de Confecciones Montubia realiza estas operaciones en un mismo mes. Clasifica cada una como «empresa» o «propietario» y explica el criterio.</p>
+<ol>
+<li>Paga con la cuenta de la empresa el alquiler del local donde funciona la fábrica.</li>
+<li>Paga con la cuenta de la empresa su consulta médica personal.</li>
+<li>Compra con dinero personal un refrigerador para su casa.</li>
+<li>Cobra a un cliente la venta de camisetas, depositando el dinero en la cuenta de la empresa.</li>
+</ol>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Identifica primero para qué se usó el bien o servicio. Si beneficia la actividad de la fábrica, pertenece a la empresa; si beneficia a una persona en su vida privada, es patrimonio personal. Luego verifica qué cuenta se usó: la cuenta no decide por sí sola.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ol>
+<li><strong>Empresa.</strong> El alquiler es necesario para la actividad productiva de la entidad.</li>
+<li><strong>Propietario.</strong> La consulta médica es personal. Aunque se pagó con dinero de la empresa, la operación no corresponde a su actividad. Debe separarse y, si el propietario tomó dinero de la empresa para ello, esa operación debe analizarse como una transacción entre la entidad y su dueño.</li>
+<li><strong>Propietario.</strong> El refrigerador sirve a la vida familiar y no a la fabricación de camisetas.</li>
+<li><strong>Empresa.</strong> El cobro corresponde a una venta de la entidad y el dinero entra en su cuenta.</li>
+</ol>
+<p><strong>Comprobación.</strong> Para cada caso respondes a dos preguntas: ¿para qué sirve el recurso? y ¿qué entidad se beneficia? Si ambas respuestas coinciden, la operación es clara.</p>
+<p><strong>Orientación según errores.</strong> Si clasificaste la consulta médica como empresa porque se pagó con la cuenta de la empresa, recuerda que la cuenta bancaria es un instrumento. Lo que define la operación es su finalidad y la entidad beneficiada. En el caso del punto 2, la pregunta que queda abierta es cómo registrar el retiro; esa decisión se estudiará en semanas posteriores.</p>
+<p><strong>Cómo entender este ejercicio.</strong> La misma cuenta bancaria puede recibir operaciones de la empresa y del propietario. Por eso la separación patrimonial depende del análisis de cada operación y no solo de la cuenta utilizada.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s01-e3">
+<h4>Ejercicio 3. Usuarios de la información de una entidad</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · trabajo individual</p>
+<p>En esta actividad relacionarás a distintas personas con la decisión que cada una debe tomar sobre la empresa, y explicarás qué información necesita.</p>
+<p><strong>Enunciado.</strong> Para cada persona indica qué decisión debe tomar y qué información contable le sería más útil.</p>
+<ol>
+<li>La gerente de producción de Montubia.</li>
+<li>Un banco que evalúa un préstamo a la empresa.</li>
+<li>Un proveedor de tela que decide si vende a crédito.</li>
+</ol>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Escribe primero la decisión y después la información. Pregúntate qué necesita saber cada persona para decidir: capacidad de pago, costos, recursos disponibles u obligaciones.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ol>
+<li>Decide cuántas camisetas producir. Necesita información sobre la producción, los materiales disponibles y los costos.</li>
+<li>Decide si concede el préstamo. Necesita información sobre los recursos de la empresa, sus obligaciones y su capacidad para pagar.</li>
+<li>Decide si vende a crédito. Necesita saber si la empresa tiene recursos suficientes y obligaciones pendientes con otros acreedores.</li>
+</ol>
+<p><strong>Comprobación.</strong> En cada caso la información responde a la decisión, no al revés. Si la información no sirve para decidir, no está cumpliendo su función.</p>
+<p><strong>Orientación según errores.</strong> Si respondiste que el banco necesita el mismo informe que la gerente, revisa que cada usuario necesita información según la decisión que debe tomar. Esa idea se desarrollará con detalle en la sesión 02.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Antes de decidir qué información entregar, pregúntate qué decisión se apoya en ella.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s01-e4">
+<h4>Ejercicio 4. Del documento a la información</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · trabajo individual</p>
+<p>En esta actividad ordenarás las etapas que siguen una operación y explicarás por qué no puede saltarse la evidencia.</p>
+<p><strong>Enunciado.</strong> Ordena de 1 a 5 las siguientes acciones, de la más temprana a la más tardía, y explica qué pasaría si se omitiera la segunda.</p>
+<ul>
+<li>(a) La gerencia decide ampliar la producción.</li>
+<li>(b) Se emite la factura por la venta.</li>
+<li>(c) La venta ocurre entre Montubia y el comercio.</li>
+<li>(d) La contadora registra la venta y prepara el informe.</li>
+<li>(e) El informe se entrega a la gerencia.</li>
+</ul>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Recuerda la Tabla 1 y busca primero el hecho que da origen a todo lo demás.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<p>Orden correcto: 1 (c), 2 (b), 3 (d), 4 (e), 5 (a).</p>
+<p>La omisión de la factura (segunda etapa) dejaría a la contadora sin evidencia verificable. Podría registrar una venta que no tiene respaldo o, peor aún, omitir una venta real; en ambos casos el informe que recibe la gerencia pierde fiabilidad y la decisión de ampliar la producción se apoyaría en una base débil.</p>
+<p><strong>Comprobación.</strong> El orden es coherente: no se puede registrar lo que no ocurrió, ni informar lo que no se registró.</p>
+<p><strong>Orientación según errores.</strong> Si situaste la decisión de la gerencia antes del hecho, confundiste la función de la contabilidad. La información describe lo ocurrido; la decisión viene después.</p>
+<p><strong>Cómo entender este ejercicio.</strong> La contabilidad avanza de lo que ocurrió hacia lo que se comunica. La evidencia es el punto de apoyo de todo el proceso.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s01-e5">
+<h4>Ejercicio 5. Explícalo con tus palabras</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad explicarás, con tus propias palabras, por qué la contabilidad no puede reducirse al dinero en caja.</p>
+<p><strong>Enunciado.</strong> Escribe un párrafo de no más de ocho líneas que responda: ¿por qué un saldo bancario alto no basta para afirmar que una empresa está bien? Usa un ejemplo de Montubia.</p>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Piensa en tres causas posibles de un aumento de caja (venta, préstamo, aporte) y en un compromiso que no se ve en el saldo bancario.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<p>Un saldo bancario alto puede venir de una venta, de un préstamo o de un aporte del propietario, y cada una de esas causas tiene un significado distinto. Además, el saldo no muestra los compromisos pendientes: si Montubia debe pagar a proveedores o al banco el próximo mes, esa obligación no aparece en la cuenta corriente hasta que se paga. Por eso la contabilidad registra derechos y obligaciones, y no solo el dinero disponible.</p>
+<p><strong>Comprobación.</strong> La explicación debe mencionar al menos dos causas del saldo y una obligación que no se ve en el saldo.</p>
+<p><strong>Orientación según errores.</strong> Si el párrafo termina diciendo que «el saldo alto demuestra utilidad», revisa el contraste entre efectivo y utilidad de esta sesión.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Explicar con palabras propias demuestra que comprendes la idea, no solo que la reconoces.</p>
+</details>
+</article>
+
+<h3>Cierre de la sesión</h3>
+<p>Hoy viste que la contabilidad es un sistema que transforma hechos económicos en información. Para hacerlo identifica la entidad, verifica el hecho con un documento fuente, mide su efecto en dinero, registra y comunica. Esta cadena explica casi todo el curso: cuando más adelante aprendas a registrar una venta o un pago, estarás aplicando estas mismas etapas.</p>
+<p>Como tarea de transferencia, piensa en una operación de tu vida cotidiana y señala qué parte de ella sería un hecho económico, qué documento la respaldaría y quién sería el usuario de esa información. Si tienes dificultades, vuelve a la Tabla 1 y a los ejercicios 1 y 2.</p>
+<p><strong>Ruta de revisión.</strong> Si te cuesta distinguir hecho económico de otros sucesos, repasa el concepto de entidad y el ejercicio 1. Si confundes efectivo con utilidad, repasa el contraste de esta sesión. Si no identificas al usuario, repasa el ejercicio 3.</p>
+<p><strong>Glosario breve.</strong> <em>Entidad:</em> unidad económica identificable que se registra por separado de sus propietarios. <em>Hecho económico:</em> suceso que afecta la situación económica de la entidad y puede medirse en dinero. <em>Documento fuente:</em> evidencia que respalda una operación. <em>Usuario:</em> persona que utiliza la información para decidir.</p>
+</section>
+
+
+<section class="pestana" id="eval1" data-panel="eval1" aria-labelledby="t-eval1">
+<h2 id="t-eval1">Prueba diagnóstica de la sesión 01 (sin nota)</h2>
+<p class="meta">Semana 1 · Unidad 1. Introducción a la contabilidad · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="1"></div>
+</section>
+
+<section class="pestana" id="ses02" data-panel="ses02" aria-labelledby="t-ses02">
+<h2 id="t-ses02">Sesión 02: tipos de empresas, usuarios y tipos de contabilidad</h2>
+<p class="meta">Semana 1 · Unidad 1 · Introducción a la contabilidad · Sesión global 02 · Trabajo individual</p>
+
+<aside class="nota-lateral" aria-labelledby="ap02">
+<h3 id="ap02">Antes de empezar</h3>
+<p>En la sesión anterior viste que la contabilidad registra hechos económicos de una entidad para informar a sus usuarios. Hoy observarás que no todas las entidades son iguales y que no todos los usuarios necesitan lo mismo. Una camiseta puede ser un producto terminado para una fábrica, una mercadería para una tienda y un uniforme para una empresa de servicios. Lo que cambia es la actividad de cada entidad y el uso que da a ese bien.</p>
+<p>Al terminar la sesión podrás clasificar una empresa por su actividad, su origen del capital y su forma jurídica; identificar usuarios internos y externos; y reconocer qué tipo de contabilidad responde a cada necesidad.</p>
+<p class="tiempos"><strong>Distribución orientativa (120 minutos):</strong> apertura 5 · explicación con pausas 40 · cinco ejercicios 50 · evaluación y revisión 20 · cierre 5.</p>
+</aside>
+
+<h3>Clasificar una empresa</h3>
+<p>Cuando hablamos de «una empresa», nos referimos a realidades muy variadas. Un taller artesanal, un supermercado, una consultora y una compañía que fabrica maquinaria no se parecen en sus recursos, en sus procesos ni en la información que necesitan. Por eso la contabilidad distingue varias clasificaciones. En esta etapa conviene conocer tres: la actividad, el origen del capital y la forma jurídica.</p>
+
+<h4>La actividad</h4>
+<p>La actividad describe qué hace la entidad con sus recursos. Es el criterio más importante para entender una operación, porque define qué significa un bien para esa empresa. Las tres categorías básicas del curso son las siguientes.</p>
+<ul>
+<li><strong>Manufacturera:</strong> transforma materias primas o materiales en productos que luego vende. Confecciones Montubia es un ejemplo: compra tela y otros materiales, los transforma en camisetas y las vende.</li>
+<li><strong>Comercial:</strong> compra bienes terminados para revenderlos sin transformarlos. Comercializadora Costa Verde compra camisetas para venderlas.</li>
+<li><strong>De servicios:</strong> presta un servicio, es decir, una actividad que el cliente recibe sin que se le entregue un bien transformado. Servicios Logísticos Andes Global coordina operaciones de importación y exportación.</li>
+</ul>
+
+<div class="concepto">
+<h4>Concepto: actividad económica</h4>
+<p>La actividad económica es la principal fuente de ingresos y de gastos de la entidad. Para identificarla, pregúntate qué hace la empresa con los recursos que adquiere: si los transforma, los revende o los utiliza para prestar un servicio. Esa respuesta condiciona la forma en que se registran sus operaciones.</p>
+<p>Una empresa puede realizar más de una actividad. En ese caso, el criterio didáctico que usaremos es identificar la actividad que genera la mayor parte de sus ingresos y de sus gastos, y explicar qué otras actividades existen. Clasificar no significa encerrar a la empresa en una casilla: significa identificar qué criterio domina en la operación que estudias.</p>
+</div>
+
+<div class="ejemplo">
+<h4>Contraste</h4>
+<p>Una misma camiseta puede tener tres significados distintos. Para Montubia, es un producto que fabrica y vende. Para Costa Verde, es mercadería que compra para revender. Para Andes Global, si la usa como uniforme del personal, es un bien destinado al uso de la empresa. La camiseta física es la misma; cambia la relación de cada entidad con ella.</p>
+</div>
+
+<h4>El origen del capital</h4>
+<p>El origen del capital indica de dónde proviene el dinero que financia la empresa: de socios nacionales, de socios extranjeros o de ambos. Esta clasificación no describe el mercado donde la empresa vende ni el tamaño de su plantilla. Su utilidad está en comprender quiénes aportaron recursos y qué derechos tienen sobre la entidad.</p>
+
+<h4>La forma jurídica</h4>
+<p>La forma jurídica es la figura legal que adopta la organización. En Ecuador, las sociedades mercantiles más conocidas son la compañía anónima, la compañía de responsabilidad limitada y la sociedad por acciones simplificada (SAS), entre otras. La forma jurídica influye en la responsabilidad de los socios y en la manera de organizar la información. Por eso la Superintendencia de Compañías, Valores y Seguros supervisa a las compañías y a otras entidades según su naturaleza.</p>
+
+<div class="concepto">
+<h4>Concepto: personalidad jurídica</h4>
+<p>Una sociedad tiene personalidad jurídica cuando la ley la reconoce como sujeto con derechos y obligaciones propios. Por eso puede comprar, vender y deber dinero como entidad distinta de sus socios. En una persona natural que explota un negocio a su nombre, la separación es menos marcada: el propietario suele responder con su patrimonio personal. Esta diferencia debe verificarse con la normativa vigente según el tipo de entidad.</p>
+</div>
+
+<p><strong>Pausa de razonamiento.</strong> Confecciones Montubia S. A. y un taller de costura, propiedad de una sola persona y sin constituir sociedad, fabrican camisetas. Antes de seguir, escribe una frase: ¿qué diferencia sería más importante para el propietario del taller al registrar sus operaciones? Piensa qué ocurriría con sus bienes personales si el taller tuviera una deuda que no puede pagar, y compara esa situación con la de los socios de una sociedad en el mismo caso.</p>
+
+<h3>Usuarios de la información</h3>
+<p>Los usuarios de la información contable son las personas que la utilizan para decidir. Se dividen en internos y externos según su relación con la gestión de la entidad.</p>
+<p>Los <strong>usuarios internos</strong> participan en la gestión o en el gobierno de la empresa: la gerencia, los administradores y los socios o accionistas que dirigen la organización. Necesitan información detallada para planear, controlar y decidir. Los <strong>usuarios externos</strong> no dirigen la entidad, pero se relacionan con ella: bancos, proveedores, clientes, organismos de control y el Servicio de Rentas Internas. Cada uno necesita información según la decisión que debe tomar.</p>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado</h4>
+<p>Un banco solicita los estados de Montubia para evaluar un préstamo. Aunque el banco reciba información de la empresa, no la dirige; por tanto, es un usuario externo. Su decisión es prestar o no, y necesita saber si la empresa puede pagar. La gerente de producción, en cambio, es usuaria interna: su decisión es cuántas camisetas fabricar, y necesita información sobre costos y capacidad productiva.</p>
+</div>
+
+<h3>Tipos de contabilidad</h3>
+<p>La información contable no es única. Se organiza según la finalidad y el usuario al que está destinada. Conviene distinguir cinco tipos que se mencionan en el curso.</p>
+<ul>
+<li><strong>Contabilidad financiera:</strong> informa sobre la situación económica de la entidad a usuarios en general, mediante estados que resumen recursos, obligaciones y resultados.</li>
+<li><strong>Contabilidad administrativa o gerencial:</strong> apoya las decisiones internas, como planificar, controlar y evaluar la gestión.</li>
+<li><strong>Contabilidad de costos:</strong> determina cuánto cuesta producir o prestar un bien o servicio, lo cual sirve para fijar precios y controlar la producción.</li>
+<li><strong>Contabilidad tributaria o fiscal:</strong> prepara la información necesaria para cumplir las obligaciones frente a la administración de impuestos.</li>
+<li><strong>Contabilidad gubernamental:</strong> se aplica a entidades del sector público y responde a sus propias finalidades.</li>
+</ul>
+
+<p>Estas clases no son excluyentes. Una misma entidad puede utilizar varias: la gerencia puede necesitar un informe administrativo, el SRI un informe tributario y un banco los estados financieros. Lo importante es identificar qué usuario y qué decisión predominan en cada caso.</p>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado</h4>
+<p>Montubia prepara un informe mensual para decidir qué modelo de camiseta producirá el próximo mes. ¿Qué tipo predomina? La finalidad principal es decidir la producción, por eso predomina la contabilidad administrativa. Si el mismo mes la empresa prepara la declaración de sus obligaciones fiscales, esa información corresponde a la contabilidad tributaria. La empresa es la misma; cambia la pregunta que cada informe responde.</p>
+</div>
+
+<p><strong>Pausa de razonamiento.</strong> Antes de seguir, responde: ¿qué diferencia principal existe entre la contabilidad financiera y la administrativa? Escribe, para cada una, quién es su destinatario y qué decisión sustenta. Si tu respuesta menciona solo el tamaño de la empresa, vuelve a la sección de usuarios y pregúntate quién lee cada informe.</p>
+
+<h3>Tabla de referencia</h3>
+<p>La Tabla 2 resume las clasificaciones de esta sesión con las empresas del caso.</p>
+<table>
+<caption>Tabla 2. Clasificación de las empresas del caso según actividad y uso del bien</caption>
+<thead><tr><th scope="col">Empresa del caso</th><th scope="col">Actividad</th><th scope="col">Relación con la camiseta</th></tr></thead>
+<tbody>
+<tr><td>Confecciones Montubia S. A.</td><td>Manufacturera</td><td>La fabrica y la vende.</td></tr>
+<tr><td>Comercializadora Costa Verde Cía. Ltda.</td><td>Comercial</td><td>La compra terminada para revender.</td></tr>
+<tr><td>Servicios Logísticos Andes Global S. A.</td><td>De servicios</td><td>Puede usarla como uniforme de su personal.</td></tr>
+</tbody>
+</table>
+
+<h3>Ejercicios guiados</h3>
+
+<article class="ejercicio" id="s02-e1">
+<h4>Ejercicio 1. Clasificar por actividad</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad clasificarás empresas por su actividad principal y justificarás el criterio que utilizaste.</p>
+<p><strong>Enunciado.</strong> Clasifica cada empresa como manufacturera, comercial o de servicios y explica por qué.</p>
+<ol>
+<li>Una empresa que compra cacao en grano, lo transforma en chocolate y lo vende.</li>
+<li>Una tienda que compra jabón a distribuidores y lo vende sin modificarlo.</li>
+<li>Una consultora que asesora a exportadores sobre trámites aduaneros.</li>
+</ol>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Pregúntate si la empresa transforma algo, si revende algo sin transformarlo o si presta una actividad sin entregar un bien transformado.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ol>
+<li><strong>Manufacturera.</strong> Transforma el cacao en chocolate, un producto distinto del que compró.</li>
+<li><strong>Comercial.</strong> Revende el jabón sin transformarlo.</li>
+<li><strong>De servicios.</strong> Presta una asesoría; el cliente recibe una actividad, no un bien transformado.</li>
+</ol>
+<p><strong>Comprobación.</strong> En cada caso puedes responder qué recurso adquiere la empresa y qué hace con él. Si la respuesta no coincide con la clasificación, revisa.</p>
+<p><strong>Orientación según errores.</strong> Si clasificaste la tienda como manufacturera porque vende productos, recuerda que vender no basta. Lo que define la categoría es si transforma el bien.</p>
+<p><strong>Cómo entender este ejercicio.</strong> La actividad se identifica por lo que la entidad hace con sus recursos, no por el tipo de producto que aparece en el aparador.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s02-e2">
+<h4>Ejercicio 2. Origen del capital y forma jurídica</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad distinguirás el origen del capital de la forma jurídica y explicarás por qué no son el mismo criterio.</p>
+<p><strong>Enunciado.</strong> La empresa Servicios Logísticos Andes Global S. A. tiene socios nacionales y un socio extranjero. Responde: ¿cuál es el origen de su capital? ¿Cuál es su forma jurídica? ¿Por qué ambos datos son distintos?</p>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Un criterio responde de dónde proviene el dinero; el otro, qué figura legal adopta la organización. Busca en el enunciado cada uno de esos datos.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<p>El origen del capital es mixto, porque combina aportes de socios nacionales y extranjeros. La forma jurídica es una sociedad anónima, según el dato del caso. Son criterios distintos: el primero se refiere a la procedencia de los recursos de los socios; el segundo, a la estructura legal de la entidad. Una misma empresa puede tener un capital de origen mixto y ser una sociedad anónima.</p>
+<p><strong>Comprobación.</strong> Si cambiara el origen del capital (por ejemplo, si todos los socios fueran nacionales), la forma jurídica podría seguir siendo la misma. Eso muestra que son criterios independientes.</p>
+<p><strong>Orientación según errores.</strong> Si respondiste que la forma jurídica es mixta, confundiste los dos criterios. Revisa la diferencia entre procedencia del capital y figura legal.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Clasificar una empresa exige varios criterios. Cada uno responde una pregunta distinta.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s02-e3">
+<h4>Ejercicio 3. Usuarios internos y externos</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad identificarás si cada usuario es interno o externo y justificarás la clasificación con su relación con la gestión de la entidad.</p>
+<p><strong>Enunciado.</strong> Clasifica a cada usuario como interno o externo y explica la decisión que toma.</p>
+<ol>
+<li>El gerente general de Montubia.</li>
+<li>Un proveedor que decide si vende tela a crédito.</li>
+<li>Un accionista que dirige el comité de la empresa.</li>
+<li>El Servicio de Rentas Internas, al verificar una declaración.</li>
+</ol>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Pregúntate si la persona participa en la gestión o en el gobierno de la entidad. Si no participa, pero necesita la información para decidir sobre su relación con la empresa, es externa.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ol>
+<li><strong>Interno.</strong> Dirige la empresa y toma decisiones de gestión.</li>
+<li><strong>Externo.</strong> Se relaciona comercialmente con la empresa y decide sobre su crédito.</li>
+<li><strong>Interno.</strong> Participa en el gobierno de la entidad.</li>
+<li><strong>Externo.</strong> Es un organismo de control que verifica el cumplimiento de obligaciones.</li>
+</ol>
+<p><strong>Comprobación.</strong> Cada clasificación responde a la misma pregunta: ¿participa en la gestión? La respuesta no depende del tamaño de la persona ni de la cantidad de información que reciba.</p>
+<p><strong>Orientación según errores.</strong> Si clasificaste al accionista como externo porque no trabaja en la fábrica, revisa el concepto de gobierno de la entidad. Participar en las decisiones de la empresa no depende del lugar de trabajo.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Interno o externo depende de la relación con la gestión, no de si recibe o no información.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s02-e4">
+<h4>Ejercicio 4. Elegir el tipo de contabilidad</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · trabajo individual</p>
+<p>En esta actividad relacionarás situaciones con el tipo de contabilidad que predomina en cada una y explicarás el criterio.</p>
+<p><strong>Enunciado.</strong> Para cada situación indica el tipo de contabilidad que predomina y explica por qué.</p>
+<ol>
+<li>La gerencia de Montubia quiere saber cuánto cuesta fabricar cada camiseta para fijar su precio de venta.</li>
+<li>Montubia debe presentar sus obligaciones fiscales ante la administración de impuestos.</li>
+<li>Un banco revisa la situación económica de la empresa para decidir si concede un crédito.</li>
+</ol>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Pregúntate para qué se usa la información: ¿fijar precios?, ¿cumplir obligaciones tributarias?, ¿decidir un crédito con información general?</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ol>
+<li><strong>Contabilidad de costos.</strong> Determina cuánto cuesta producir cada unidad, lo que sirve de base para el precio.</li>
+<li><strong>Contabilidad tributaria o fiscal.</strong> Prepara la información necesaria para cumplir obligaciones frente a la administración de impuestos.</li>
+<li><strong>Contabilidad financiera.</strong> Informa a un usuario externo sobre la situación económica de la entidad para una decisión de crédito.</li>
+</ol>
+<p><strong>Comprobación.</strong> En cada caso puedes preguntar quién usa la información y para qué. Si la respuesta coincide con el tipo elegido, la clasificación es coherente.</p>
+<p><strong>Orientación según errores.</strong> Si elegiste la contabilidad administrativa para el punto 3, recuerda que la decisión del banco es externa. La administrativa se orienta a las decisiones internas de la gerencia.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Un mismo hecho puede aparecer en varios tipos de contabilidad; el criterio es la finalidad principal del informe.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s02-e5">
+<h4>Ejercicio 5. Un mismo bien, tres situaciones</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad compararás el significado de un mismo bien según la actividad de cada entidad y explicarás por qué no conviene clasificarlo solo por su nombre.</p>
+<p><strong>Enunciado.</strong> Explica, con un párrafo breve, qué significa una camiseta para Montubia, para Costa Verde y para Andes Global, si Andes Global la usa como uniforme.</p>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Para cada entidad, responde: ¿qué hace con la camiseta? ¿La fabrica, la compra para vender o la usa?</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<p>Para Montubia, la camiseta es el producto de su actividad: la fabrica para venderla. Para Costa Verde es un bien que compra terminado con la intención de revenderlo. Para Andes Global, si la usa como uniforme de su personal, no la vende; la camiseta sirve al uso interno de la empresa. El bien es el mismo, pero su significado para cada entidad cambia, y por eso su registro también tendrá que cambiar en cada caso.</p>
+<p><strong>Comprobación.</strong> El párrafo debe mencionar la actividad de cada entidad y la finalidad del bien para cada una.</p>
+<p><strong>Orientación según errores.</strong> Si escribiste que la camiseta es «ropa» en los tres casos, describiste el objeto físico y no la relación de la entidad con él. Ese es el error que el curso busca corregir.</p>
+<p><strong>Cómo entender este ejercicio.</strong> No se clasifica un bien por su apariencia, sino por la actividad y el uso que la entidad le da.</p>
+</details>
+</article>
+
+<h3>Cierre de la sesión</h3>
+<p>Hoy comprobaste que una misma información contable se organiza de distintas maneras según la actividad de la empresa, el origen de su capital, su forma jurídica y el usuario que la necesita. Estas clasificaciones no son detalles: determinan qué significa cada bien y qué informe debe preparar la entidad.</p>
+<p>Como tarea de transferencia, elige una empresa de tu entorno y clasifícala por actividad, origen del capital y forma jurídica. Luego indica qué usuarios internos y externos le interesarían y qué tipo de contabilidad predomina en su caso.</p>
+<p><strong>Ruta de revisión.</strong> Si confundes actividad con tipo de producto, repasa el ejercicio 1 y la Tabla 2. Si mezclas origen del capital con forma jurídica, repasa el ejercicio 2. Si no distingues usuarios, repasa el ejercicio 3.</p>
+<p><strong>Glosario breve.</strong> <em>Actividad económica:</em> lo que la entidad hace con sus recursos. <em>Forma jurídica:</em> figura legal de la organización. <em>Usuario interno:</em> quien participa en la gestión. <em>Usuario externo:</em> quien se relaciona con la entidad sin dirigirla. <em>Contabilidad tributaria:</em> información para cumplir obligaciones fiscales.</p>
+</section>
+
+
+<section class="pestana" id="eval2" data-panel="eval2" aria-labelledby="t-eval2">
+<h2 id="t-eval2">Evaluación de la sesión 02</h2>
+<p class="meta">Semana 1 · Unidad 1. Introducción a la contabilidad · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="2"></div>
+</section>
+
+<section class="pestana" id="ses03" data-panel="ses03" aria-labelledby="t-ses03">
+<h2 id="t-ses03">Sesión 03: principios éticos y organismos de control</h2>
+<p class="meta">Semana 1 · Unidad 1 · Introducción a la contabilidad · Sesión global 03 · Trabajo individual</p>
+
+<aside class="nota-lateral" aria-labelledby="ap03">
+<h3 id="ap03">Antes de empezar</h3>
+<p>Hasta ahora has visto qué registra la contabilidad y qué tipos de entidades y usuarios existen. Esta sesión se ocupa de dos preguntas que aparecen en cualquier trabajo contable: cómo debe comportarse quien prepara la información y ante qué organismos responde la empresa.</p>
+<p>Al terminar podrás nombrar los principios éticos fundamentales, reconocer cuál se afecta en una situación concreta, identificar los organismos de control que estudiará el curso y relacionar cada obligación con el organismo que corresponde.</p>
+<p class="tiempos"><strong>Distribución orientativa (120 minutos):</strong> apertura 5 · explicación con pausas 40 · cinco ejercicios 50 · evaluación y revisión 20 · cierre 5.</p>
+</aside>
+
+<h3>Por qué la ética forma parte de la contabilidad</h3>
+<p>La información contable tiene valor porque otras personas confían en ella. Un banco concede un crédito apoyándose en los estados financieros; un proveedor decide vender a plazo; un socio evalúa si su inversión está protegida. Si quien prepara esa información modifica cifras, oculta un error o utiliza datos reservados para su beneficio, la confianza se rompe y la decisión de los usuarios se apoya en algo falso. La ética profesional es, por tanto, una condición para que la contabilidad cumpla su función.</p>
+<p>Una comparación ayuda a verlo. Piensa en un termómetro: si quien lo fabrica lo ajusta para que marque lo que conviene, ya no sirve para medir nada, aunque siga pareciendo un instrumento confiable. La analogía tiene un alcance concreto: el termómetro mide una sola magnitud, mientras que la contabilidad describe la situación de una entidad y depende de documentos y juicios profesionales. Lo que sí se traslada es la idea central: un instrumento alterado pierde su función aunque conserve su apariencia.</p>
+
+<h3>Los cinco principios fundamentales</h3>
+<p>Los códigos de ética para profesionales de la contabilidad, como el que difunde la Federación Internacional de Contadores (IFAC, por sus siglas en inglés), reconocen cinco principios fundamentales. Cada uno protege una dimensión distinta de la conducta profesional. El texto oficial que rige en Ecuador debe consultarse en la fuente correspondiente antes de citarlo como norma.</p>
+
+<div class="concepto">
+<h4>Concepto: integridad</h4>
+<p>La integridad exige ser honesto y justo en todas las relaciones profesionales y comerciales, decir la verdad sobre los servicios y la experiencia, y actuar de manera adecuada aun bajo presión. Quien tiene integridad no presenta cifras que sabe incorrectas ni oculta hechos relevantes para favorecer a un cliente.</p>
+</div>
+
+<div class="concepto">
+<h4>Concepto: objetividad</h4>
+<p>La objetividad exige emitir juicios y recomendaciones sin sesgo ni influencia indebida. Obliga a evitar trabajos en los que un conflicto de interés pueda afectar tu criterio profesional. La objetividad se refiere al juicio, no a la personalidad: puedes ser cordial y, aun así, objetivo.</p>
+</div>
+
+<div class="concepto">
+<h4>Concepto: competencia y diligencia profesionales</h4>
+<p>La competencia consiste en mantener los conocimientos y habilidades necesarios para ejercer la profesión. La diligencia consiste en actuar con cuidado y conforme a las normas aplicables. Ambas son continuas: un título obtenido hace años no asegura que los conocimientos sigan vigentes.</p>
+</div>
+
+<div class="concepto">
+<h4>Concepto: confidencialidad</h4>
+<p>La confidencialidad obliga a respetar la información obtenida en la relación profesional y a no revelarla ni utilizarla sin una autorización apropiada. Está limitada por la ley y por deberes profesionales que pueden exigir su divulgación en circunstancias específicas. Su función es proteger a los clientes y la relación de confianza.</p>
+</div>
+
+<div class="concepto">
+<h4>Concepto: comportamiento profesional</h4>
+<p>El comportamiento profesional exige cumplir las leyes y reglamentos aplicables y evitar cualquier conducta que pueda desprestigiar a la profesión. Incluye la forma de promocionar servicios: prometer resultados que no pueden sustentarse es una falta, aunque la intención sea ayudar al cliente.</p>
+</div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado</h4>
+<p>Una contadora descubre que el cliente tiene un error de 3.000 dólares en sus estados financieros. El cliente le pide no mencionarlo a los socios. La integridad exige no ocultar un error relevante; la objetividad exige no dejarse influir por la presión; la confidencialidad no ampara el encubrimiento, porque protege la información reservada, no una falsedad. La contadora debe comunicar el error y buscar la forma de corregirlo. Observa que varios principios pueden estar presentes, pero uno es el más directamente afectado: aquí, la integridad.</p>
+</div>
+
+<p><strong>Pausa de razonamiento.</strong> Un contador ofrece a un cliente garantizar la devolución de impuestos sin revisar sus documentos. ¿Qué principio se afecta? Escribe tu respuesta y justifícala con la conducta que describe la situación: ¿qué hace el contador con la promesa? Piensa si la falta está en la forma de la promesa, en la falta de revisión o en ambas. Después compara tu respuesta con el concepto de comportamiento profesional.</p>
+
+<h3>Organismos de control en Ecuador</h3>
+<p>Las empresas no solo responden ante sus clientes y socios. Tienen obligaciones frente a organismos del Estado, cada uno con una función propia. La Tabla 3 presenta los cuatro organismos del curso y su materia de control, según la información institucional consultada. Léela como un mapa: cada organismo corresponde a un tipo de obligación.</p>
+
+<table>
+<caption>Tabla 3. Organismos de control del curso y materia que controlan</caption>
+<thead><tr><th scope="col">Organismo</th><th scope="col">Naturaleza y función principal</th><th scope="col">Ejemplo de obligación de Montubia</th></tr></thead>
+<tbody>
+<tr><td>Servicio de Rentas Internas (SRI)</td><td>Entidad técnica y autónoma de derecho público, a cargo de la administración de los impuestos internos.</td><td>Declarar y pagar impuestos (lo que se estudiará en la unidad 2).</td></tr>
+<tr><td>Superintendencia de Compañías, Valores y Seguros</td><td>Órgano técnico con autonomía, que supervisa la organización, el funcionamiento, la disolución y la liquidación de compañías y otras entidades.</td><td>Presentar información societaria y financiera según su tipo de compañía.</td></tr>
+<tr><td>Instituto Ecuatoriano de Seguridad Social (IESS)</td><td>Entidad autónoma que otorga las prestaciones del seguro social obligatorio a sus afiliados.</td><td>Afiliar a los trabajadores y cumplir sus aportes.</td></tr>
+<tr><td>Ministerio del Trabajo</td><td>Rector de la política laboral; regula y verifica el cumplimiento de las obligaciones laborales.</td><td>Cumplir con contratos, jornadas y pagos de sueldos y beneficios.</td></tr>
+</tbody>
+</table>
+
+<div class="concepto">
+<h4>Concepto: organismo de control</h4>
+<p>Un organismo de control es una entidad pública que verifica el cumplimiento de normas en una materia determinada. Cada uno tiene competencias específicas: un organismo puede controlar impuestos, otro la constitución de sociedades y otro la seguridad social. Por eso una misma empresa tiene obligaciones simultáneas ante varios organismos.</p>
+</div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado</h4>
+<p>Confecciones Montubia S. A. tiene 40 trabajadores, vende a varias empresas y está constituida como sociedad anónima. Sus obligaciones se distribuyen así: el SRI, por los impuestos; el IESS, por la afiliación y los aportes de sus trabajadores; el Ministerio del Trabajo, por el cumplimiento de las normas laborales; y la Superintendencia de Compañías, Valores y Seguros, por las obligaciones propias de su forma societaria. Si alguien te preguntara solo por el IESS, la respuesta sería incompleta, aunque fuera correcta en lo que dice.</p>
+</div>
+
+<p><strong>Pausa de razonamiento.</strong> Una empresa afirma que, como no tiene trabajadores, no le corresponde ninguna obligación ante el IESS. ¿Qué datos deberías revisar antes de aceptar esa conclusión? Piensa en si la entidad tiene trabajadores o personal vinculado a su actividad, y en las condiciones que la normativa exige para la afiliación. Si el dato no aparece en el caso, anota qué falta antes de decidir.</p>
+
+<h3>Ejercicios guiados</h3>
+
+<article class="ejercicio" id="s03-e1">
+<h4>Ejercicio 1. Nombra el principio</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad asociarás cada conducta con el principio ético que protege y explicarás tu respuesta.</p>
+<p><strong>Enunciado.</strong> Para cada conducta, identifica el principio fundamental más directamente afectado.</p>
+<ol>
+<li>Un contador acepta revisar los libros de una empresa, aunque nunca ha trabajado con el sistema que utiliza.</li>
+<li>Un contador comunica a un cliente las comisiones que recibiría si le recomienda un proveedor, y el cliente decide sin que esa comisión influya en el criterio profesional.</li>
+<li>Un contador comparte con un amigo el monto de los impuestos de un cliente, sin autorización.</li>
+</ol>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Pregúntate qué protege la conducta: la preparación, el juicio, la información reservada o la honestidad.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ol>
+<li><strong>Competencia y diligencia profesionales.</strong> Aceptar un trabajo sin conocer el sistema pone en riesgo la calidad del trabajo.</li>
+<li><strong>Objetividad.</strong> Hay un interés que podría afectar el criterio, y el principio exige evitar esa influencia o revelarla. En este caso, la transparencia permite al cliente decidir con información.</li>
+<li><strong>Confidencialidad.</strong> Se divulgó información de un cliente sin autorización.</li>
+</ol>
+<p><strong>Comprobación.</strong> Cada respuesta identifica una conducta y el bien que el principio protege: la calidad, el juicio o la información reservada.</p>
+<p><strong>Orientación según errores.</strong> Si respondiste «integridad» para el punto 2, revisa que la objetividad se refiere al criterio frente a intereses. La integridad también puede estar presente, pero no es el principio más directo.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Asociar un principio con un bien protegido te facilita reconocer situaciones nuevas.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s03-e2">
+<h4>Ejercicio 2. Ocultar un error</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · trabajo individual</p>
+<p>En esta actividad analizarás una situación de presión y justificarás la decisión profesional con los principios estudiados.</p>
+<p><strong>Enunciado.</strong> Un cliente pide al contador de Montubia omitir una cuenta por pagar en el informe que se entregará al banco. ¿Qué principios están en juego? Describe qué debe hacer el contador y qué principio fundamenta esa decisión.</p>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Identifica primero la información que se pide ocultar y a quién afecta su omisión: ¿al banco, que decide un crédito? Luego busca el principio que obliga a decir la verdad sobre la situación.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<p>En juego están la integridad (no presentar una situación incompleta o falsa) y la objetividad (no permitir que la presión del cliente altere el criterio). La confidencialidad no ampara la omisión, porque el banco es un usuario que necesita la información para decidir. El contador debe negarse a omitir la obligación, explicar al cliente por qué el informe debe reflejar la situación real y, si es necesario, buscar una forma de presentar la información con transparencia.</p>
+<p><strong>Comprobación.</strong> La respuesta identifica dos principios, explica el efecto sobre el banco y propone una acción concreta que no implica ocultar nada.</p>
+<p><strong>Orientación según errores.</strong> Si respondiste que la confidencialidad obliga a omitir la cuenta, revisa que la reserva protege información legítima y no permite engañar a un usuario que decide con base en el informe.</p>
+<p><strong>Cómo entender este ejercicio.</strong> La presión de un cliente no cambia la naturaleza de la información. Ante una petición de omitir, el criterio es el efecto sobre quien decide.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s03-e3">
+<h4>Ejercicio 3. Relaciona obligaciones y organismos</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad relacionarás cuatro obligaciones con el organismo que las controla y justificarás cada relación.</p>
+<p><strong>Enunciado.</strong> Asocia cada obligación con el organismo correspondiente según la Tabla 3.</p>
+<ol>
+<li>Afiliar a los trabajadores al seguro social obligatorio.</li>
+<li>Declarar y pagar los impuestos internos de la empresa.</li>
+<li>Cumplir las normas sobre contratos, jornadas y pago de sueldos.</li>
+<li>Presentar la información societaria de una sociedad anónima.</li>
+</ol>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Busca la palabra clave de cada obligación: seguro social, impuestos, normas laborales o compañía.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ol>
+<li>IESS.</li>
+<li>SRI.</li>
+<li>Ministerio del Trabajo.</li>
+<li>Superintendencia de Compañías, Valores y Seguros.</li>
+</ol>
+<p><strong>Comprobación.</strong> Cada obligación tiene un único organismo principal en la Tabla 3. Si una obligación pareciera corresponder a dos organismos, identifica cuál es la materia principal del control.</p>
+<p><strong>Orientación según errores.</strong> Si asociaste la afiliación con el Ministerio del Trabajo, recuerda que el Ministerio es rector de la política laboral, mientras que el IESS otorga la seguridad social.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Identificar el organismo es preguntar qué materia controla, no qué documento se presenta.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s03-e4">
+<h4>Ejercicio 4. Un mapa de obligaciones</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · trabajo individual</p>
+<p>En esta actividad elaborarás un listado de obligaciones de una empresa ante los organismos del curso y explicarás qué información necesita el contador para cumplirlas.</p>
+<p><strong>Enunciado.</strong> Servicios Logísticos Andes Global S. A. tiene 25 trabajadores, presta servicios de coordinación logística internacional y vende servicios a empresas del país y del exterior. Elabora un listado de sus obligaciones frente a los cuatro organismos y señala qué información requiere el contador para cumplirlas. Si un dato no está en el enunciado, indícalo.</p>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Recorre la Tabla 3 de arriba hacia abajo y pregúntate, para cada organismo, si la empresa tiene alguna obligación relacionada con su materia.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<ul>
+<li><strong>SRI:</strong> obligaciones tributarias por sus ingresos y operaciones. Requiere información sobre facturas emitidas, compras y cálculos de impuestos. El detalle se estudiará en la unidad 2.</li>
+<li><strong>Superintendencia de Compañías, Valores y Seguros:</strong> obligaciones propias de su forma societaria. Requiere información sobre su constitución y sus estados financieros, según lo que exija la normativa aplicable.</li>
+<li><strong>IESS:</strong> afiliación y aportes de sus 25 trabajadores. Requiere la lista del personal, sueldos y fechas de vinculación.</li>
+<li><strong>Ministerio del Trabajo:</strong> cumplimiento de contratos, jornadas y pagos. Requiere contratos, roles de pago y registros de asistencia.</li>
+</ul>
+<p>Información que falta: el enunciado no indica la forma jurídica exacta de la empresa, ni su régimen tributario, ni si tiene obligaciones específicas por operar con clientes del exterior. El contador debe obtener esos datos antes de afirmar qué obligaciones tiene.</p>
+<p><strong>Comprobación.</strong> El listado cubre los cuatro organismos y distingue la obligación del dato necesario para cumplirla.</p>
+<p><strong>Orientación según errores.</strong> Si afirmaste que la empresa debe pagar un impuesto determinado sin conocer su régimen, supusiste un dato. Declara el supuesto o pide la información faltante.</p>
+<p><strong>Cómo entender este ejercicio.</strong> Una conclusión responsable distingue lo que el caso permite afirmar de lo que todavía falta verificar.</p>
+</details>
+</article>
+
+<article class="ejercicio" id="s03-e5">
+<h4>Ejercicio 5. Ética y confianza</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · trabajo individual</p>
+<p>En esta actividad explicarás cómo la conducta de un profesional puede afectar la confianza en la profesión.</p>
+<p><strong>Enunciado.</strong> Escribe un párrafo de no más de ocho líneas que explique por qué una falta de integridad de un contador afecta a más personas que a su cliente.</p>
+<p class="ayuda"><strong>Ayuda para comenzar.</strong> Piensa quiénes usan la información que él prepara: bancos, socios, proveedores, organismos de control.</p>
+<details class="solucion">
+<summary>Ver solución razonada</summary>
+<p>La información contable se usa para decisiones de terceros. Si un contador presenta cifras falsas o incompletas, afecta a los bancos que conceden créditos, a los socios que invierten, a los proveedores que venden a plazo y a los organismos que verifican el cumplimiento. Además, afecta la confianza general en la profesión: si los usuarios dudan de los informes, les cuesta más decidir y la contabilidad pierde utilidad para la sociedad.</p>
+<p><strong>Comprobación.</strong> El párrafo debe mencionar al menos dos grupos de usuarios afectados y la pérdida de confianza.</p>
+<p><strong>Orientación según errores.</strong> Si el párrafo solo menciona al cliente, revisa quiénes utilizan la información. La falta ética se extiende a quienes confían en ella.</p>
+<p><strong>Cómo entender este ejercicio.</strong> La ética profesional protege una cadena de decisiones, no solo una relación privada.</p>
+</details>
+</article>
+
+<h3>Cierre de la sesión</h3>
+<p>Hoy cerraste la introducción a la contabilidad con dos ideas centrales. La primera es que la información contable depende de la conducta de quien la prepara: la integridad, la objetividad, la competencia, la confidencialidad y el comportamiento profesional son las condiciones para que los usuarios confíen en ella. La segunda es que las empresas responden ante varios organismos de control, y el contador debe conocer qué obligación corresponde a cada uno para preparar información útil.</p>
+<p>Como tarea de transferencia, elige una situación real o hipotética en la que una persona presione a un contador para cambiar una cifra. Identifica el principio afectado, a quiénes perjudicaría la decisión y qué alternativa profesional tendría. Si necesitas apoyo, repasa la pausa de razonamiento y el ejercicio 2.</p>
+<p><strong>Ruta de revisión.</strong> Si confundes objetividad con cortesía, repasa el concepto de objetividad. Si asocias cualquier obligación con el IESS, repasa la Tabla 3. Si no distingues confidencialidad de encubrimiento, repasa el ejemplo razonado de esta sesión.</p>
+<p><strong>Glosario breve.</strong> <em>Integridad:</em> honestidad y justicia en las relaciones profesionales. <em>Objetividad:</em> juicio sin sesgo ni influencia indebida. <em>Confidencialidad:</em> respeto a la información reservada obtenida en el trabajo. <em>Organismo de control:</em> entidad pública que verifica el cumplimiento de normas en una materia.</p>
+</section>
+
+
+<section class="pestana" id="eval3" data-panel="eval3" aria-labelledby="t-eval3">
+<h2 id="t-eval3">Evaluación de la sesión 03</h2>
+<p class="meta">Semana 1 · Unidad 1. Introducción a la contabilidad · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="3"></div>
+</section>
+
+<section class="pestana" id="reflexion" data-panel="reflexion" aria-labelledby="t-reflexion">
+<h2 id="t-reflexion">Reflexión</h2>
+<p class="meta">Semana 1 · Unidad 1 · Estas reflexiones no tienen respuesta correcta ni calificación.</p>
+<p>Las siguientes reflexiones conectan los contenidos de la semana con situaciones cotidianas. Léelas con calma y escribe, si te sirve, unas líneas de respuesta en tu cuaderno. Distingue, mientras lees, entre una reflexión personal, que depende de tu experiencia, y una pregunta técnica, que sí tiene una respuesta comprobable con el material.</p>
+
+<h3>El dinero de la casa y el dinero del negocio</h3>
+<p>Muchas personas que tienen un pequeño negocio usan la misma cuenta para pagar la compra del mes y los insumos de la tienda. Al principio parece práctico. Con el tiempo, sin embargo, resulta difícil saber si el negocio produce ganancias o solo sostiene los gastos del hogar. Separar ambos recursos no es un trámite burocrático: es la condición para entender la propia situación económica.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué cambio concreto harías en tu forma de pagar para que tus gastos personales y los de un posible negocio dejen de confundirse?</p>
+
+<h3>Un error que nadie quiere ver</h3>
+<p>Un error en una cuenta suele ser más fácil de ocultar que de corregir. Quien lo descubre puede sentir la tentación de callar para evitar un conflicto o para proteger a un colega. La ética profesional no se aprende solo con reglas: se ejercita en momentos como este, cuando decir la verdad tiene un costo.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué harías si descubrieras un error que favorece a tu jefe y, al corregirlo, pudieras perjudicarlo? Justifica tu decisión con uno de los cinco principios de la sesión 03.</p>
+
+<h3>La pregunta antes del informe</h3>
+<p>Cuando alguien pide un informe, es común empezar a prepararlo sin preguntar para qué se necesita. El resultado suele ser una gran cantidad de datos que nadie utiliza. La contabilidad tiene una lógica distinta: primero se identifica la decisión y luego se decide qué información la sustenta.</p>
+<p><strong>Pregunta de reflexión:</strong> piensa en un informe que hayas recibido recientemente. ¿Qué decisión debía apoyar y la información que contenía te ayudaba a tomarla?</p>
+
+<h3>Lo que el saldo no dice</h3>
+<p>Un saldo alto en la cuenta bancaria transmite tranquilidad. Pero esa sensación puede ser engañosa: el dinero puede venir de un préstamo que deberá devolverse, de un aporte que no es ganancia o de ventas que aún no se han cobrado. Aprender a preguntar por el origen de un saldo es una forma de cuidar tus propias decisiones.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué información necesitarías antes de concluir que un negocio conocido por ti está bien económicamente? Enumera al menos tres datos distintos del saldo bancario.</p>
+</section>
+
+<section class="pestana" id="ia" data-panel="ia" aria-labelledby="t-ia">
+<h2 id="t-ia">Actividad con IA</h2>
+<p class="meta">Semana 1 · Actividad individual · Tiempo orientativo: 40 minutos</p>
+
+<p>Esta actividad te permite comparar una explicación generada por un asistente de inteligencia artificial con el material de la semana. La respuesta de la IA no es una fuente verificada por sí misma: su valor depende de que la contrastes, la corrijas cuando haga falta y justifiques lo que aceptas. No compartas datos personales, tributarios ni bancarios en la conversación.</p>
+
+<h3>Paso 1. Trabajo inicial propio</h3>
+<p>Antes de consultar cualquier herramienta, escribe en cinco líneas la diferencia entre un hecho económico y un pago. Incluye un ejemplo de tu vida cotidiana. Guarda tu texto: lo necesitarás para el contraste.</p>
+
+<h3>Paso 2. Prompt exacto</h3>
+<p>Copia el siguiente texto sin modificarlo:</p>
+<p class="prompt"><em>«Explica a un estudiante de primer semestre de Negocios Internacionales por qué un préstamo recibido aumenta el efectivo de una empresa sin generar utilidad. Utiliza un ejemplo de una empresa que fabrica camisetas, define cada término técnico la primera vez que lo uses y limita la respuesta a 150 palabras.»</em></p>
+
+<h3>Paso 3. Contraste con el material</h3>
+<p>Compara la respuesta con el contraste sobre el saldo bancario de la sesión 01 y con el concepto de unidad monetaria. Anota qué afirmaciones coinciden, cuáles son incompletas y cuáles pueden llevar a confundir efectivo con utilidad.</p>
+
+<h3>Paso 4. Verificación</h3>
+<p>Verifica al menos una afirmación de la respuesta. Puedes elegir entre dos opciones: comprobar que el préstamo es una obligación de la empresa (y no un ingreso), contrastándolo con el material, o comprobar la descripción de un organismo de control de la sesión 03 en la Tabla 3. Si la respuesta menciona una fuente, consúltala; si no la menciona, no la aceptes sin revisión.</p>
+
+<h3>Paso 5. Justificación</h3>
+<p>Para cada afirmación revisada, escribe si la aceptas, la corriges o la rechazas, y explica por qué en dos o tres líneas. Esta justificación es la parte más importante de la actividad.</p>
+
+<h3>Paso 6. Lista de autoevaluación</h3>
+<ul>
+<li>¿Escribí mi respuesta inicial antes de consultar la herramienta?</li>
+<li>¿Contrasté la respuesta con el material de la sesión 01?</li>
+<li>¿Verifiqué al menos una afirmación con una fuente indicada?</li>
+<li>¿Justifiqué cada decisión de aceptar, corregir o rechazar?</li>
+<li>¿Identifiqué algún término que la respuesta usó sin definir?</li>
+</ul>
+</section>
+
+<section class="pestana" id="biblio" data-panel="biblio" aria-labelledby="t-biblio">
+<h2 id="t-biblio">Bibliografía</h2>
+<p class="meta">Referencias en formato APA 7, en orden alfabético.</p>
+
+<p>Las referencias siguientes fueron consultadas para elaborar el contenido de la semana. Cada una se vincula con las afirmaciones concretas que respalda: la definición de la entidad y de la información contable, las funciones de los organismos de la Tabla 3 y los principios éticos de la sesión 03. Una bibliografía general no valida por sí sola cada afirmación; por eso debes tomar en cuenta la relación indicada.</p>
+
+<ul class="referencias">
+<li>Corte Constitucional del Ecuador. (s. f.). <em>Ley de Creación del Servicio de Rentas Internas</em> [Texto legal]. Repositorio de la Corte Constitucional del Ecuador. Respalda la naturaleza del SRI como entidad técnica y autónoma de derecho público.</li>
+<li>IFAC. (s. f.). <em>Code of ethics</em> [Página web]. https://ifac.ie/policies/code-of-ethics. Respalda los cinco principios fundamentales de la sesión 03.</li>
+<li>Instituto Ecuatoriano de Seguridad Social. (2013). <em>Resolución C.D. 457: Reglamento Orgánico Funcional del IESS</em>. Registro Oficial, Edición Especial N.º 45, 30 de agosto de 2013. https://www.iess.gob.ec/documents/10162/83895/CD.+457. Respalda la naturaleza del IESS como entidad autónoma y sus prestaciones de seguridad social.</li>
+<li>Ministerio del Trabajo & Instituto Ecuatoriano de Seguridad Social. (s. f.). <em>Convenio No. CPPSSP-033-2020</em> [Convenio de cooperación]. https://trabajo.gob.ec/wp-content/uploads/downloads/2024/01/13.%20convenio_iess-mdt.pdf. Respalda la función del Ministerio del Trabajo como rector de la política laboral.</li>
+<li>Superintendencia de Compañías, Valores y Seguros. (s. f.). <em>Funciones institucionales</em> [Documento institucional]. https://www.supercias.gob.ec/intranet/bd_supercias/descargas/dit/20220714195032.pdf. Respalda las funciones de control de la Superintendencia sobre compañías, valores y seguros.</li>
+</ul>
+
+<p class="nota">Se recomienda verificar cada referencia en Google Scholar (scholar.google.com) o en el repositorio institucional antes de citarla en trabajos académicos. La vigencia de las normas debe verificarse en las fuentes oficiales correspondientes; Google Scholar no sustituye esa verificación.</p>
+</section>
+</main>
+
+<footer>
+  <p>Universidad de Guayaquil · Facultad de Ciencias Administrativas · Paralelo NIN-SVE-1-19 · Docente: Gabriel Francisco García Gutiérrez.</p>
+  <p>Las empresas Confecciones Montubia S. A., Comercializadora Costa Verde Cía. Ltda. y Servicios Logísticos Andes Global S. A. forman una situación de estudio creada con fines didácticos. Sus cifras y hechos son supuestos para aprender.</p>
+  <p>Las puntuaciones de las evaluaciones de práctica no son notas oficiales del examen parcial.</p>
+</footer>
+
+<script>
+/* ==========================================================
+   1. Datos de evaluación (generados desde ej_semana01.json)
+   ========================================================== */
+const EVALUACIONES = [{"sesion": 1, "diagnostica": true, "titulo": "Prueba diagnóstica de la sesión 01 (sin nota)", "items": [{"tipo": "Teórica", "pregunta": "¿Cuál de las siguientes descripciones corresponde mejor a la contabilidad como sistema de información?", "opciones": ["Un proceso que identifica, mide, registra y comunica los hechos económicos de una entidad para que sus usuarios puedan decidir.", "Un archivo de facturas que se conserva solo para cumplir con la revisión de los auditores.", "Un instrumento que sirve únicamente para calcular los impuestos que la empresa debe pagar.", "Una herramienta exclusiva del departamento financiero, sin relación con las demás áreas de la empresa."], "retro": ["CORRECTO. La contabilidad transforma hechos económicos en información que otras personas utilizan para decidir.", "Incorrecto. Las facturas son documentos fuente, pero la contabilidad va más allá: interpreta, clasifica y comunica los hechos.", "Incorrecto. El cálculo de impuestos es una de sus aplicaciones, no su función completa. Piensa también en quiénes más usan esa información.", "Incorrecto. La información contable sirve a la administración, a los propietarios, a terceros y a organismos de control, no solo a un área."], "correcta": 0, "general": "Repasa la definición de contabilidad: identificar, medir, registrar y comunicar para que los usuarios puedan decidir."}, {"tipo": "Análisis", "pregunta": "Supongamos que Confecciones Montubia S. A. vendió camisetas a crédito y, en la misma semana, su propietario pagó con la cuenta bancaria de la empresa una consulta médica personal. ¿Cuál interpretación es más adecuada?", "opciones": ["Ambas operaciones son gastos de la empresa, porque en las dos salió dinero de la cuenta bancaria.", "La venta es un hecho económico de la empresa; la consulta médica es un gasto personal del propietario que debe separarse del patrimonio de la empresa.", "Ninguna debe registrarse, porque la venta no se cobró al contado.", "Ambas corresponden a la empresa, porque el propietario es quien la dirige."], "retro": ["Incorrecto. Que salga dinero no define por sí solo quién registra la operación ni qué tipo de hecho económico es.", "CORRECTO. Antes de registrar, hay que identificar la entidad y separar los recursos de la empresa de los del propietario.", "Incorrecto. Una venta a crédito es un hecho económico aunque el cobro sea posterior. Revisa qué derecho nace para la empresa.", "Incorrecto. Dirigir la empresa no convierte en empresarial un gasto personal. La separación patrimonial exige distinguir ambas cosas."], "correcta": 1, "general": "Primero identifica la entidad que registra y luego decide si el hecho afecta sus recursos u obligaciones."}, {"tipo": "Teórica", "pregunta": "En contabilidad, ¿qué significa el término entidad?", "opciones": ["Únicamente el propietario que aporta el capital inicial.", "Solo las organizaciones que no persiguen fines de lucro.", "Unidad económica identificable que se registra por separado de sus propietarios y de otras organizaciones.", "Cualquier persona que compra productos en un local comercial."], "retro": ["Incorrecto. El propietario es distinto de la entidad, aunque la controle o haya aportado el capital.", "Incorrecto. La contabilidad registra tanto empresas con fines de lucro como organizaciones sin fines de lucro.", "CORRECTO. La entidad es la unidad sobre la que se registra información; por eso sus cuentas se separan de las de sus dueños.", "Incorrecto. El cliente que compra es un tercero, no la entidad que se está registrando."], "correcta": 2, "general": "La entidad es el punto de vista desde el cual se registra cada operación."}, {"tipo": "Teórica", "pregunta": "¿Qué papel cumple un documento fuente, como una factura?", "opciones": ["Sirve solo como constancia para el cliente y no tiene uso en la contabilidad.", "Reemplaza al registro contable, por lo que no es necesario anotar la operación.", "Es un resumen de los impuestos pagados, sin relación con la operación que describe.", "Respalda el hecho económico y permite verificarlo, pues identifica fecha, partes, importe y concepto."], "retro": ["Incorrecto. Para el cliente es una constancia, pero para la empresa emisora y receptora es evidencia del hecho registrado.", "Incorrecto. El documento fuente justifica el registro; no lo reemplaza. La operación debe anotarse en los registros de la entidad.", "Incorrecto. Un documento fuente describe una operación concreta; no es un resumen de impuestos.", "CORRECTO. El documento fuente sirve de evidencia verificable y es el punto de partida del registro."], "correcta": 3, "general": "Un documento fuente es la evidencia de un hecho; el registro contable se hace a partir de él."}, {"tipo": "Teórica", "pregunta": "¿Qué es un hecho económico?", "opciones": ["Suceso que afecta o puede afectar los recursos, las obligaciones o el patrimonio de la entidad, y que puede medirse en dinero.", "Únicamente la venta que se cobra al contado.", "Cualquier conversación de los empleados, aunque no se relacione con la empresa.", "Solo los pagos que realiza el banco a la entidad."], "retro": ["CORRECTO. Lo decisivo es que el suceso modifique la situación económica de la entidad y pueda expresarse en dinero.", "Incorrecto. Una venta a crédito también es un hecho económico, aunque el cobro sea posterior.", "Incorrecto. Una conversación no modifica recursos ni obligaciones de la entidad, por eso no es un hecho económico contable.", "Incorrecto. Un pago bancario puede ser un hecho económico, pero no es el único. Revisa la definición completa."], "correcta": 0, "general": "Un hecho económico se reconoce por su efecto en la situación de la entidad, no por el lugar donde ocurre."}, {"tipo": "Análisis", "pregunta": "Una empresa registra solo el dinero que tiene en caja y no sus derechos a recibir dinero de sus clientes. ¿Qué limitación tiene su información?", "opciones": ["Ninguna, porque el efectivo es todo lo que la empresa posee.", "Puede ser incompleta, porque la situación económica incluye derechos y obligaciones, no solo el dinero disponible.", "Solo sería incompleta si la empresa vende a crédito en el exterior.", "La limitación es que no puede preparar facturas electrónicas."], "retro": ["Incorrecto. El efectivo es un recurso, pero no es todo lo que la empresa posee ni todo lo que debe.", "CORRECTO. Una situación económica completa muestra lo que la entidad tiene a su favor y lo que debe.", "Incorrecto. Las ventas a crédito, nacionales o al exterior, presentan el mismo problema si no se registran.", "Incorrecto. La facturación es un documento fuente; la limitación está en el registro de los derechos y obligaciones."], "correcta": 1, "general": "Si la información solo muestra el efectivo, la fotografía de la empresa queda incompleta."}, {"tipo": "Teórica", "pregunta": "¿Por qué la contabilidad no puede reducirse al registro del dinero que entra y sale?", "opciones": ["Porque el dinero no tiene relación con los impuestos que debe pagar la empresa.", "Porque el efectivo es siempre igual a la utilidad del período.", "Porque una operación puede generar derechos u obligaciones sin movimiento inmediato de dinero, y la contabilidad debe reflejarlos.", "Porque la contabilidad solo interesa al propietario de la empresa."], "retro": ["Incorrecto. Los impuestos pueden relacionarse con operaciones que no implican movimiento de dinero en el momento.", "Incorrecto. El efectivo y la utilidad son conceptos distintos. Un aumento de caja puede venir de un préstamo, no de una ganancia.", "CORRECTO. La contabilidad registra la situación económica de la entidad, no solo sus movimientos de caja.", "Incorrecto. Propietarios, administradores, bancos y organismos de control también utilizan la información contable."], "correcta": 2, "general": "El efectivo es un componente de la situación económica, no toda la situación."}, {"tipo": "Teórica", "pregunta": "¿Qué afirmación sobre la separación entre la empresa y su propietario es correcta?", "opciones": ["La empresa es una entidad distinta; los gastos personales del propietario no deben registrarse como gastos de la empresa.", "Como el propietario controla la empresa, ambos forman una sola entidad contable.", "La separación solo es necesaria cuando la empresa tiene muchos trabajadores.", "El propietario puede usar el dinero de la empresa sin registrarlo, porque el dinero es suyo."], "retro": ["CORRECTO. La separación patrimonial permite que los estados de la empresa reflejen solo sus propios recursos y obligaciones.", "Incorrecto. El control no elimina la distinción. El propietario y la empresa se registran por separado.", "Incorrecto. La separación es un criterio general de la entidad; no depende del número de trabajadores.", "Incorrecto. Si el propietario toma dinero de la empresa, debe registrarse esa operación, pues afecta los recursos de la entidad."], "correcta": 0, "general": "Toda operación debe asociarse a la entidad que la realiza y a sus recursos."}, {"tipo": "Teórica", "pregunta": "¿Qué tipo de información produce la contabilidad para la toma de decisiones?", "opciones": ["Una lista de precios de los productos que existen en el mercado.", "Información sobre la situación y los cambios económicos de la entidad, que apoya decisiones de inversión, financiamiento y gestión.", "Un informe de las actividades sociales de los empleados.", "Un pronóstico exacto de las ventas del siguiente año."], "retro": ["Incorrecto. Los precios de mercado pueden ser útiles para otros fines, pero no son el producto central de la contabilidad.", "CORRECTO. La contabilidad describe la situación y sus cambios; las decisiones se toman a partir de esa información.", "Incorrecto. Las actividades sociales pueden ser relevantes para la empresa, pero no constituyen información contable típica.", "Incorrecto. La contabilidad registra hechos pasados y presentes; no garantiza pronósticos exactos del futuro."], "correcta": 1, "general": "La contabilidad informa; quien decide es el usuario, con base en esa información."}, {"tipo": "Análisis", "pregunta": "Un estudiante afirma: «Si el dinero de la cuenta bancaria aumentó, la empresa ganó dinero.» ¿Qué debe revisar antes de aceptar esa conclusión?", "opciones": ["Nada; el aumento del efectivo siempre indica utilidad.", "Solo el monto, sin revisar su origen.", "Si el aumento de efectivo proviene de la operación, de un préstamo o de un aporte del propietario, porque efectivo y utilidad no son lo mismo.", "Si el banco cobró comisiones, porque eso demuestra que hubo pérdida."], "retro": ["Incorrecto. Un préstamo recibido aumenta el efectivo sin generar utilidad.", "Incorrecto. El monto no basta: su origen determina si el aumento corresponde a una ganancia.", "CORRECTO. Antes de concluir, hay que identificar qué hecho económico produjo la entrada de dinero.", "Incorrecto. Las comisiones son un gasto en ese caso, pero no prueban por sí solas una pérdida del período."], "correcta": 2, "general": "Un aumento de caja requiere conocer su origen antes de interpretarlo."}, {"tipo": "Teórica", "pregunta": "¿Cuál es la relación entre la contabilidad y la toma de decisiones?", "opciones": ["La contabilidad decide por la gerencia cuál inversión realizar.", "La contabilidad solo se utiliza después de que la decisión ya fue tomada.", "La contabilidad es irrelevante para la gerencia, que actúa solo con intuición.", "La contabilidad aporta información verificable que los usuarios interpretan, pero no decide por ellos."], "retro": ["Incorrecto. La decisión corresponde a los usuarios y a la gerencia; la contabilidad aporta la base de información.", "Incorrecto. La información también sirve para anticipar, planificar y evaluar decisiones antes de tomarlas.", "Incorrecto. La información contable es una herramienta de gestión; desconocerla aumenta el riesgo de decidir sin fundamento.", "CORRECTO. La contabilidad informa con datos verificables; el juicio sobre qué hacer lo ejerce quien decide."], "correcta": 3, "general": "Información y decisión son distintas: la primera sustenta a la segunda."}, {"tipo": "Teórica", "pregunta": "¿Qué significa que la contabilidad registre los hechos en unidades monetarias?", "opciones": ["Que los hechos se expresan en una unidad monetaria común, lo que permite sumarlos y compararlos.", "Que todas las operaciones deben pagarse en efectivo.", "Que solo se registran las operaciones realizadas en moneda extranjera.", "Que la contabilidad se hace sin documentos, de manera oral."], "retro": ["CORRECTO. Expresar los hechos en dinero permite agregarlos y compararlos. Es una convención que tiene límites: no todo lo valioso puede medirse en dinero.", "Incorrecto. Muchas operaciones se pagan a crédito y, aun así, se registran en unidades monetarias.", "Incorrecto. La moneda de registro es la que usa la entidad. Revisa la idea de unidad común de medida.", "Incorrecto. La contabilidad se apoya en documentos fuente, que son la evidencia de cada hecho."], "correcta": 0, "general": "La unidad monetaria es la medida común que hace posible agregar hechos heterogéneos."}, {"tipo": "Análisis", "pregunta": "Un trabajador compra útiles para su hogar con su propio dinero y los lleva al taller de la empresa. ¿Debe la empresa registrar esa compra?", "opciones": ["Sí, porque el bien llegó al taller y ahora la empresa lo usa.", "No, porque la compra es personal y no modifica los recursos de la entidad; solo registraría una operación si existe una transacción propia de la empresa con ese bien.", "Sí, porque la empresa debe pagar todo lo que sus trabajadores usen.", "Sí, siempre, porque cualquier bien que llegue al taller pertenece a la empresa."], "retro": ["Incorrecto. Que un bien esté en el taller no significa que sea recurso de la empresa ni que la empresa lo haya adquirido.", "CORRECTO. La separación patrimonial exige analizar quién realiza la operación y si afecta los recursos de la entidad.", "Incorrecto. Una obligación de pago debe nacer de una operación o de una decisión de la empresa, no de la presencia del bien en sus instalaciones.", "Incorrecto. La presencia física de un bien no determina su propiedad. Hay que revisar la operación y su documento."], "correcta": 1, "general": "La pregunta correcta no es dónde está el bien, sino qué operación lo vincula con la entidad."}, {"tipo": "Teórica", "pregunta": "¿Por qué se exige un documento fuente antes de registrar una operación?", "opciones": ["Para decorar los archivos de la empresa con la firma del gerente.", "Para cumplir solo con el pago de impuestos, sin otra utilidad.", "Para reemplazar la contabilidad por una lista de compras.", "Porque permite comprobar que el hecho ocurrió, en qué fecha, por qué importe y entre qué partes."], "retro": ["Incorrecto. La firma puede formar parte del documento, pero su función es respaldar la operación, no decorar el archivo.", "Incorrecto. Los documentos sirven a muchos usuarios, no solo al cumplimiento tributario.", "Incorrecto. Una lista de compras no sustituye a un registro contable ni a un documento de respaldo.", "CORRECTO. El documento fuente permite verificar el hecho antes de registrarlo y revisar después el registro."], "correcta": 3, "general": "Sin evidencia verificable, el registro pierde su fundamento."}, {"tipo": "Teórica", "pregunta": "¿Cuál de las siguientes preguntas corresponde al objetivo de la contabilidad?", "opciones": ["¿Cuántas personas trabajan en la empresa?", "¿Qué color tiene el logotipo de la empresa?", "¿Qué ocurrió económicamente en la entidad y qué información necesitan sus usuarios para decidir?", "¿Cuánto dinero tiene el propietario en su cuenta personal?"], "retro": ["Incorrecto. El número de trabajadores es un dato útil para otras áreas, pero no define el objetivo de la contabilidad.", "Incorrecto. La imagen corporativa no es materia de la información contable.", "CORRECTO. El objetivo es describir los hechos económicos de la entidad para que sus usuarios puedan decidir.", "Incorrecto. El dinero personal del propietario pertenece a su patrimonio personal, no a la entidad que se registra."], "correcta": 2, "general": "El objetivo de la contabilidad se formula en términos de hechos económicos y de usuarios que deciden."}]}, {"sesion": 2, "diagnostica": false, "titulo": "Evaluación de la sesión 02", "items": [{"tipo": "Teórica", "pregunta": "¿Qué caracteriza a una empresa manufacturera?", "opciones": ["Transforma materias primas o materiales en productos terminados que luego vende.", "Compra productos terminados para revenderlos sin modificarlos.", "Presta servicios intangibles, sin entregar bienes físicos.", "Administra recursos de terceros sin producir ni vender."], "retro": ["CORRECTO. La actividad central es la transformación: los materiales se convierten en un producto diferente.", "Incorrecto. Esa descripción corresponde a una empresa comercial, que compra para vender.", "Incorrecto. Esa descripción corresponde a una empresa de servicios.", "Incorrecto. Administrar recursos ajenos no es la actividad que define a una empresa manufacturera."], "correcta": 0, "general": "Clasifica por lo que la empresa hace con los bienes, no solo por el tipo de bien que vende."}, {"tipo": "Análisis", "pregunta": "Confecciones Montubia confecciona camisetas. Comercializadora Costa Verde compra camisetas terminadas para revenderlas. Servicios Logísticos Andes Global coordina importaciones para terceros. ¿Cuál es la clasificación por actividad correcta?", "opciones": ["Las tres son comerciales, porque venden algo.", "Montubia: manufacturera; Costa Verde: comercial; Andes Global: de servicios.", "Montubia: comercial; Costa Verde: manufacturera; Andes Global: manufacturera.", "Las tres son de servicios, porque todas tienen clientes."], "retro": ["Incorrecto. Vender no basta para ser comercial; hay que identificar si la empresa transforma, compra para revender o presta servicios.", "CORRECTO. Cada empresa se clasifica por su actividad principal: transformar, revender o prestar servicios.", "Incorrecto. Montubia transforma materiales, por eso es manufacturera; Costa Verde no transforma las camisetas.", "Incorrecto. Tener clientes no define la actividad. Andes Global presta un servicio, pero Montubia y Costa Verde no lo hacen."], "correcta": 1, "general": "La actividad principal se identifica a partir de lo que la entidad hace con sus recursos."}, {"tipo": "Teórica", "pregunta": "¿Qué indica la clasificación por origen del capital?", "opciones": ["El lugar donde la empresa vende sus productos.", "El número de empleados que tiene la empresa.", "De dónde proviene el dinero que financia la empresa: de socios nacionales, extranjeros o de ambos.", "El tipo de impuesto que la empresa debe pagar."], "retro": ["Incorrecto. Ese criterio se relaciona con el mercado, no con el origen de los recursos financieros de la empresa.", "Incorrecto. El número de empleados es un indicador de tamaño, no de origen del capital.", "CORRECTO. El origen del capital describe la procedencia de los aportes de los socios o propietarios.", "Incorrecto. El tipo de impuesto depende de la actividad y de las operaciones, no del origen del capital."], "correcta": 2, "general": "No confundas el origen del capital con el lugar de venta ni con el tamaño de la empresa."}, {"tipo": "Teórica", "pregunta": "¿Qué es la forma jurídica de una empresa?", "opciones": ["El diseño del logotipo y la imagen de marca.", "La cantidad de productos que la empresa fabrica al mes.", "El monto del capital inicial, sin importar el tipo de sociedad.", "La estructura legal que adopta la organización, como una compañía anónima o una compañía de responsabilidad limitada, según la ley."], "retro": ["Incorrecto. La imagen de marca es una decisión comercial; no determina la estructura legal.", "Incorrecto. La producción mensual describe la actividad, no la figura legal de la entidad.", "Incorrecto. El monto del capital es un dato de la entidad, pero la forma jurídica depende de la estructura que adopta.", "CORRECTO. La forma jurídica determina, entre otros aspectos, quiénes son los socios y cómo se organiza la entidad."], "correcta": 3, "general": "La forma jurídica es la figura legal con la que la entidad se presenta ante la sociedad y el Estado."}, {"tipo": "Análisis", "pregunta": "Un negocio es explotado por una persona a su nombre, sin constituir una sociedad. ¿Qué afirmación es más adecuada?", "opciones": ["En muchos casos el propietario responde con su patrimonio personal; una sociedad, en cambio, es una entidad jurídica distinta de sus socios.", "Ambas figuras son equivalentes, porque las dos tienen un nombre comercial.", "La sociedad no puede llevar contabilidad, porque no tiene dueño.", "La persona natural no necesita registrar sus operaciones."], "retro": ["CORRECTO. Esta diferencia es central: la separación entre la entidad y sus dueños depende de la forma jurídica.", "Incorrecto. Tener un nombre comercial no iguala la responsabilidad ni la personalidad jurídica de ambas figuras.", "Incorrecto. Una sociedad sí lleva contabilidad; de hecho, debe registrar sus operaciones como entidad distinta de sus socios.", "Incorrecto. La obligación de registrar operaciones depende de la actividad y de la normativa aplicable, no de la forma jurídica por sí sola."], "correcta": 0, "general": "La forma jurídica influye en la responsabilidad de los dueños y en la forma de presentar la información."}, {"tipo": "Teórica", "pregunta": "¿Qué significa que una entidad tenga personalidad jurídica distinta de sus socios?", "opciones": ["Que los socios ya no pueden tener participación en la empresa.", "Que la entidad puede tener derechos y obligaciones propios, que se registran separadamente de los bienes personales de sus socios.", "Que la empresa no paga impuestos.", "Que los socios deben pagar siempre todas las deudas de la empresa con su patrimonio personal."], "retro": ["Incorrecto. La personalidad jurídica no elimina la participación de los socios; la organiza.", "CORRECTO. La entidad actúa como sujeto propio: compra, vende, adeuda y se registra por separado.", "Incorrecto. La personalidad jurídica no exime de obligaciones tributarias.", "Incorrecto. En muchas sociedades la responsabilidad de los socios está limitada. Revisa el tipo de sociedad."], "correcta": 1, "general": "La separación jurídica permite que la contabilidad de la entidad sea independiente de la de sus dueños."}, {"tipo": "Teórica", "pregunta": "¿Quiénes son usuarios internos de la información contable?", "opciones": ["Bancos y proveedores que evalúan otorgar crédito a la empresa.", "El Servicio de Rentas Internas, que recibe las declaraciones.", "La gerencia, los administradores y los socios o accionistas que dirigen o gobiernan la entidad.", "Los clientes que compran a crédito."], "retro": ["Incorrecto. Bancos y proveedores son usuarios externos: no forman parte de la gestión de la empresa.", "Incorrecto. El SRI es un organismo externo a la entidad; utiliza la información para el control tributario.", "CORRECTO. Los usuarios internos participan en la gestión o en el gobierno de la entidad.", "Incorrecto. Los clientes son terceros que se relacionan comercialmente con la empresa; no la dirigen."], "correcta": 2, "general": "Interno o externo depende de la relación del usuario con la gestión de la entidad."}, {"tipo": "Análisis", "pregunta": "Un banco solicita los estados de una empresa para evaluar un préstamo. ¿A qué tipo de usuario pertenece el banco?", "opciones": ["Usuario interno, porque recibe la información directamente de la empresa.", "No es usuario, porque no tiene derecho a información.", "Usuario interno, porque los préstamos son decisiones de la gerencia.", "Usuario externo: no dirige la empresa, pero necesita información para decidir si le presta dinero."], "retro": ["Incorrecto. Recibir la información no convierte al banco en usuario interno. Lo decisivo es su relación con la gestión.", "Incorrecto. El banco sí es usuario de la información, aunque sea externo.", "Incorrecto. La decisión de conceder el préstamo la toma el banco, no la gerencia de la empresa.", "CORRECTO. Un usuario externo utiliza la información para decidir sobre su relación con la entidad sin gestionarla."], "correcta": 3, "general": "Ubica al usuario según su posición frente a la entidad y la decisión que debe tomar."}, {"tipo": "Teórica", "pregunta": "¿Qué tipo de contabilidad se orienta principalmente a la información para la gerencia y las decisiones internas?", "opciones": ["La contabilidad administrativa o gerencial.", "La contabilidad tributaria, orientada a cumplir obligaciones frente a la administración de impuestos.", "La contabilidad gubernamental, que informa sobre el sector público.", "La contabilidad registrada solo en efectivo."], "retro": ["CORRECTO. La contabilidad administrativa produce información para planear, controlar y decidir dentro de la entidad.", "Incorrecto. La contabilidad tributaria atiende obligaciones fiscales; puede ser útil para la gerencia, pero no es su orientación principal.", "Incorrecto. La contabilidad gubernamental se aplica a entidades del sector público, que no se describe en esta pregunta.", "Incorrecto. No existe un tipo de contabilidad definido por la forma de cobro; revisa los criterios de clasificación."], "correcta": 0, "general": "Los tipos de contabilidad se distinguen por el usuario y la finalidad de la información."}, {"tipo": "Teórica", "pregunta": "¿Qué tipo de contabilidad se relaciona con el cumplimiento de obligaciones frente a la administración de impuestos?", "opciones": ["La contabilidad de costos, que calcula el precio de un producto.", "La contabilidad tributaria o fiscal.", "La contabilidad administrativa.", "La contabilidad del presupuesto familiar."], "retro": ["Incorrecto. La contabilidad de costos se orienta a determinar el costo de productos o servicios.", "CORRECTO. La contabilidad tributaria prepara la información necesaria para cumplir las obligaciones fiscales.", "Incorrecto. La contabilidad administrativa se orienta a la gestión interna, no al cumplimiento tributario específico.", "Incorrecto. El presupuesto familiar no es un tipo de contabilidad empresarial."], "correcta": 1, "general": "Cada tipo de contabilidad responde a una pregunta diferente."}, {"tipo": "Análisis", "pregunta": "Confecciones Montubia prepara un informe mensual para decidir qué modelo de camiseta producirá el próximo mes. ¿Qué tipo de contabilidad predomina en ese informe?", "opciones": ["Contabilidad tributaria, porque el informe debe presentarse al SRI.", "Contabilidad gubernamental, porque el informe es público.", "Contabilidad administrativa, porque sirve a la gerencia para decidir.", "Contabilidad de costos exclusivamente, porque se trata de producción."], "retro": ["Incorrecto. El informe está orientado a una decisión interna. Si además se presentara al SRI, ese uso sería otro.", "Incorrecto. La entidad no pertenece al sector público y el informe no es de uso público en este caso.", "CORRECTO. La finalidad principal es decidir la producción; por eso predomina la información administrativa.", "Incorrecto. La contabilidad de costos puede aportar datos, pero la finalidad de decisión general corresponde a la administrativa."], "correcta": 2, "general": "Para identificar el tipo, pregúntate para qué se usa la información y quién la necesita."}, {"tipo": "Teórica", "pregunta": "¿Cuál es la diferencia principal entre la contabilidad financiera y la contabilidad administrativa?", "opciones": ["La financiera solo se usa en los bancos.", "La administrativa es obligatoria y la financiera es opcional.", "No hay diferencia; son nombres distintos de la misma información.", "La financiera informa sobre la situación de la entidad a usuarios en general, y la administrativa apoya las decisiones internas de la gerencia."], "retro": ["Incorrecto. La contabilidad financiera se usa en empresas de distintos sectores.", "Incorrecto. La obligatoriedad depende de la normativa aplicable, no del tipo de información.", "Incorrecto. Comparten datos, pero se diferencian por el usuario y por la finalidad de la información.", "CORRECTO. Una se orienta a informar a usuarios en general; la otra, a sostener la gestión interna."], "correcta": 3, "general": "Ambas usan los mismos hechos; cambian el destinatario y la decisión que sustentan."}, {"tipo": "Teórica", "pregunta": "¿Por qué la clasificación por actividad importa para interpretar una operación?", "opciones": ["Porque la actividad determina el color del logotipo de la empresa.", "Porque solo las empresas manufactureras llevan contabilidad.", "Porque la actividad no tiene relación con las operaciones que se registran.", "Porque una misma camiseta puede ser un producto que una fábrica elabora o un bien que un comercio adquiere para vender."], "retro": ["Incorrecto. El logotipo es un asunto de imagen corporativa y no determina la contabilidad.", "Incorrecto. Todas las entidades obligadas llevan contabilidad, sea cual sea su actividad.", "Incorrecto. La actividad es el punto de partida para entender qué hace la empresa con sus recursos.", "CORRECTO. El mismo bien tiene significado distinto según la actividad y el uso de la entidad que lo posee."], "correcta": 3, "general": "Antes de registrar un bien, pregunta qué actividad realiza la entidad y para qué lo usará."}, {"tipo": "Análisis", "pregunta": "Confecciones Montubia vende a Comercializadora Costa Verde 100 camisetas. Costa Verde vende después 20 de ellas a Servicios Logísticos Andes Global. ¿Qué afirmación es correcta?", "opciones": ["No es un hecho económico para Costa Verde, porque solo lo son las ventas al consumidor final.", "La compra de Costa Verde es un hecho económico de esa entidad, que recibe bienes para revenderlos; la venta de Montubia es un hecho económico distinto para Montubia.", "Solo Montubia registra un hecho económico, porque fabricó las camisetas.", "Ninguna de las dos operaciones debe registrarse, porque las camisetas aún no se han consumido."], "retro": ["Incorrecto. Las compras y las ventas entre empresas también son hechos económicos de cada entidad que participa.", "CORRECTO. Cada entidad registra la operación desde su propia perspectiva; no se registra la misma cosa de la misma manera.", "Incorrecto. Las dos empresas participan en operaciones distintas, y cada una debe registrar la suya.", "Incorrecto. El consumo de un bien no es el criterio para decidir si hubo un hecho económico."], "correcta": 1, "general": "Una misma transacción entre dos entidades genera registros distintos en cada una."}, {"tipo": "Teórica", "pregunta": "¿Qué relación existe entre el tipo de usuario y el tipo de información requerida?", "opciones": ["Todos los usuarios necesitan exactamente la misma información.", "Los usuarios externos no tienen derecho a ninguna información.", "Cada usuario necesita información según la decisión que debe tomar; por eso una misma entidad puede presentar informes distintos para distintos usuarios.", "La información solo sirve para usuarios internos, por eso no se comunica afuera."], "retro": ["Incorrecto. Si todos necesitaran lo mismo, no existirían distintos tipos de contabilidad ni de informes.", "Incorrecto. Los usuarios externos tienen interés legítimo en la información, aunque no accedan a todo lo interno.", "CORRECTO. La finalidad determina el contenido y el detalle de la información que cada usuario requiere.", "Incorrecto. La información también se comunica a usuarios externos cuando la normativa o sus decisiones lo requieren."], "correcta": 2, "general": "Pregunta primero qué decisión debe tomar el usuario; de allí se deriva qué información necesita."}]}, {"sesion": 3, "diagnostica": false, "titulo": "Evaluación de la sesión 03", "items": [{"tipo": "Teórica", "pregunta": "¿Qué principio ético exige ser honesto y justo en todas las relaciones profesionales y comerciales?", "opciones": ["Integridad.", "Objetividad.", "Confidencialidad.", "Diligencia profesional."], "retro": ["CORRECTO. La integridad exige actuar con honestidad y justicia, y decir la verdad sobre los servicios y la experiencia.", "Incorrecto. La objetividad se refiere a formar juicios sin sesgos ni presiones indebidas, no a la honestidad general.", "Incorrecto. La confidencialidad protege la información obtenida durante el trabajo; no define la honestidad general.", "Incorrecto. La diligencia exige cuidado y competencia en el trabajo, pero el principio que se describe es la integridad."], "correcta": 0, "general": "Los principios éticos se distinguen por la conducta que protegen."}, {"tipo": "Análisis", "pregunta": "Un contador descubre un error importante en los estados financieros de un cliente y recibe la indicación de no mencionarlo a los accionistas. ¿Qué principio se vulnera de forma más directa?", "opciones": ["Confidencialidad, porque el cliente pidió reserva sobre sus datos.", "Integridad, porque ocultar un error relevante contradice actuar con honestidad.", "Competencia, porque el contador no tiene preparación para detectar errores.", "Ninguno, porque la reserva es una práctica común del trabajo contable."], "retro": ["Incorrecto. La confidencialidad protege la información, pero no obliga a encubrir un error que afecta a usuarios legítimos.", "CORRECTO. Ocultar un error relevante contradice la honestidad y la transparencia que exige la integridad.", "Incorrecto. El caso no describe falta de preparación, sino una indicación de encubrir un hecho.", "Incorrecto. Que una práctica sea frecuente no la vuelve ética; la reserva no justifica ocultar información relevante."], "correcta": 1, "general": "Ante presiones para ocultar información, identifica el principio afectado antes de decidir la respuesta."}, {"tipo": "Teórica", "pregunta": "¿Qué exige el principio de objetividad?", "opciones": ["Ser amable con todos los clientes.", "Conservar en secreto toda la información.", "Emitir juicios sin sesgo ni influencia indebida, evitando conflictos de interés que afecten el criterio profesional.", "Mantener siempre la misma opinión, aunque cambien los hechos."], "retro": ["Incorrecto. La cortesía es deseable, pero no es el contenido del principio de objetividad.", "Incorrecto. Esa descripción corresponde a la confidencialidad, no a la objetividad.", "CORRECTO. La objetividad protege el juicio profesional frente a presiones, intereses o sesgos.", "Incorrecto. Un juicio objetivo cambia cuando cambian los hechos; mantener una opinión sin revisarla contradice la objetividad."], "correcta": 2, "general": "La objetividad se refiere al criterio, no al carácter de la persona."}, {"tipo": "Teórica", "pregunta": "¿Qué comprende la competencia y diligencia profesionales?", "opciones": ["Tener un título y no volver a estudiar.", "Aceptar todos los trabajos que se ofrezcan, aunque no se conozcan.", "Cumplir horarios, sin revisar la calidad del trabajo.", "Mantener los conocimientos y habilidades necesarios y actuar con cuidado conforme a las normas aplicables."], "retro": ["Incorrecto. El título es un punto de partida; la competencia exige mantener actualizados los conocimientos.", "Incorrecto. Aceptar trabajos sin la preparación necesaria contradice la competencia profesional.", "Incorrecto. La puntualidad no sustituye la revisión de la calidad del trabajo.", "CORRECTO. La competencia se mantiene con formación continua y la diligencia, con cuidado en la ejecución."], "correcta": 3, "general": "Competencia y diligencia son condiciones permanentes, no un requisito que se cumple una sola vez."}, {"tipo": "Teórica", "pregunta": "¿Qué exige el principio de confidencialidad?", "opciones": ["No revelar ni usar la información obtenida en el trabajo sin la autorización o el fundamento legal o profesional correspondiente.", "Compartir la información con amigos, siempre que no mencionen nombres.", "Guardar la información solo en papel.", "Publicar los estados financieros en redes sociales para que todos los conozcan."], "retro": ["CORRECTO. La confidencialidad protege la información obtenida en la relación profesional y limita su uso.", "Incorrecto. Compartir datos sin mencionar nombres sigue siendo una divulgación indebida si la información es reservada.", "Incorrecto. El medio de almacenamiento no define la confidencialidad; lo decisivo es quién accede y para qué.", "Incorrecto. Publicar información reservada sin autorización contradice el principio."], "correcta": 0, "general": "La confidencialidad limita quién accede a la información y para qué puede usarla."}, {"tipo": "Análisis", "pregunta": "Una contadora comparte con su hermana, que trabaja en un banco, el saldo de un cliente para ayudarle a conseguir un crédito. ¿Qué principio se vulnera?", "opciones": ["Competencia profesional, porque no tiene la preparación necesaria para obtener créditos.", "Confidencialidad, porque compartió información de un cliente sin autorización.", "Diligencia, porque no revisó el saldo antes de compartirlo.", "Ninguno, porque el saldo no es un dato secreto."], "retro": ["Incorrecto. El caso no trata de falta de conocimientos técnicos, sino del uso de información de un cliente.", "CORRECTO. El saldo es información del cliente obtenida en el trabajo; su divulgación sin autorización vulnera la confidencialidad.", "Incorrecto. La revisión del saldo no es el problema central; el problema es haber compartido el dato.", "Incorrecto. Que un dato no sea públicamente conocido no significa que pueda compartirse. Revisa si tiene carácter reservado."], "correcta": 1, "general": "Pregunta qué información se compartió, con quién y con qué autorización."}, {"tipo": "Teórica", "pregunta": "¿Qué exige el principio de comportamiento profesional?", "opciones": ["Vestir formalmente en la oficina.", "Anunciar los servicios con promesas de resultados garantizados.", "Cumplir las leyes y reglamentos aplicables y evitar conductas que puedan desprestigiar a la profesión.", "Trabajar solo cuando el cliente lo pida."], "retro": ["Incorrecto. La vestimenta puede ser una norma de la empresa, pero no es el contenido del principio.", "Incorrecto. Prometer resultados sin base puede vulnerar la integridad y desprestigiar la profesión.", "CORRECTO. El comportamiento profesional exige cumplir la ley y cuidar la imagen de la profesión.", "Incorrecto. Depender de la petición del cliente no sustituye la responsabilidad profesional."], "correcta": 2, "general": "El comportamiento profesional integra el cumplimiento legal y la responsabilidad frente a la sociedad."}, {"tipo": "Análisis", "pregunta": "Un contador ofrece a una empresa garantizar una devolución de impuestos sin revisar sus documentos. ¿Qué principio se afecta de manera más clara?", "opciones": ["Confidencialidad, porque revela un dato de la empresa.", "Competencia, porque no tiene preparación para revisar impuestos.", "Ninguno, porque ofrecer servicios es parte del trabajo.", "Comportamiento profesional, porque promete resultados sin base y puede desprestigiar la profesión."], "retro": ["Incorrecto. No hay revelación de información confidencial en el caso descrito.", "Incorrecto. La falta de preparación no se describe; el problema es la promesa sin revisar los documentos.", "Incorrecto. Ofrecer servicios es legítimo; lo que vulnera el principio es garantizar un resultado sin fundamento.", "CORRECTO. Una garantía sin revisión carece de base y afecta la imagen y la confianza en la profesión."], "correcta": 3, "general": "Distingue entre ofrecer un servicio y prometer un resultado que no puede sustentarse."}, {"tipo": "Teórica", "pregunta": "¿Qué organismo controla, en Ecuador, a las compañías en aspectos societarios, financieros y contables?", "opciones": ["La Superintendencia de Compañías, Valores y Seguros.", "El Instituto Ecuatoriano de Seguridad Social.", "El Ministerio del Trabajo.", "El Banco Central del Ecuador, que controla los impuestos."], "retro": ["CORRECTO. La Superintendencia supervisa la organización, el funcionamiento, la disolución y la liquidación de las compañías.", "Incorrecto. El IESS administra la seguridad social; no es el organismo de control societario.", "Incorrecto. El Ministerio del Trabajo rige la política laboral; no controla la organización societaria.", "Incorrecto. El control de impuestos corresponde al SRI, no al Banco Central, y el control societario corresponde a la Superintendencia."], "correcta": 0, "general": "Cada organismo se identifica por la materia que controla."}, {"tipo": "Teórica", "pregunta": "¿Qué función principal cumple el IESS?", "opciones": ["Fijar las tarifas del impuesto al valor agregado.", "Otorgar las prestaciones del seguro social obligatorio a sus afiliados.", "Supervisar a las compañías en su constitución y disolución.", "Resolver los juicios laborales entre empleados y empleadores."], "retro": ["Incorrecto. Las tarifas tributarias no las fija el IESS; esa materia corresponde a la normativa tributaria.", "CORRECTO. El IESS es una entidad autónoma que otorga las prestaciones del seguro social obligatorio.", "Incorrecto. La supervisión societaria corresponde a la Superintendencia de Compañías, Valores y Seguros.", "Incorrecto. Los conflictos laborales se tramitan en las instancias correspondientes, no en el IESS."], "correcta": 1, "general": "El IESS se vincula con la afiliación y las prestaciones de seguridad social."}, {"tipo": "Análisis", "pregunta": "¿Qué organismo es el rector de la política laboral y verifica el cumplimiento de las obligaciones laborales de los empleadores?", "opciones": ["El IESS, porque le corresponde la afiliación de los trabajadores.", "El SRI, porque recauda impuestos sobre los sueldos.", "El Ministerio del Trabajo.", "La Superintendencia de Compañías, porque controla todo el trabajo empresarial."], "retro": ["Incorrecto. El IESS administra la seguridad social; la rectoría de la política laboral corresponde al Ministerio.", "Incorrecto. El SRI recauda impuestos, incluidos los que se relacionan con sueldos, pero no es el rector de la política laboral.", "CORRECTO. El Ministerio del Trabajo regula y verifica el cumplimiento de las obligaciones laborales.", "Incorrecto. La Superintendencia controla aspectos societarios, financieros y contables, no toda la actividad laboral."], "correcta": 2, "general": "Distingue la función de rectoría, la de recaudación y la de prestación."}, {"tipo": "Teórica", "pregunta": "¿Qué tipo de obligación corresponde al SRI en el caso de una empresa?", "opciones": ["Afiliar a los trabajadores al seguro social.", "Aprobar las normas internacionales de contabilidad.", "Controlar las bolsas de valores.", "Obligaciones tributarias, como declarar y pagar impuestos y cumplir deberes formales relacionados con ellos."], "retro": ["Incorrecto. La afiliación corresponde al IESS.", "Incorrecto. Las normas internacionales de contabilidad se emiten por organismos normativos internacionales, no por el SRI.", "Incorrecto. El control del mercado de valores corresponde a la Superintendencia de Compañías, Valores y Seguros.", "CORRECTO. El SRI administra la materia tributaria y verifica el cumplimiento de las obligaciones impositivas."], "correcta": 3, "general": "Relaciona cada obligación con el organismo que la administra."}, {"tipo": "Teórica", "pregunta": "¿Cuál es la relación correcta entre una empresa y los organismos de control?", "opciones": ["Cada empresa cumple obligaciones frente a varios organismos según su naturaleza, su actividad y sus operaciones.", "Una empresa solo tiene obligaciones con un organismo a la vez.", "Los organismos de control no tienen relación con las empresas privadas.", "Las obligaciones dependen únicamente del número de clientes."], "retro": ["CORRECTO. Una misma empresa puede tener obligaciones tributarias, societarias, de seguridad social y laborales al mismo tiempo.", "Incorrecto. Una empresa puede cumplir obligaciones frente a varios organismos simultáneamente.", "Incorrecto. Los organismos regulan a las empresas privadas en sus materias respectivas.", "Incorrecto. El número de clientes no determina por sí solo las obligaciones de la empresa."], "correcta": 0, "general": "Para cada empresa, identifica qué organismo corresponde a cada tipo de obligación."}, {"tipo": "Análisis", "pregunta": "Confecciones Montubia tiene 40 trabajadores, vende camisetas a varias empresas y está constituida como sociedad anónima. ¿Qué combinación de obligaciones describe mejor su relación con los organismos estudiados?", "opciones": ["Solo con el IESS, porque tiene trabajadores.", "Obligaciones tributarias ante el SRI, afiliación y aportes ante el IESS, cumplimiento laboral ante el Ministerio del Trabajo y, según corresponda, obligaciones societarias ante la Superintendencia de Compañías, Valores y Seguros.", "Solo con la Superintendencia de Compañías, porque es una sociedad anónima.", "Ninguna, porque las camisetas no son servicios."], "retro": ["Incorrecto. Tener trabajadores genera obligaciones con el IESS, pero no excluye las demás.", "CORRECTO. La combinación considera la naturaleza tributaria, laboral, de seguridad social y societaria de la entidad.", "Incorrecto. La forma societaria genera obligaciones ante la Superintendencia, pero no agota las demás relaciones con organismos.", "Incorrecto. Las obligaciones dependen de la existencia de la entidad, su actividad y su forma jurídica, no de que venda servicios."], "correcta": 1, "general": "Una empresa puede tener obligaciones simultáneas ante varios organismos; identifícalas una por una."}, {"tipo": "Teórica", "pregunta": "¿Por qué el contador debe conocer las obligaciones de la empresa frente a cada organismo?", "opciones": ["Porque los organismos le pagan por los registros que prepara.", "Porque así puede evitar revisar los documentos.", "Porque la información que prepara debe respaldar el cumplimiento de esas obligaciones y las decisiones de la entidad.", "Porque el contador reemplaza a los organismos de control."], "retro": ["Incorrecto. La relación profesional no depende de pagos de los organismos; el motivo es la responsabilidad frente a la información.", "Incorrecto. Conocer las obligaciones exige revisar documentos, no evitar hacerlo.", "CORRECTO. La información contable sirve tanto al cumplimiento como a la gestión; por eso debe conocerse qué exige cada organismo.", "Incorrecto. El contador no sustituye la función de control de los organismos."], "correcta": 2, "general": "El conocimiento de las obligaciones permite preparar información útil y cumplir con los organismos competentes."}]}];
+
+/* ==========================================================
+   2. Navegación por pestañas
+   ========================================================== */
+(function () {
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('[data-panel]'));
+
+  function mostrar(id, enfocar) {
+    panels.forEach(p => { p.hidden = (p.dataset.panel !== id); });
+    tabs.forEach(t => {
+      const activa = t.dataset.target === id;
+      t.setAttribute('aria-selected', activa ? 'true' : 'false');
+      t.tabIndex = activa ? 0 : -1;
+      if (activa && enfocar) t.focus();
+    });
+    const panel = document.querySelector('[data-panel="' + id + '"]');
+    if (panel) {
+      const titulo = panel.querySelector('h2');
+      if (titulo) { titulo.setAttribute('tabindex', '-1'); titulo.focus({ preventScroll: true }); }
+    }
+    try { history.replaceState(null, '', '#' + id); } catch (e) { /* vista previa sin permiso para cambiar la URL: se ignora */ }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => mostrar(t.dataset.target, false));
+    t.addEventListener('keydown', e => {
+      let j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (j !== null) { e.preventDefault(); tabs[j].focus(); mostrar(tabs[j].dataset.target, true); }
+    });
+  });
+
+  const inicial = (location.hash || '').replace('#', '');
+  mostrar(panels.some(p => p.dataset.panel === inicial) ? inicial : 'intro', false);
+})();
+
+/* ==========================================================
+   3. Evaluaciones de práctica
+   Cada evaluación se dibuja desde EVALUACIONES. Las respuestas
+   se guardan solo en memoria de la pestaña mientras esté abierta.
+   ========================================================== */
+(function () {
+  const LETRAS = ['a', 'b', 'c', 'd'];
+
+  function dibujar(ev, raiz) {
+    const n = ev.items.length;
+    let respuestas = Array(n).fill(null);
+    const nombre = 'ev' + ev.sesion + '-';
+
+    raiz.innerHTML = '';
+
+    // 3.1 Cabecera
+    const cab = document.createElement('div');
+    cab.className = 'cabecera-eval';
+    cab.innerHTML = '<p class="nota-practica">' + (ev.diagnostica
+      ? 'Esta prueba es diagnóstica y formativa: no tiene nota. Sirve para identificar qué conviene repasar.'
+      : 'Esta evaluación es de práctica. Sus respuestas le muestran qué comprende y qué conviene revisar; no sustituye a las evaluaciones oficiales.') + '</p>';
+    const prog = document.createElement('p');
+    prog.className = 'progreso';
+    prog.setAttribute('aria-live', 'polite');
+    cab.appendChild(prog);
+    raiz.appendChild(cab);
+
+    // 3.2 Preguntas
+    const formulario = document.createElement('form');
+    formulario.setAttribute('novalidate', 'novalidate');
+    formulario.addEventListener('submit', e => e.preventDefault());
+    raiz.appendChild(formulario);
+
+    ev.items.forEach((it, i) => {
+      const fs = document.createElement('fieldset');
+      const leyenda = document.createElement('legend');
+      leyenda.innerHTML = 'Pregunta ' + (i + 1) + ' de ' + n;
+      fs.appendChild(leyenda);
+
+      const badge = document.createElement('span');
+      badge.className = 'insignia';
+      badge.textContent = '[' + it.tipo + ']';
+      fs.appendChild(badge);
+
+      const enun = document.createElement('p');
+      enun.textContent = it.pregunta;
+      fs.appendChild(enun);
+
+      const opts = document.createElement('div');
+      opts.className = 'opts';
+      it.opciones.forEach((texto, k) => {
+        const id = nombre + 'p' + i + '-' + k;
+        const etiqueta = document.createElement('label');
+        etiqueta.setAttribute('for', id);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = nombre + 'p' + i;
+        radio.id = id;
+        radio.value = String(k);
+        const letra = document.createElement('span');
+        letra.className = 'letra';
+        letra.textContent = LETRAS[k] + ')';
+        const txt = document.createElement('span');
+        txt.textContent = texto;
+        etiqueta.appendChild(radio);
+        etiqueta.appendChild(letra);
+        etiqueta.appendChild(txt);
+        opts.appendChild(etiqueta);
+        radio.addEventListener('change', () => elegir(i, k));
+      });
+      fs.appendChild(opts);
+
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.setAttribute('aria-live', 'polite');
+      fs.appendChild(fb);
+
+      const gen = document.createElement('p');
+      gen.className = 'gen';
+      gen.textContent = 'Idea que conviene recordar: ' + it.general;
+      fs.appendChild(gen);
+
+      formulario.appendChild(fs);
+    });
+
+    // 3.3 Resultado y acciones
+    const resultado = document.createElement('div');
+    resultado.className = 'resultado';
+    resultado.setAttribute('aria-live', 'polite');
+    raiz.appendChild(resultado);
+
+    const acciones = document.createElement('div');
+    acciones.className = 'acciones';
+    const btnReintento = document.createElement('button');
+    btnReintento.type = 'button';
+    btnReintento.className = 'btn principal';
+    btnReintento.textContent = 'Intentar nuevamente';
+    btnReintento.hidden = true;
+    btnReintento.addEventListener('click', () => reiniciar(false));
+    const btnReinicio = document.createElement('button');
+    btnReinicio.type = 'button';
+    btnReinicio.className = 'btn';
+    btnReinicio.textContent = 'Reiniciar cuestionario';
+    btnReinicio.addEventListener('click', () => reiniciar(true));
+    acciones.appendChild(btnReintento);
+    acciones.appendChild(btnReinicio);
+    raiz.appendChild(acciones);
+
+    // 3.4 Lógica de respuesta
+    function elegir(i, k) {
+      if (bloqueado) return;
+      respuestas[i] = k;
+      const it = ev.items[i];
+      const fieldset = formulario.querySelectorAll('fieldset')[i];
+      const fb = fieldset.querySelector('.fb');
+      const gen = fieldset.querySelector('.gen');
+      const acierto = (k === it.correcta);
+      fb.className = 'fb ' + (acierto ? 'ok' : 'mal');
+      fb.textContent = it.retro[k];
+      gen.classList.add('visible');
+      actualizar();
+    }
+
+    // 3.5 Cálculo de progreso, aciertos y bloqueo
+    let bloqueado = false;
+    function actualizar() {
+      const contestadas = respuestas.filter(x => x !== null).length;
+      const aciertos = respuestas.reduce((s, x, i) => s + (x === ev.items[i].correcta ? 1 : 0), 0);
+      prog.textContent = 'Respondidas: ' + contestadas + ' de ' + n + '. Aciertos hasta ahora: ' + aciertos + '.';
+
+      if (contestadas < n) {
+        bloqueado = false;
+        resultado.innerHTML = '';
+        btnReintento.hidden = true;
+        return;
+      }
+
+      // Evaluación completa: se bloquea la edición hasta reiniciar.
+      bloqueado = true;
+      formulario.querySelectorAll('input').forEach(inp => inp.disabled = true);
+      const porcentaje = Math.round((aciertos / n) * 100);
+      const nota = (aciertos / n * 10).toFixed(1).replace('.', ',');
+      let texto = '<strong>Resultado: ' + aciertos + ' de ' + n + ' respuestas correctas (' + porcentaje + ' %).</strong>';
+      if (ev.diagnostica) {
+        texto += '<br>Esta prueba no tiene calificación. Revisa las preguntas erradas con sus retroalimentaciones.';
+      } else {
+        texto += '<br>Puntaje de práctica: ' + nota + ' sobre 10. No es una nota oficial.';
+      }
+      if (aciertos < n) {
+        texto += '<br>Revisa las preguntas erradas y, si quieres, intenta de nuevo con las mismas preguntas en el mismo orden.';
+        btnReintento.hidden = false;
+      } else {
+        texto += '<br>Respondió todas las preguntas correctamente. No es necesario repetir el cuestionario.';
+        btnReintento.hidden = true;
+      }
+      resultado.innerHTML = texto;
+    }
+
+    // 3.6 Reinicio y reintento
+    function reiniciar(completo) {
+      respuestas = Array(n).fill(null);
+      bloqueado = false;
+      formulario.querySelectorAll('input').forEach(inp => { inp.disabled = false; inp.checked = false; });
+      formulario.querySelectorAll('.fb').forEach(f => { f.className = 'fb'; f.textContent = ''; });
+      formulario.querySelectorAll('.gen').forEach(g => g.classList.remove('visible'));
+      btnReintento.hidden = true;
+      resultado.innerHTML = '';
+      actualizar();
+      if (completo) {
+        const primera = formulario.querySelector('input');
+        if (primera) primera.focus();
+      }
+    }
+
+    actualizar();
+  }
+
+  document.querySelectorAll('.quiz[data-eval]').forEach(raiz => {
+    const num = parseInt(raiz.dataset.eval, 10);
+    const ev = EVALUACIONES.find(e => e.sesion === num);
+    if (ev) dibujar(ev, raiz);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contabilidad General · Semana 02</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- 1. Variables y base ---------- */
+:root{
+  --azul:#003366; --celeste:#87CEEB; --azul-claro:#E8F4FD; --texto:#1d1d1d;
+  --ok:#14532d; --ok-fondo:#e6f4ea; --mal:#7f1d1d; --mal-fondo:#fdecec; --borde:#c9d6e2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.6;color:var(--texto);background:#fff}
+h1,h2,h3,h4{font-family:Lora,Georgia,"Times New Roman",serif;color:var(--azul);line-height:1.25}
+h2{font-size:1.6rem;margin:.2rem 0 .6rem}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem}
+h4{font-size:1.05rem;margin:1.1rem 0 .4rem}
+p{margin:.6rem 0;max-width:72ch}
+ul,ol{max-width:72ch;padding-left:1.4rem}
+li{margin:.3rem 0}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:6px 10px;z-index:10}
+.meta{font-size:.92rem;color:#3b4a5a;margin:0 0 1rem}
+.tiempos{font-size:.95rem}
+
+/* ---------- 2. Encabezado y menú ---------- */
+header.cabecera{background:var(--azul);color:#fff;padding:14px 16px}
+header.cabecera h1{color:#fff;font-size:1.25rem;margin:0}
+header.cabecera p{margin:2px 0 0;font-size:.92rem;color:#e3eef8}
+nav.menu{background:var(--celeste);color:#000;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;border-bottom:1px solid #6fbcd9}
+nav.menu ul{display:flex;list-style:none;margin:0;padding:0;max-width:none}
+nav.menu li{margin:0}
+nav.menu button{font:inherit;font-size:.95rem;background:transparent;color:#000;border:0;padding:12px 14px;cursor:pointer;min-height:44px}
+nav.menu button:hover{background:rgba(255,255,255,.35)}
+nav.menu button[aria-selected="true"]{background:#fff;color:var(--azul);font-weight:700}
+
+main{padding:16px 16px 48px;max-width:860px;margin:0 auto}
+
+/* ---------- 3. Secciones y bloques ---------- */
+.pestana[hidden]{display:none}
+.concepto{border-left:5px solid var(--azul);padding:.6rem .9rem;margin:1rem 0;background:#f7fafd}
+.concepto h4{margin-top:.1rem}
+.ejemplo{background:var(--azul-claro);padding:.7rem .9rem;margin:1rem 0;border-radius:4px}
+.ejemplo h4{margin-top:.1rem}
+.nota-lateral{border:1px solid var(--borde);border-left:5px solid #2a7fb8;background:#fbfdff;padding:.7rem .9rem;margin:0 0 1.2rem;border-radius:4px}
+.nota-lateral h3{margin-top:.1rem}
+.nota-lateral p:first-of-type{margin-top:.2rem}
+.pausa{font-style:normal}
+.prompt{background:#f4f4f4;padding:.6rem .8rem;border-radius:4px}
+.ejercicio{border-top:1px solid var(--borde);margin-top:1.4rem;padding-top:.4rem}
+.ejercicio .tiempo{font-size:.92rem;color:#3b4a5a;margin:0}
+.ayuda{font-style:italic}
+.tabla-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;margin:.8rem 0;min-width:60%}
+caption{caption-side:top;text-align:left;font-weight:700;padding:4px 0;color:var(--azul);font-family:Lora,Georgia,serif}
+th,td{border:1px solid var(--borde);padding:6px 8px;vertical-align:top;text-align:left;min-width:110px}
+th{background:var(--azul-claro)}
+.referencias li{margin-bottom:.7rem;padding-left:1.4rem;text-indent:-1.4rem;list-style:none;max-width:72ch}
+.nota{font-size:.95rem;border-top:1px solid var(--borde);padding-top:.6rem}
+.calc{font-family:Consolas,"Courier New",monospace;font-size:.95rem;background:#f7f9fb;border:1px solid var(--borde);padding:.5rem .7rem;overflow-x:auto;white-space:pre;max-width:100%}
+.tcuenta{display:flex;flex-wrap:wrap;gap:12px;margin:.8rem 0}
+.tcuenta table{min-width:0;width:100%}
+
+/* ---------- 4. Solución desplegable ---------- */
+details.solucion{margin:.7rem 0;border:1px solid var(--azul);border-radius:4px;background:#fff}
+details.solucion>summary{cursor:pointer;padding:.55rem .8rem;font-weight:700;color:var(--azul);background:#eef5fb;min-height:44px;display:flex;align-items:center}
+details.solucion>*:not(summary){padding:0 .8rem}
+details.solucion[open]>summary{border-bottom:1px solid var(--borde)}
+details.solucion>*:last-child{padding-bottom:.8rem}
+
+/* ---------- 5. Evaluación ---------- */
+.quiz{margin-top:.5rem}
+.quiz .cabecera-eval{background:var(--azul-claro);padding:.7rem .9rem;border-radius:4px;margin-bottom:1rem}
+.quiz .progreso{font-weight:600;margin:.2rem 0}
+.quiz fieldset{border:1px solid var(--borde);border-radius:4px;padding:.7rem .9rem;margin:0 0 1rem}
+.quiz legend{font-weight:700;color:var(--azul);padding:0 .3rem;font-family:Lora,Georgia,serif}
+.quiz .insignia{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:10px;background:var(--azul);color:#fff;margin-right:6px;vertical-align:middle}
+.quiz .opts{display:grid;gap:6px;margin:.5rem 0}
+.quiz .opts label{display:flex;gap:10px;align-items:flex-start;padding:10px 10px;border:1px solid var(--borde);border-radius:4px;cursor:pointer;min-height:44px}
+.quiz .opts label:hover{background:#f5faff}
+.quiz .opts input{margin-top:5px;min-width:18px;min-height:18px}
+.quiz .letra{font-weight:700;color:var(--azul)}
+.quiz .fb{margin-top:.5rem;padding:.6rem .8rem;border-radius:4px;display:none}
+.quiz .fb.ok{display:block;background:var(--ok-fondo);color:var(--ok);border-left:5px solid var(--ok)}
+.quiz .fb.mal{display:block;background:var(--mal-fondo);color:var(--mal);border-left:5px solid var(--mal)}
+.quiz .gen{font-size:.93rem;margin-top:.4rem;color:#34434f;display:none}
+.quiz .gen.visible{display:block}
+.quiz .resultado{border:2px solid var(--azul);border-radius:4px;padding:.8rem 1rem;margin:1rem 0;background:#fff}
+.quiz .acciones{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0}
+.quiz button.btn{font:inherit;font-weight:600;padding:10px 14px;min-height:44px;border-radius:4px;border:2px solid var(--azul);background:#fff;color:var(--azul);cursor:pointer}
+.quiz button.btn.principal{background:var(--azul);color:#fff}
+.quiz button.btn[hidden]{display:none}
+.quiz .nota-practica{font-size:.93rem;color:#34434f}
+
+/* ---------- 6. Pie ---------- */
+footer{background:#f2f5f8;color:#2a3440;padding:14px 16px;font-size:.9rem;border-top:1px solid var(--borde)}
+footer p{margin:.2rem 0}
+
+/* ---------- 7. Pantallas estrechas ---------- */
+@media (max-width:420px){
+  body{font-size:16px}
+  main{padding:12px 12px 40px}
+  h2{font-size:1.4rem}
+  table{font-size:.92rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#principal">Ir al contenido</a>
+<header class="cabecera">
+  <h1>Contabilidad General</h1>
+  <p>Licenciatura en Negocios Internacionales · Ciclo II de 2026 · Semana 02: Marco conceptual, NIC 1 y la cuenta contable</p>
+</header>
+
+<nav class="menu" aria-label="Secciones de la semana">
+  <ul role="tablist">
+    <li><button type="button" role="tab" id="tab-intro" data-target="intro" aria-controls="intro" aria-selected="false" tabindex="-1">Repaso</button></li>
+    <li><button type="button" role="tab" id="tab-ses01" data-target="ses01" aria-controls="ses01" aria-selected="false" tabindex="-1">Sesión 01</button></li>
+    <li><button type="button" role="tab" id="tab-eval1" data-target="eval1" aria-controls="eval1" aria-selected="false" tabindex="-1">Evaluación 01</button></li>
+    <li><button type="button" role="tab" id="tab-ses02" data-target="ses02" aria-controls="ses02" aria-selected="false" tabindex="-1">Sesión 02</button></li>
+    <li><button type="button" role="tab" id="tab-eval2" data-target="eval2" aria-controls="eval2" aria-selected="false" tabindex="-1">Evaluación 02</button></li>
+    <li><button type="button" role="tab" id="tab-ses03" data-target="ses03" aria-controls="ses03" aria-selected="false" tabindex="-1">Sesión 03</button></li>
+    <li><button type="button" role="tab" id="tab-eval3" data-target="eval3" aria-controls="eval3" aria-selected="false" tabindex="-1">Evaluación 03</button></li>
+    <li><button type="button" role="tab" id="tab-reflexion" data-target="reflexion" aria-controls="reflexion" aria-selected="false" tabindex="-1">Reflexión</button></li>
+    <li><button type="button" role="tab" id="tab-ia" data-target="ia" aria-controls="ia" aria-selected="false" tabindex="-1">Actividad con IA</button></li>
+    <li><button type="button" role="tab" id="tab-biblio" data-target="biblio" aria-controls="biblio" aria-selected="false" tabindex="-1">Bibliografía</button></li>
+  </ul>
+</nav>
+
+<main id="principal">
+<section class="pestana" id="intro" data-panel="intro">
+<h2>Repaso de la semana anterior y punto de partida</h2>
+<p class="meta">Semana 2 · Unidad 1 · Repaso de la semana 1 y presentación de las tres sesiones</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>La semana pasada conociste a tres empresas ficticias. Son inventadas para que aprendas, y los datos que aparecen en este material son situaciones de estudio. Confecciones Montubia S. A. fabrica camisetas. Comercializadora Costa Verde Cía. Ltda. las compra para revenderlas. Servicios Logísticos Andes Global S. A. las compra para que sus empleados las usen como uniforme.</p>
+<p>Esta semana responderás una pregunta sencilla: si una empresa quiere informar sobre su situación, ¿qué debe contener esa información para que alguien pueda decidir con ella? Para responderla vas a estudiar tres ideas. La primera es el marco conceptual, que son los principios que guían a quienes escriben las normas de información financiera. La segunda es la norma que indica cómo presentar los estados financieros. La tercera es la cuenta, la herramienta con la que se anotan los movimientos de cada recurso, cada deuda y cada ingreso.</p>
+<p>Al terminar la semana deberías poder explicar para quién se prepara la información financiera y qué cualidades la hacen útil; decir si una partida corresponde a activo, pasivo, patrimonio, ingreso o gasto; y leer una cuenta T, es decir, indicar en qué lado se anota cada movimiento y cuál es su saldo. Para lograrlo, trabaja así: intenta cada pausa por escrito, compara tu respuesta con la explicación y vuelve a los ejemplos si tu respuesta es diferente.</p>
+<p>Cada sesión está pensada para 120 minutos: unos 5 para leer la apertura, 40 para la explicación con pausas, 50 para los ejercicios, 20 para la evaluación y la revisión, y 5 para el cierre.</p>
+</div>
+
+<h3>Lo que debes recordar de la semana 1</h3>
+<p>La contabilidad es un sistema que registra los hechos económicos de una empresa y los comunica para que las personas puedan tomar decisiones. Tres ideas de la semana pasada te van a servir ahora.</p>
+<p>La primera es la <strong>entidad</strong>. Es la empresa, que tiene sus propios recursos y deudas, separados de los de sus dueños. Por eso, si el dueño de Montubia paga una consulta médica personal con su tarjeta, ese gasto no se anota como gasto de la empresa. La segunda es el <strong>hecho económico</strong>, que es cualquier suceso que cambia la situación económica de la empresa y se puede expresar en dinero. Para comprobarlo se usa el <strong>documento fuente</strong>, como una factura o un contrato. La tercera idea es que <strong>la información no es solo dinero en caja</strong>. Si Montubia vende a crédito, el dinero no entra hoy, pero la situación de la empresa sí cambia.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 1. Empresas del hilo conductor y su función en la cadena (situaciones de estudio)</caption>
+<thead><tr><th>Empresa</th><th>Actividad</th><th>Relación con el producto</th></tr></thead>
+<tbody>
+<tr><td>Confecciones Montubia S. A.</td><td>Fabricante. Confecciona camisetas con los materiales que compra.</td><td>Fabrica las camisetas y vende parte a Costa Verde. Usa algunas como uniformes de su personal.</td></tr>
+<tr><td>Comercializadora Costa Verde Cía. Ltda.</td><td>Comercial. Compra mercadería terminada para venderla.</td><td>Compra a Montubia y vende a Andes Global.</td></tr>
+<tr><td>Servicios Logísticos Andes Global S. A.</td><td>De servicios. Trabaja en el área de Negocios Internacionales.</td><td>Compra camisetas para que sus empleados las usen como uniforme. No las vende.</td></tr>
+</tbody></table></div>
+
+<h3>Qué vas a estudiar esta semana</h3>
+<p>La <strong>sesión 01</strong> trata del marco conceptual de las Normas Internacionales de Información Financiera (NIIF). Verás para quién se prepara la información, qué cualidades la hacen útil y qué significa cada uno de los cinco elementos de los estados financieros.</p>
+<p>La <strong>sesión 02</strong> estudia la NIC 1. Es la norma que dice cómo se presentan los estados financieros y qué partes forman el conjunto completo.</p>
+<p>La <strong>sesión 03</strong> presenta la cuenta contable: el debe, el haber, la naturaleza de cada cuenta y cómo calcular un saldo. Practicarás con cuentas T, que son la forma más sencilla de ver una cuenta.</p>
+<p>Las tres sesiones están conectadas. Lo que aprendas en la sesión 01 te ayudará a entender por qué la sesión 02 pide ciertas partidas. Lo que clasifiques en la sesión 02 te servirá para entender en qué cuentas se acumulan los movimientos de la sesión 03. Si una idea te resulta difícil porque depende de otra, vuelve a la anterior antes de seguir.</p>
+<p>Esta semana todavía no harás asientos completos en el libro diario. Eso llega en la semana 3. Tampoco se evalúan temas que el plan deja para más adelante, como los ajustes o los estados financieros de cierre. Cuando mencionemos uno de esos temas, te lo indicaremos.</p>
+</section>
+
+
+<section class="pestana" id="ses01" data-panel="ses01">
+<h2>Sesión 01 · Marco conceptual de la información financiera</h2>
+<p class="meta">Semana 2 · Unidad 1 · Marco Conceptual de las NIIF (sesión global 04) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que el gerente de Confecciones Montubia S. A. recibe una solicitud por parte de un banco en la que le pide un informe de la situación financiera de la empresa. El banco quiere saber si puede concederle un crédito a Montubia. Antes de preparar el informe, el gerente se pregunta qué información contable debe contener para que el banco pueda decidir bien. No basta con que las cifras sean verdaderas. También deben servir para la decisión, mostrar la realidad de la empresa y poder compararse con otros periodos.</p>
+<p>Al terminar esta sesión deberías poder explicar a quién se dirige la información financiera y por qué; distinguir las cualidades fundamentales de las cualidades que mejoran la utilidad de la información; aplicar las definiciones de activo, pasivo, patrimonio, ingresos y gastos a situaciones concretas, y justificar cada clasificación.</p>
+<p>Recuerda trabajar y contestar cada pausa planteada antes de leer la explicación que te proponemos. Escribe tu propia respuesta con tus propias palabras y compárala después. Si una definición te resulta abstracta, busca el ejemplo de Montubia que la acompaña.</p>
+</div>
+
+<h3>1. Qué es el marco conceptual</h3>
+<p>Las NIIF son normas que explican cómo registrar, medir y presentar operaciones concretas, como la compra de mercadería o un préstamo. Pero ninguna norma puede prever todas las situaciones. Por eso existe el <strong>Marco Conceptual para la Información Financiera</strong>. Lo publica el Consejo de Normas Internacionales de Contabilidad, que en inglés se llama IASB. El marco reúne los principios generales que guían la elaboración de las normas y sirven de apoyo cuando una norma no dice nada sobre un caso.</p>
+<p>El marco tiene un límite importante: no reemplaza a las normas. Si una NIIF trata un asunto de forma específica, esa norma es la que se aplica. Puedes pensar en el marco como una constitución. Una constitución no resuelve cada caso concreto, pero establece los principios con los que se interpretan las leyes. El marco hace algo parecido con las normas contables. La comparación tiene un alcance: una constitución es una ley dentro de un país, y el marco no tiene fuerza de ley en Ecuador por sí mismo.</p>
+
+<h3>2. Para quién se prepara la información</h3>
+<p>La información financiera sirve para que los <strong>usuarios</strong> tomen decisiones económicas. Un usuario es cualquier persona que usa la información de la empresa. El objetivo es dar datos sobre tres cosas: la situación financiera de la empresa, su rendimiento (cuánto gana o pierde) y sus flujos de efectivo (cómo entra y sale el dinero). La NIC 1 lo dice en su párrafo 9. Además, los estados muestran qué hizo la administración con los recursos que le confiaron los dueños.</p>
+<p>Piensa en dos usuarios. Quien presta dinero debe decidir si concede un crédito. Quien aporta capital debe decidir si mantiene su inversión. Ambos necesitan información, pero para decisiones distintas. Por eso el banco que evalúa a Montubia es un usuario diferente del socio que quiere saber si la empresa tuvo utilidades, aunque los dos miren la misma información.</p>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: el informe para el banco</h4>
+<p>Montubia prepara un informe para el banco. El banco quiere saber si la empresa podrá pagar sus deudas en los próximos meses. Para eso necesita dos datos: cuánto dinero espera recibir la empresa y cuánto tendrá que pagar. Si el informe mostrara solo el saldo de caja, el banco no sabría cuánto debe Montubia a sus proveedores ni cuánto le deben sus clientes. La información sería verdadera, pero no alcanzaría para decidir.</p>
+</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Antes de seguir, responde: si el informe de Montubia mostrara solo el dinero que hay en caja, ¿qué decisión del banco quedaría sin base? Escribe una respuesta de dos o tres frases.</p>
+<p class="ayuda">Si tu respuesta solo habla del efectivo, piensa en otras partidas que afectan la capacidad de pago, como las deudas con proveedores o el dinero que los clientes deben a la empresa.</p>
+</div>
+
+<h3>3. Cualidades de la información útil</h3>
+<p>El marco separa las cualidades de la información en dos grupos. El primero son las <strong>cualidades fundamentales</strong>: la relevancia y la representación fiel. Si la información no las tiene, no sirve, aunque esté muy ordenada. El segundo grupo son las <strong>cualidades que mejoran</strong> la información: la comparabilidad, la verificabilidad, la oportunidad y la comprensibilidad. Estas cualidades hacen más útil la información que ya es relevante y fiel, pero no pueden salvar una información que no lo es.</p>
+<p>La <strong>relevancia</strong> significa que la información puede cambiar una decisión. Una cifra es relevante si ayuda a predecir resultados futuros o si confirma o corrige lo que ya se esperaba. Ligada a la relevancia está la <strong>materialidad</strong>: una partida es material cuando dejarla fuera, o presentarla mal, podría cambiar la decisión de un usuario.</p>
+<p>La <strong>representación fiel</strong> significa que la información describe lo que realmente pasó en la economía de la empresa, no solo lo que dice el nombre legal de un documento. Una representación fiel es completa, neutral y libre de errores. Libre de errores no quiere decir que todas las cifras sean exactas. Algunas cifras son estimaciones, y tienen incertidumbre. Lo correcto es explicar esa incertidumbre, no esconderla.</p>
+<p>Las cualidades que mejoran son las siguientes. La <strong>comparabilidad</strong> permite comparar la información entre periodos y entre empresas. La <strong>verificabilidad</strong> permite que distintas personas, al revisar los mismos datos, lleguen a conclusiones parecidas. La <strong>oportunidad</strong> significa que la información llega a tiempo para decidir. La <strong>comprensibilidad</strong> exige que la información se presente con claridad a alguien que conoce razonablemente los negocios. El marco también reconoce un límite práctico: la información debe valer más de lo que cuesta producirla.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 2. Cualidades de la información financiera útil</caption>
+<thead><tr><th>Cualidad</th><th>Tipo</th><th>Pregunta que responde</th><th>Ejemplo en Montubia</th></tr></thead>
+<tbody>
+<tr><td>Relevancia</td><td>Fundamental</td><td>¿La información puede cambiar una decisión?</td><td>Las deudas vencidas con proveedores sí cambian la decisión del banco.</td></tr>
+<tr><td>Representación fiel</td><td>Fundamental</td><td>¿Muestra lo que realmente pasó, de forma completa, neutral y sin errores?</td><td>Un préstamo del socio que debe devolverse no se presenta como aporte de capital.</td></tr>
+<tr><td>Comparabilidad</td><td>Mejora</td><td>¿Se puede comparar con otros periodos o con otras empresas?</td><td>Los dos años se presentan con los mismos criterios de clasificación.</td></tr>
+<tr><td>Verificabilidad</td><td>Mejora</td><td>¿Otra persona puede comprobar la información con los documentos?</td><td>Cada venta tiene su factura.</td></tr>
+<tr><td>Oportunidad</td><td>Mejora</td><td>¿Llega a tiempo para decidir?</td><td>El informe del cierre mensual llega antes de la reunión del comité de crédito.</td></tr>
+<tr><td>Comprensibilidad</td><td>Mejora</td><td>¿Lo puede entender una persona que conoce el negocio?</td><td>Cada partida tiene un nombre claro, y las notas explican lo que falta.</td></tr>
+</tbody></table></div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: exacta, pero tardía</h4>
+<p>Imagina que el informe de Montubia tiene todas las facturas correctas, pero llega cuatro meses después del cierre. Las cifras son verificables y completas, pero el informe pierde su oportunidad: el banco ya tomó su decisión con otra información. Por eso no basta con tener una cualidad. Si una falla, la utilidad de la información baja aunque las demás estén bien.</p>
+</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Observa qué cambia. Imagina dos informes. El primero es exacto, pero llega tarde. El segundo llega a tiempo, pero omite una deuda importante. ¿Cuál de los dos hay que corregir primero, y por qué? Responde pensando qué cualidad falta en cada caso.</p>
+<p class="ayuda">Si respondiste que la deuda omitida es más grave, revisa por qué la representación fiel es una cualidad fundamental. Una deuda omitida hace que la situación de la empresa se vea distinta de la realidad.</p>
+</div>
+
+<h3>4. Los cinco elementos de los estados financieros</h3>
+<p>Los estados financieros agrupan sus partidas en cinco grandes clases, que se llaman <strong>elementos</strong>: activos, pasivos, patrimonio, ingresos y gastos. Para entender los tres primeros conviene empezar por una palabra: <strong>recurso económico</strong>. Es un derecho que puede producir beneficios económicos (párrafo 4.4 del marco). Con esa idea, el marco define los elementos.</p>
+
+<div class="concepto">
+<h4>Activo</h4>
+<p>Un activo es un recurso económico que la empresa controla en el presente, como resultado de sucesos pasados (párrafo 4.3). Hay tres ideas en esta frase. El recurso existe hoy. La empresa lo controla, es decir, puede decidir cómo usarlo y obtener sus beneficios. Y el control viene de algo que ya ocurrió, como una compra ya realizada. Un contrato que todavía no se cumplió no alcanza, por sí solo, para decir que hay un activo.</p>
+</div>
+
+<div class="concepto">
+<h4>Pasivo</h4>
+<p>Un pasivo es una obligación presente de la empresa de entregar un recurso económico, como resultado de sucesos pasados (párrafo 4.26). Es una deuda, o una obligación de dar algo, que existe hoy y que nació de algo que ya pasó. Un presupuesto que la gerencia aprueba para comprar maquinaria el próximo año no es un pasivo. Todavía no hay una obligación, porque no ocurrió ningún suceso que la origine.</p>
+</div>
+
+<div class="concepto">
+<h4>Patrimonio</h4>
+<p>El patrimonio es el interés que queda para los dueños. Se calcula restando todos los pasivos de todos los activos (párrafo 4.63). Si la empresa vendiera todo lo que tiene y pagara todo lo que debe, lo que sobrara sería del patrimonio. El patrimonio no se mide por separado: depende de los activos y de los pasivos.</p>
+</div>
+
+<div class="concepto">
+<h4>Ingresos y gastos</h4>
+<p>Un ingreso es un aumento de activos, o una disminución de pasivos, que aumenta el patrimonio. Lo que los dueños aportan no cuenta como ingreso. Un gasto es lo contrario: una disminución de activos, o un aumento de pasivos, que disminuye el patrimonio. Lo que los dueños retiran tampoco es gasto (párrafos 4.68 y 4.69). Observa que los dos se definen por su efecto sobre el patrimonio. Por eso un ingreso no es lo mismo que un cobro, ni un gasto es lo mismo que un pago. Esa diferencia la verás en la sesión 03.</p>
+</div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: un cliente que paga por adelantado</h4>
+<p>Un cliente deposita 500 dólares por un pedido de camisetas que Montubia todavía no entrega. La empresa recibió efectivo, pero aún no cumplió su parte. Por eso ese dinero no es todavía un ingreso. Montubia tiene la obligación de entregar camisetas. Separa dos cosas: el recurso que entró (el efectivo) y la obligación que nació (entregar camisetas). Más adelante, en la unidad 3, estudiarás con más detalle los anticipos de clientes. Por ahora basta con que veas que el efectivo recibido crea una obligación.</p>
+</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Un cliente deposita 500 dólares por un pedido que Montubia todavía no entrega. Antes de leer la respuesta, indica si en ese momento Montubia tiene un activo, un pasivo o ninguno de los dos por ese depósito. Explica tu razón usando la definición correspondiente.</p>
+<p class="ayuda">Pregúntate qué obligación nace del depósito y qué suceso pasado la origina. Después compara esa obligación con la definición de pasivo.</p>
+</div>
+
+<h3>5. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Antes de abrir cada solución, escribe tu respuesta. La solución te explica por qué la respuesta es esa y qué error suele llevar a una respuesta equivocada. Trabaja cada ejercicio por tu cuenta.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Usuarios y decisiones</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás a los usuarios de la información de Montubia y la decisión que toma cada uno. Considera cuatro interesados: el banco que evalúa un préstamo, un socio que mantiene su aporte, el gerente que planifica la producción y el Servicio de Rentas Internas (SRI), que verifica el cumplimiento de las obligaciones tributarias.</p>
+<p class="ayuda">Para cada usuario, pregúntate primero qué decisión tiene que tomar. Después decide si participa en la gestión de la empresa (usuario interno) o si está fuera de ella (usuario externo).</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>El banco es un usuario externo. No dirige la empresa, pero necesita información para decidir si presta dinero. El socio puede ser interno o externo según su papel. Si el socio dirige la empresa, es interno. Si solo invierte su dinero, es externo. El gerente es un usuario interno, porque administra la empresa y necesita información para planificar. El SRI es un usuario externo: usa la información para comprobar que la empresa cumple sus obligaciones tributarias.</p>
+<p><strong>Comprobación:</strong> cada usuario debe tener una decisión asociada. Si alguno no decide nada con la información, revisa si realmente es un usuario de la información financiera.</p>
+<p><strong>Error frecuente:</strong> pensar que todo el que recibe el informe es un usuario interno. Lo que define si alguien es interno es su relación con la gestión de la empresa.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La pregunta clave no es quién recibe el informe, sino qué decisión tomará cada usuario. La decisión dice qué información necesita.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Identificar cualidades</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás qué cualidad de la información se ve afectada en cada situación. Considera cuatro afirmaciones sobre los informes de Montubia: (a) el informe incluye una deuda con un proveedor, pero no dice que el proveedor está reclamando el pago; (b) el informe de este año usa un criterio de valoración distinto al del año anterior, sin avisarlo; (c) el informe de diciembre se entrega en marzo; (d) las cifras se pueden comprobar con los documentos de respaldo.</p>
+<p class="ayuda">Relaciona cada situación con una cualidad de la tabla 2. Pregúntate si lo que falta o cambia afecta la decisión, la comparación, la comprobación o el momento de entrega.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>(a) Afecta a la representación fiel y a la comprensibilidad. El informe no cuenta que el proveedor reclama el pago, y ese dato es importante para el banco. (b) Afecta a la comparabilidad: al cambiar el criterio sin avisar, no se pueden comparar los dos años. (c) Afecta a la oportunidad: el informe llega cuando ya no sirve para decidir. (d) Es verificabilidad: otra persona puede comprobar las cifras con los documentos.</p>
+<p><strong>Comprobación:</strong> cada afirmación debe quedar asociada a una cualidad principal. Puede tener efectos secundarios, pero la cualidad principal es la que cambia la lectura del caso.</p>
+<p><strong>Error frecuente:</strong> confundir la oportunidad con la verificabilidad. Una cifra puede comprobarse con sus documentos y aun así llegar tarde.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cada cualidad responde a una pregunta distinta. Si una falla, la información puede seguir siendo útil en otros aspectos, pero no en el que falló.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Aplicar las definiciones</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad clasificarás cuatro situaciones de Montubia como activo, pasivo o ninguno de los dos. Justifica cada respuesta con la definición correspondiente. Las situaciones son: (1) tela comprada a crédito y ya recibida en la bodega, cuyo pago vence en sesenta días; (2) un plan de inversión en maquinaria aprobado por la gerencia para el próximo año, sin contrato firmado; (3) un cliente que deposita 500 dólares por un pedido que todavía no se entrega; (4) el derecho a cobrar a un cliente por camisetas entregadas la semana pasada.</p>
+<p class="ayuda">En cada caso busca tres cosas: si hay un recurso que la empresa controla, si hay una obligación presente y si ambas nacen de algo que ya ocurrió.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>(1) La tela es un recurso que Montubia controla, y viene de una compra ya hecha. Es un activo. La deuda con el proveedor es una obligación presente que nació de esa misma compra. Es un pasivo. Son dos partidas distintas que vienen del mismo suceso. (2) El plan no es un activo ni un pasivo. No hay un recurso controlado ni una obligación que haya nacido de algo que ya pasó. (3) El depósito crea la obligación de entregar camisetas. Eso es un pasivo. El efectivo es un recurso, pero lo que define la clasificación es la obligación. (4) El derecho a cobrar es un recurso que la empresa controla porque ya entregó las camisetas. Es un activo.</p>
+<p><strong>Comprobación:</strong> en los casos (1) y (4), identifica el suceso pasado que origina el activo. En el caso (2), comprueba que no existe ni un recurso controlado ni una obligación presente.</p>
+<p><strong>Error frecuente:</strong> tratar como pasivo algo que solo es un presupuesto o una intención de compra, o tratar como activo un bien que la empresa todavía no controla.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Las definiciones no se aplican según el nombre de la partida. Se aplican según si existe un recurso o una obligación, y según el suceso que los originó.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Forma legal y sustancia</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad analizarás si el nombre de un documento coincide con lo que realmente ocurre. Un socio de Montubia transfirió 10.000 dólares a la empresa. El contrato lo llama «aporte de capital», pero dice que la empresa devolverá ese monto en doce meses, con un interés. Decide cómo debe presentarse ese monto según lo que realmente ocurre.</p>
+<p class="ayuda">Compara el nombre del contrato con lo que la empresa debe hacer después. ¿Tendrá que entregar dinero al socio?</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Lo que realmente ocurre es un préstamo: la empresa debe devolver el monto y pagar un interés. Esa obligación existe hoy y nació de la transferencia que la empresa recibió. Por lo tanto, es un pasivo y no patrimonio. Presentarlo como aporte de capital mostraría solo el nombre del contrato, no lo que pasa en realidad. Eso afecta a la representación fiel.</p>
+<p><strong>Comprobación:</strong> pregúntate si la empresa podría evitar devolver el dinero al socio. Si no puede, el monto es un pasivo, sin importar cómo se llame en el contrato.</p>
+<p><strong>Error frecuente:</strong> aceptar el nombre del contrato sin revisar sus condiciones. Para la representación fiel hay que mirar lo que realmente ocurre.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El mismo dinero puede ser patrimonio o pasivo, según las obligaciones que genere. El nombre del documento no decide la clasificación por sí solo.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: cambio de una condición</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>Supongamos que el socio del ejercicio anterior no puede exigir que le devuelvan el dinero. Su aporte se convierte en una participación permanente en el capital de Montubia, sin interés y sin plazo de devolución. Antes de resolver, anota qué crees que cambia en la clasificación y qué se mantiene igual. Esta variante sirve para comparar las dos operaciones. El caso original sigue siendo el del ejercicio 4.</p>
+<p class="ayuda">Vuelve a hacerte la pregunta clave: ¿la empresa tendrá que entregar recursos en el futuro por ese monto?</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Si la empresa no tiene que devolver el monto ni pagar intereses, no tiene una obligación presente de entregar recursos. El aporte aumenta el patrimonio, es decir, lo que queda para los dueños. Lo que se mantiene igual es que el socio entregó el dinero y que la operación debe documentarse. Lo que cambia es la obligación: en el ejercicio 4 existía, y en esta variante no existe.</p>
+<p><strong>Comprobación:</strong> compara las dos situaciones y verifica que la única diferencia importante sea la obligación de entregar recursos.</p>
+<p><strong>Error frecuente:</strong> pensar que todo dinero que aporta un dueño es patrimonio. Lo decisivo es si hay una obligación de devolverlo.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cuando cambia una condición, el razonamiento debe volver a los mismos criterios. Si la conclusión cambia, identifica qué condición la cambió.</p></div>
+</div>
+
+<h3>6. Cierre de la sesión</h3>
+<p>Volvamos a la situación del inicio. El banco necesita información útil para decidir si presta dinero a Montubia. Esa utilidad depende de que la información sea relevante y fiel. También depende de que se pueda comparar, verificar, entregar a tiempo y entender. Y los elementos que la forman deben definirse con precisión: un recurso controlado, una obligación presente, el interés de los dueños y el efecto de cada operación sobre el patrimonio.</p>
+<p>Como tarea de transferencia, elige otra empresa de tu entorno, real o imaginaria. Escribe tres cosas: quiénes son sus usuarios, qué decisión toma cada uno y cuál de las cualidades de la tabla 2 sería más difícil de cumplir en su caso. Si te cuesta empezar, vuelve al ejemplo del banco y a la pausa del depósito.</p>
+<p>Para repasar según tu dificultad: si confundes activo y pasivo, relee los párrafos de definición junto con el caso del depósito. Si confundes relevancia y representación fiel, relee la tabla 2. Si tienes dudas sobre el patrimonio, relee su definición como lo que queda para los dueños.</p>
+</section>
+
+
+<section class="pestana" id="eval1" data-panel="eval1" aria-labelledby="t-eval1">
+<h2 id="t-eval1">Evaluación de la sesión 01: marco conceptual</h2>
+<p class="meta">Semana 2 · Unidad 1. Introducción a la contabilidad · 16 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="1"></div>
+</section>
+
+<section class="pestana" id="ses02" data-panel="ses02">
+<h2>Sesión 02 · NIC 1 y estructura de los estados financieros</h2>
+<p class="meta">Semana 2 · Unidad 1 · NIC 1 y presentación de estados financieros (sesión global 05) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Al cerrar el año, Confecciones Montubia S. A. debe entregar a su banco un grupo de estados financieros. Un estado financiero es un informe ordenado de cifras que muestra la situación económica de una empresa. Este grupo debe mostrar dónde está la empresa en una fecha concreta y cómo le fue durante el año. La pregunta de esta sesión es qué debe incluir ese grupo, cómo debe presentarse y en qué se diferencian los estados que lo forman.</p>
+<p>Al terminar deberías poder nombrar los componentes del conjunto completo de estados financieros según la NIC 1. La NIC 1 es la Norma Internacional de Contabilidad que indica cómo presentar esos estados. También deberías poder explicar qué significa presentar de forma razonable y cuándo una empresa puede declarar que cumple las NIIF. Las NIIF son las Normas Internacionales de Información Financiera. Por último, deberías distinguir el estado de situación financiera del estado de resultados: el primero muestra una situación a una fecha y el segundo, un desempeño durante un periodo. Con esa diferencia clara, podrás clasificar partidas concretas en el estado que corresponde.</p>
+<p>Para estudiar, intenta cada clasificación en un papel antes de leer la solución. Si dudas entre dos estados, hazte una sola pregunta: ¿esta partida describe lo que la empresa tiene y debe en una fecha, o lo que ganó o perdió durante un periodo?</p>
+</div>
+
+<h3>1. Qué establece la NIC 1</h3>
+<p>La NIC 1, titulada Presentación de Estados Financieros, establece la base para presentar los estados de propósito general. Son los estados que se preparan para usuarios que no pueden pedir a la empresa un informe hecho a su medida. El banco es uno de esos usuarios: no puede exigir a Montubia un informe especial, así que recibe el conjunto general. La norma busca que la información sea comparable con la de periodos anteriores y con la de otras empresas. Para lograrlo, fija requisitos generales de presentación, orientaciones sobre la estructura de los estados y un contenido mínimo.</p>
+<p>Antes de aplicar la norma a una empresa real, hay que confirmar qué normas corresponden a ese tipo de entidad en Ecuador. Esa verificación se hace en unidades posteriores del curso y no se evalúa esta semana. Lo que sí debe quedarte claro es que esta sesión estudia la norma tal como describe la presentación de un conjunto completo.</p>
+
+<h3>2. El conjunto completo de estados financieros</h3>
+<p>La NIC 1 indica que un conjunto completo de estados financieros tiene cinco componentes (párrafo 10). Son los siguientes: (a) un estado de situación financiera a la fecha de cierre del periodo; (b) un estado de resultados y otro resultado integral del periodo; (c) un estado de cambios en el patrimonio del periodo; (d) un estado de flujos de efectivo del periodo; y (e) las notas, que incluyen las políticas contables materiales y otra información explicativa. Una política contable es el criterio que la empresa usa para registrar y medir sus operaciones, y es material cuando su omisión podría cambiar una decisión del usuario.</p>
+<p>Tres precisiones completan esta idea. La primera es que el conjunto se presenta al menos una vez al año e incluye cifras comparativas del periodo anterior (párrafos 36 y 38). Así el usuario puede ver si la empresa mejoró o empeoró. La segunda es que todos los estados del conjunto tienen igual importancia (párrafo 11). Ninguno puede esconderse detrás de otro. La tercera es que la norma permite dar a los estados títulos distintos, siempre que su contenido sea equivalente (párrafo 10, última oración). Lo importante es qué información contiene cada estado, no el nombre que lleva.</p>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: el conjunto de Montubia al cierre</h4>
+<p>Montubia prepara el conjunto completo para el banco. El estado de situación financiera muestra lo que la empresa tiene y lo que debe en la fecha de cierre. El estado de resultados muestra cuánto ganó o perdió durante el año. El estado de cambios en el patrimonio muestra cómo cambió lo que pertenece a los socios. El estado de flujos de efectivo muestra cómo entró y salió el dinero. Las notas explican los criterios usados y las cifras más importantes.</p>
+<p>Imagina que Montubia entregara solamente el estado de resultados. El banco sabría cuánto ganó la empresa en el año, pero no sabría qué deudas tiene a la fecha de cierre. Esa información hace falta para decidir un crédito, por eso la norma pide el conjunto completo.</p>
+</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Observa qué cambia si el banco recibe solamente el estado de resultados de Montubia. ¿Qué decisión de crédito queda sin información? Explica por qué el estado de resultados no la resuelve.</p>
+<p class="ayuda">Piensa qué mide el estado de resultados: el desempeño durante un periodo, no la situación en una fecha. Pregúntate qué deudas aparecerían en el estado que falta.</p>
+</div>
+
+<h3>3. Presentación razonable y declaración de cumplimiento</h3>
+<p>La norma exige que los estados financieros presenten de forma razonable la situación financiera, el desempeño financiero y los flujos de efectivo de la empresa (párrafo 15). Presentar de forma razonable significa mostrar fielmente los efectos de cada operación. Para hacerlo se usan las definiciones de activo, pasivo, patrimonio, ingresos y gastos que estudiaste en la sesión 01. La norma indica que, cuando la empresa aplica las NIIF y añade las revelaciones necesarias, la presentación resulta razonable.</p>
+<p>Si los estados cumplen las NIIF, la empresa debe declararlo de forma explícita y sin reservas en sus notas (párrafo 16). Esa declaración no puede hacerse si el conjunto no cumple todos los requisitos de las NIIF. Tampoco basta con explicar en una nota un criterio que no es adecuado. La norma indica que una empresa no puede corregir una política inapropiada solo con revelaciones ni con notas explicativas (párrafo 18). Una nota puede aclarar, pero no puede arreglar un criterio equivocado.</p>
+
+<h3>4. El estado de situación financiera y el estado de resultados</h3>
+<p>Estos dos estados son los que más se usan para analizar una empresa, y miden cosas distintas. El <strong>estado de situación financiera</strong> muestra los activos, los pasivos y el patrimonio a una fecha determinada. Puedes compararlo con una fotografía: muestra lo que la empresa tiene y debe en ese instante. El <strong>estado de resultados y otro resultado integral</strong> muestra los ingresos y gastos durante un periodo, y el resultado que se obtiene al restarlos. Puedes compararlo con una película: registra lo que pasó a lo largo de un intervalo de tiempo.</p>
+<p>En el estado de resultados aparece también el <strong>otro resultado integral</strong>. Son partidas de ingresos y gastos que, por exigencia de otras NIIF, no se incluyen en el resultado del periodo. Por ahora basta con saber que existen y que se presentan después de la utilidad o pérdida del periodo. Su tratamiento se estudiará en etapas posteriores.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 3. Estado de situación financiera y estado de resultados</caption>
+<thead><tr><th>Aspecto</th><th>Estado de situación financiera</th><th>Estado de resultados y otro resultado integral</th></tr></thead>
+<tbody>
+<tr><td>Pregunta que responde</td><td>¿Qué tiene y qué debe la empresa en una fecha?</td><td>¿Cuánto ingresó, cuánto gastó y qué resultado obtuvo en un periodo?</td></tr>
+<tr><td>Tipo de medición</td><td>Una situación a una fecha.</td><td>Un desempeño durante un periodo.</td></tr>
+<tr><td>Partidas típicas</td><td>Efectivo, cuentas por cobrar, mercadería, maquinaria, deudas con proveedores, capital.</td><td>Ventas, costo de la mercadería vendida, sueldos, servicios, intereses.</td></tr>
+<tr><td>Lo que no muestra</td><td>No dice cuánto se ganó durante el año.</td><td>No muestra qué deudas quedan pendientes a la fecha.</td></tr>
+</tbody></table></div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: una venta a crédito</h4>
+<p>Montubia vende camisetas por 2.000 dólares a un cliente que pagará dentro de sesenta días. En el estado de resultados aparece el ingreso por esa venta, porque corresponde al desempeño del periodo. En el estado de situación financiera aparece el derecho a cobrar, porque a la fecha de cierre la empresa todavía no recibió el dinero. Una misma operación aparece en los dos estados, pero cada partida responde a una pregunta distinta. Esta diferencia se retomará en la sesión 03, cuando estudies el debe, el haber y los saldos.</p>
+</div>
+
+<div class="concepto">
+<h4>Anticipación no evaluable</h4>
+<p>Más adelante, el plan de la asignatura incluye la clasificación de las partidas en corrientes y no corrientes dentro del estado de situación financiera. Esa clasificación no se evalúa esta semana. También existe una norma nueva, la NIIF 18, que reemplazará a la NIC 1 en la presentación de los estados financieros. Se estudiará en una etapa posterior, cuando se verifique su texto oficial.</p>
+</div>
+
+<h3>5. Cómo clasificar una partida</h3>
+<p>Para decidir en qué estado va una partida, conviene responder tres preguntas. La primera es si la partida describe algo que existe a una fecha, como un recurso, una obligación o el interés de los propietarios, o algo que ocurrió durante un periodo, como un ingreso, un gasto o un resultado. La segunda es si la partida forma parte del conjunto que exige la norma o si se trata de información complementaria. La tercera es si la partida corresponde a un suceso que la NIC 1 o las NIIF tratan como otro resultado integral.</p>
+<p>Una dificultad frecuente aparece con los informes que acompañan a los estados. Un informe de gestión, por ejemplo, puede ser útil para el usuario. Sin embargo, la norma lo describe como información fuera de los estados financieros (párrafo 13). Por eso no se clasifica como partida de ningún estado.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Clasificar partidas de Montubia</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad clasificarás diez partidas de Montubia como pertenecientes al estado de situación financiera (SF), al estado de resultados (ER) o a ninguno de los dos (N). Las partidas son: efectivo en caja y bancos; cuentas por cobrar a clientes; telas en bodega; maquinaria de confección; deudas con proveedores; capital aportado por los socios; ventas del mes; sueldos del mes; intereses pagados en el año; el informe de responsabilidad social que la empresa publica por separado.</p>
+<p class="ayuda">Aplica las tres preguntas de la sección 5. Si la partida describe una situación a una fecha, probablemente va en el SF. Si describe un movimiento del periodo, probablemente va en el ER.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Efectivo en caja y bancos: SF, porque es un recurso que existe a la fecha. Cuentas por cobrar: SF, porque es un derecho a cobrar a la fecha de cierre. Telas en bodega: SF, porque son recursos que la empresa controla a la fecha. Maquinaria: SF, porque es un recurso de uso prolongado que existe a la fecha. Deudas con proveedores: SF, porque son obligaciones pendientes a la fecha. Capital aportado: SF, porque forma parte del patrimonio a la fecha. Ventas del mes: ER, porque son ingresos del periodo. Sueldos del mes: ER, porque son gastos del periodo. Intereses pagados en el año: ER, porque son gastos del periodo. Informe de responsabilidad social: N, porque se publica fuera de los estados financieros.</p>
+<p><strong>Comprobación:</strong> cada partida del SF responde a la pregunta de qué tiene o debe la empresa a la fecha. Cada partida del ER responde a qué ocurrió durante el periodo.</p>
+<p><strong>Error frecuente:</strong> poner una partida en el ER solo porque aparece en el mismo registro que una venta. Lo que decide es si describe una situación a una fecha o un movimiento del periodo.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La pregunta de fondo es si la partida mide un saldo o un flujo. Los saldos a una fecha van en el SF, y los movimientos del periodo, en el ER.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Qué forma parte del conjunto completo</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás qué componentes forman parte del conjunto completo de Montubia. Considera esta lista: estado de situación financiera; estado de resultados y otro resultado integral; estado de cambios en el patrimonio; estado de flujos de efectivo; notas; informe de gestión de la gerencia; informe de sostenibilidad ambiental. Decide cuáles forman parte del conjunto y cuáles quedan fuera.</p>
+<p class="ayuda">Recuerda los cinco componentes del párrafo 10 y la distinción del párrafo 13 entre los estados y los informes que los acompañan.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Forman parte del conjunto: el estado de situación financiera, el estado de resultados y otro resultado integral, el estado de cambios en el patrimonio, el estado de flujos de efectivo y las notas. El informe de gestión de la gerencia y el informe de sostenibilidad ambiental no son componentes del conjunto. Muchas empresas los presentan aparte, y eso no los convierte en partes de los estados ni reemplaza a ninguno de ellos.</p>
+<p><strong>Comprobación:</strong> el conjunto tiene cinco componentes. Si contaste más, revisa si incluiste un informe que la norma trata como información externa.</p>
+<p><strong>Error frecuente:</strong> creer que el informe de gestión es parte del conjunto porque se entrega junto con los estados.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cada componente del conjunto cumple una función definida por la norma. Un informe útil, pero complementario, no cumple esa función.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Elegir el estado que responde a una pregunta</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad elegirás qué estado responde mejor a tres preguntas: (a) ¿cuánto debe Montubia a sus proveedores el 31 de diciembre?; (b) ¿la empresa ganó dinero durante el año?; (c) ¿cuánto de las ventas del año corresponde a clientes que todavía no han pagado? Indica en cada caso el estado y explica por qué.</p>
+<p class="ayuda">Pregúntate si la pregunta se refiere a un momento concreto o a un intervalo de tiempo.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>(a) El estado de situación financiera, porque la deuda es un saldo a una fecha. (b) El estado de resultados y otro resultado integral, porque la utilidad o pérdida se obtiene de los ingresos y gastos del periodo. (c) Esta pregunta necesita los dos estados. El ingreso total de las ventas aparece en el estado de resultados. La parte que queda pendiente de cobro a la fecha aparece en el estado de situación financiera como cuentas por cobrar.</p>
+<p><strong>Comprobación:</strong> en la pregunta (c) debes poder decir qué partida corresponde a cada estado y por qué la diferencia entre ambas es el cobro pendiente.</p>
+<p><strong>Error frecuente:</strong> responder (c) con un solo estado. Muchas preguntas de negocio necesitan información de los dos.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Ningún estado es mejor que el otro. Cada uno responde a una pregunta distinta, y la pregunta es la que indica qué estado usar.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Lo que se vende a crédito</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad analizarás dónde aparece cada efecto de una venta a crédito. Montubia vendió camisetas a crédito por 2.000 dólares, y su cliente pagará en sesenta días. Indica qué partida aparece en el estado de resultados, qué partida aparece en el estado de situación financiera y por qué el dinero todavía no figura como efectivo.</p>
+<p class="ayuda">Recuerda la diferencia entre ingreso y cobro de la sesión 01. Pregúntate qué derecho tiene la empresa a la fecha de cierre.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>En el estado de resultados aparece el ingreso por ventas de 2.000 dólares, porque la venta es un ingreso del periodo. En el estado de situación financiera aparece una cuenta por cobrar de 2.000 dólares, porque la empresa tiene derecho a cobrar esa cantidad a la fecha de cierre. El efectivo no aparece porque el cliente todavía no ha pagado. El ingreso y el cobro son hechos distintos: el ingreso se reconoce cuando Montubia entrega las camisetas, y el cobro ocurre cuando el dinero entra.</p>
+<p><strong>Comprobación:</strong> los dos efectos deben mostrar que la empresa tiene un derecho a cobrar y no dinero. Si el dinero ya hubiera entrado, la partida en el estado de situación financiera sería efectivo y no una cuenta por cobrar.</p>
+<p><strong>Error frecuente:</strong> afirmar que una venta a crédito no afecta al estado de resultados hasta que se cobra.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Una venta puede aumentar el resultado del periodo sin aumentar la caja. Por eso la utilidad no es lo mismo que el efectivo disponible.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: cambio del periodo</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>Supongamos que Montubia, además del estado de resultados anual, prepara uno mensual para su gerencia. Antes de resolver, indica qué crees que cambia en el estado mensual respecto del anual y qué no cambia. El caso anual del ejercicio 4 sigue siendo la referencia para comparar.</p>
+<p class="ayuda">Pregúntate qué mide el estado de resultados y si esa medición cambia cuando el periodo es más corto.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Cambia la extensión del periodo: el estado mensual muestra ingresos y gastos de un mes, y el anual, los de un año. Lo que no cambia es la naturaleza del estado. Sigue midiendo ingresos, gastos y resultado durante un periodo, y no una situación a una fecha. Tampoco cambian las definiciones de ingreso y gasto. Como los dos estados no cubren el mismo intervalo de tiempo, al compararlos hay que tenerlo en cuenta.</p>
+<p><strong>Comprobación:</strong> compara las dos situaciones y verifica que la única diferencia relevante sea la duración del periodo.</p>
+<p><strong>Error frecuente:</strong> pensar que el estado mensual es un estado de situación porque se entrega con más frecuencia. La frecuencia no cambia la naturaleza de la medición.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cambiar la periodicidad modifica el alcance del informe, pero no la pregunta que responde cada estado.</p></div>
+</div>
+
+<h3>6. Cierre de la sesión</h3>
+<p>Volvamos a Montubia y a su banco. El conjunto completo que la empresa entrega reúne cinco componentes y todos tienen igual importancia. Ese conjunto debe presentar de forma razonable la situación, el desempeño y los flujos de la empresa. Los dos estados que más se consultan miden cosas distintas. Uno muestra lo que la empresa tiene y debe a una fecha, y el otro muestra lo que ocurrió durante un periodo.</p>
+<p>Como tarea de transferencia, elige tres partidas del informe de una empresa comercial que conozcas, real o imaginaria. Clasifícalas en el estado correspondiente y explica qué pregunta responde cada una. Si una partida parece pertenecer a los dos estados, explica qué condición la separa en cada caso.</p>
+<p>Para revisar según tu dificultad: si confundes los estados, relee la tabla 3. Si dudas sobre el informe de gestión, relee el párrafo 13 en la sección 5. Si no distingues ingreso y cobro, relee el ejercicio 4.</p>
+</section>
+
+
+<section class="pestana" id="eval2" data-panel="eval2" aria-labelledby="t-eval2">
+<h2 id="t-eval2">Evaluación de la sesión 02: NIC 1 y estados financieros</h2>
+<p class="meta">Semana 2 · Unidad 1. Introducción a la contabilidad · 16 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="2"></div>
+</section>
+
+<section class="pestana" id="ses03" data-panel="ses03">
+<h2>Sesión 03 · La cuenta contable: debe, haber y saldos</h2>
+<p class="meta">Semana 2 · Unidad 1 · La cuenta contable y sus partes (sesión global 06) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Cada día, Montubia recibe cobros de clientes, paga servicios, compra telas y recibe aportes de sus socios. La contabilidad necesita una forma de seguir cada uno de esos movimientos sin perder la pista de lo que pasa con el dinero, las deudas y los derechos. Esa forma es la cuenta contable. Una cuenta es un espacio donde se anotan los aumentos y disminuciones de un mismo recurso, de una misma deuda o de un mismo ingreso o gasto.</p>
+<p>Al terminar deberías poder identificar las partes de una cuenta. También deberías explicar qué significan el debe y el haber, y por qué las palabras cargo y abono son equivalentes. Por último, deberías determinar la naturaleza de una cuenta y calcular su saldo a partir de sus movimientos.</p>
+<p>Para estudiar, copia en un papel el esquema de la cuenta T de la sección 2 y ubica cada movimiento con el dedo antes de leer el cálculo. Si dudas del lado de un movimiento, pregúntate primero si ese movimiento aumenta o disminuye la cuenta. Después decide el lado.</p>
+</div>
+
+<h3>1. La cuenta como unidad de registro</h3>
+<p>Una cuenta es un registro que agrupa todos los movimientos de un mismo elemento. Tiene un nombre que indica qué representa, por ejemplo Caja, Bancos, Cuentas por cobrar, Proveedores o Capital. Su forma más conocida es la cuenta T, que tiene la forma de la letra T. A la izquierda se anotan los importes del debe, y a la derecha, los del haber. Puedes imaginarla como un cuaderno de dos columnas en el que cada columna guarda una clase de movimiento. Así puedes ver de un vistazo cuánto entró y cuánto salió. La comparación tiene un límite: el cuaderno solo muestra los movimientos, mientras que la cuenta, además, permite calcular un saldo.</p>
+<p>Una cuenta necesita tres elementos para ser útil. El nombre indica el recurso o la clase de operación que se registra. Los importes de cada lado muestran los movimientos. El saldo resume la diferencia entre ambos lados. Sin nombre no sabríamos qué se registra. Sin movimientos no habría evidencia de los cambios. Y sin saldo no tendríamos una lectura rápida de lo acumulado.</p>
+
+<h3>2. Debe, haber, cargo y abono</h3>
+<p>El <strong>debe</strong> es el lado izquierdo de la cuenta, y el <strong>haber</strong> es el lado derecho. Son solo lugares. No indican por sí mismos si algo aumenta o disminuye, ni si la operación es buena o mala. Por ejemplo, un movimiento en el debe de la cuenta Caja significa que el efectivo aumentó. Un movimiento en el debe de la cuenta Proveedores significa que la deuda disminuyó.</p>
+<p>Las palabras <strong>cargo</strong> y <strong>abono</strong> se usan como equivalentes. El cargo es un movimiento en el debe, y el abono es un movimiento en el haber. No significan «aumento» ni «disminución», y conviene no interpretarlas así. Una frase como «se cargó la cuenta» solo indica el lado en que se anotó el importe.</p>
+
+<div class="concepto">
+<h4>Un error previsible</h4>
+<p>Muchos estudiantes creen que el debe siempre significa «menos» y que el haber siempre significa «más». Esa idea falla con la cuenta Proveedores. Cuando la empresa paga a un proveedor, el pago aparece en el debe y la deuda disminuye. Revisa por qué: el lado indica el lugar del movimiento, y el efecto sobre la cuenta depende de su naturaleza, que es el tema de la siguiente sección.</p>
+</div>
+
+<h3>3. Naturaleza de las cuentas</h3>
+<p>La <strong>naturaleza</strong> de una cuenta indica en qué lado aumenta. Las cuentas de activo y de gasto son deudoras: aumentan con movimientos en el debe y disminuyen con movimientos en el haber. Las cuentas de pasivo, de patrimonio y de ingreso son acreedoras: aumentan con movimientos en el haber y disminuyen con movimientos en el debe. Esta regla es una convención de registro. Su fundamento se revisará con más detalle la semana siguiente, cuando estudies la ecuación contable.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 4. Naturaleza de las cuentas y efecto de sus movimientos</caption>
+<thead><tr><th>Clase de cuenta</th><th>Naturaleza</th><th>Aumenta con</th><th>Disminuye con</th><th>Ejemplo en Montubia</th></tr></thead>
+<tbody>
+<tr><td>Activo</td><td>Deudora</td><td>Debe</td><td>Haber</td><td>Caja, cuentas por cobrar, telas</td></tr>
+<tr><td>Gasto</td><td>Deudora</td><td>Debe</td><td>Haber</td><td>Sueldos, servicios básicos</td></tr>
+<tr><td>Pasivo</td><td>Acreedora</td><td>Haber</td><td>Debe</td><td>Proveedores por pagar</td></tr>
+<tr><td>Patrimonio</td><td>Acreedora</td><td>Haber</td><td>Debe</td><td>Capital aportado por los socios</td></tr>
+<tr><td>Ingreso</td><td>Acreedora</td><td>Haber</td><td>Debe</td><td>Ventas</td></tr>
+</tbody></table></div>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: la caja</h4>
+<p>La caja de Montubia es un activo, así que su naturaleza es deudora. Cuando entra dinero, el importe se anota en el debe. Cuando sale, se anota en el haber. Si la empresa cobra 1.200 dólares a un cliente, la caja aumenta y el importe va al debe. Si paga 800 dólares a un proveedor, la caja disminuye y el importe va al haber. Observa que el haber sirve para registrar una disminución de la caja, y también un aumento de una deuda con proveedores. Por eso la lectura depende de la cuenta en la que se mira el movimiento.</p>
+</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Montubia paga 800 dólares a un proveedor con efectivo de su caja. Antes de leer la explicación, indica en qué lado va el importe en la cuenta Caja y en la cuenta Proveedores. Dilo también para cada cuenta: ¿aumenta o disminuye?</p>
+<p class="ayuda">Recuerda que la caja es deudora y que Proveedores es acreedora. Un movimiento que disminuye una cuenta deudora va en el haber. Un movimiento que disminuye una cuenta acreedora va en el debe.</p>
+</div>
+
+<h3>4. Saldo deudor y saldo acreedor</h3>
+<p>El <strong>saldo</strong> de una cuenta es la diferencia entre la suma de los movimientos del debe y la suma de los movimientos del haber. Si el debe supera al haber, el saldo es <strong>deudor</strong>. Si el haber supera al debe, el saldo es <strong>acreedor</strong>. Si ambos lados suman lo mismo, el saldo es cero. El saldo se informa en el lado que corresponde a la naturaleza de la cuenta. Por ejemplo, un saldo deudor en la caja significa que la empresa tiene efectivo disponible.</p>
+<p>Para calcular el saldo hay tres pasos: sumar el debe, sumar el haber y restar el menor del mayor. Después se indica el lado del resultado. El cálculo también sirve para revisar si el saldo tiene sentido. Una caja no debería tener saldo acreedor en condiciones normales, porque no puede pagar más efectivo del que tiene. Si el resultado contradice la naturaleza de la cuenta, revisa los movimientos antes de seguir.</p>
+
+<h3>5. Práctica con cuentas T</h3>
+<p>Supongamos que los movimientos de la caja de Montubia durante una semana de estudio son los siguientes. Supongamos también que los socios hacen un primer aporte de 20.000 dólares en efectivo, como aporte patrimonial a la empresa. Este monto forma parte de la situación de estudio y permite ver cómo se combina un aumento de la caja con un aumento del patrimonio. Más adelante, en el ejercicio 2, los socios harán un segundo aporte, distinto de este, depositado en el banco. Los movimientos se presentan aquí como cuenta T. El asiento que los registra en el libro diario se estudiará en la semana 3.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 5. Movimientos de la cuenta Caja de Montubia (situación de estudio)</caption>
+<thead><tr><th>Movimiento</th><th>Lado</th><th>Importe (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Aporte de los socios en efectivo</td><td>Debe</td><td>20.000,00</td></tr>
+<tr><td>Pago de servicios básicos</td><td>Haber</td><td>3.500,00</td></tr>
+<tr><td>Cobro de un cliente</td><td>Debe</td><td>1.200,00</td></tr>
+<tr><td>Pago a un proveedor</td><td>Haber</td><td>800,00</td></tr>
+</tbody></table></div>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 6. Cuenta T de Caja con sus movimientos</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td>20.000,00 (aporte de los socios)</td><td>3.500,00 (servicios básicos)</td></tr>
+<tr><td>1.200,00 (cobro de cliente)</td><td>800,00 (pago a proveedor)</td></tr>
+<tr><td>Total debe: 21.200,00</td><td>Total haber: 4.300,00</td></tr>
+</tbody></table></div>
+
+<div class="concepto">
+<h4>Cálculo 1. Saldo de la cuenta Caja</h4>
+<p><strong>Situación.</strong> Necesitas saber cuánto efectivo tiene Montubia al final de la semana de estudio. Con ese dato podrás responder si puede pagar una deuda de 2.000 dólares que vence el mismo día.</p>
+<p><strong>Qué buscamos.</strong> El saldo de la cuenta Caja, en dólares, y su lado.</p>
+<p><strong>Datos.</strong> Según la tabla 5, el total del debe es 21.200,00 (20.000,00 + 1.200,00) y el total del haber es 4.300,00 (3.500,00 + 800,00). Estos datos forman parte de la situación de estudio.</p>
+<p><strong>Por qué esta operación.</strong> El saldo es la diferencia entre ambos lados. La caja es deudora, así que un saldo deudor indica efectivo disponible.</p>
+<div class="calc">Saldo = total debe − total haber
+Saldo = 21.200,00 − 4.300,00
+Saldo = 16.900,00 deudor</div>
+<p><strong>Comprobación.</strong> Puedes hacer el cálculo por entradas y salidas: las entradas (20.000,00 + 1.200,00) menos las salidas (3.500,00 + 800,00) dan 16.900,00. Es el mismo cálculo visto desde otro criterio, así que sirve para revisar la suma. Como la caja no puede tener un saldo acreedor en este caso, el saldo deudor es coherente con su naturaleza.</p>
+<p><strong>Interpretación.</strong> Según los datos de la situación de estudio, Montubia dispone de 16.900,00 dólares en caja y puede pagar la deuda de 2.000,00 dólares. El error que evita este cálculo es confundir el total de cobros con el efectivo disponible. Si miraras solo el debe, sobrestimarías la caja.</p>
+</div>
+
+<div class="ejemplo">
+<h4>Contraste: una cuenta con saldo acreedor</h4>
+<p>No todas las cuentas tienen saldo deudor. La cuenta Proveedores de Montubia es acreedora. Aumenta con el haber, cuando la empresa compra a crédito, y disminuye con el debe, cuando paga. Si la empresa compra telas a crédito por 5.000 dólares y paga 2.000 dólares, el saldo es de 3.000 dólares acreedor. Es decir, hay una deuda pendiente. El saldo indica en qué lado está el resultado acumulado de la cuenta, y no dice si la empresa está bien o mal.</p>
+</div>
+
+<h3>6. Cuentas T en la práctica</h3>
+<p>Al leer una cuenta T conviene seguir tres preguntas en orden: ¿qué representa la cuenta?, ¿cuál es su naturaleza?, ¿en qué lado está el saldo? Con esa secuencia puedes leer cualquier cuenta sin depender de la memoria. Por ejemplo, para la cuenta Proveedores de Montubia, la respuesta es la siguiente: representa una deuda, su naturaleza es acreedora y, como el saldo es acreedor, la empresa todavía debe dinero.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Naturaleza de seis cuentas</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad determinarás la naturaleza de seis cuentas de Montubia: Bancos, Cuentas por cobrar, Sueldos, Capital, Ventas y Proveedores. Indica si cada una es deudora o acreedora, y en qué lado aumenta.</p>
+<p class="ayuda">Clasifica primero cada cuenta como activo, pasivo, patrimonio, ingreso o gasto. Después aplica la regla de la tabla 4.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Bancos es un activo: deudora, aumenta en el debe. Cuentas por cobrar es un activo: deudora, aumenta en el debe. Sueldos es un gasto: deudora, aumenta en el debe. Capital es patrimonio: acreedora, aumenta en el haber. Ventas es un ingreso: acreedora, aumenta en el haber. Proveedores es un pasivo: acreedora, aumenta en el haber.</p>
+<p><strong>Comprobación:</strong> las cuentas de activo y de gasto deben ser deudoras. Las de pasivo, patrimonio e ingreso deben ser acreedoras. Si una cuenta de activo resultó acreedora, revisa su clasificación.</p>
+<p><strong>Error frecuente:</strong> decidir la naturaleza según el lado en que aparece el saldo en un momento concreto, en lugar de hacerlo según la clase de cuenta.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La naturaleza depende de la clase de cuenta. El saldo de un momento puede quedar en un lado u otro, pero la naturaleza no cambia.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Saldo de la cuenta Bancos</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás el saldo de la cuenta Bancos de Montubia a partir de sus movimientos. Los movimientos son los siguientes: depósito en el banco de un segundo aporte de los socios por 15.000 dólares, distinto del primer aporte en efectivo; transferencia a un proveedor de tela por 4.000 dólares; cobro de un cliente depositado en el banco por 2.500 dólares; transferencia por pago de servicios por 1.250 dólares. Calcula el total del debe, el total del haber, el saldo y su lado.</p>
+<p class="ayuda">Recuerda que Bancos es una cuenta de activo. Decide, movimiento por movimiento, si aumenta o disminuye el dinero depositado.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Bancos es deudora. El depósito del segundo aporte (15.000,00) y el cobro del cliente (2.500,00) son movimientos en el debe, por un total de 17.500,00. El segundo aporte se registra en Bancos porque el dinero se depositó en la cuenta bancaria. Junto con el primer aporte en efectivo de 20.000 dólares, los socios aportan en total 35.000 dólares, cada uno en una operación distinta. La transferencia al proveedor (4.000,00) y el pago de servicios (1.250,00) son movimientos en el haber, por un total de 5.250,00.</p>
+<div class="calc">Saldo = total debe − total haber
+Saldo = 17.500,00 − 5.250,00
+Saldo = 12.250,00 deudor</div>
+<p><strong>Comprobación:</strong> las entradas (17.500,00) menos las salidas (5.250,00) dan 12.250,00. El saldo deudor es coherente con un activo.</p>
+<p><strong>Interpretación.</strong> Según los datos del ejercicio, Montubia tiene 12.250,00 dólares depositados en su cuenta bancaria. Ese saldo no es utilidad. Es el dinero que queda disponible después de los movimientos de la cuenta.</p>
+<p><strong>Error frecuente:</strong> sumar todos los movimientos como si tuvieran el mismo signo. Cada lado tiene un efecto distinto según la naturaleza de la cuenta.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Una vez que cada movimiento está en su lado, el cálculo del saldo es mecánico. El trabajo importante es decidir el lado, y eso depende de la naturaleza de la cuenta.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Identificar el lado de un movimiento</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad indicarás en qué lado (debe o haber) se anota cada movimiento de la cuenta Caja de Montubia. Considera estos casos: (a) entra efectivo por una venta de contado; (b) sale efectivo para pagar el alquiler del local; (c) entra efectivo por el cobro a un cliente que debía 600 dólares; (d) sale efectivo para pagar una deuda con un proveedor.</p>
+<p class="ayuda">En cada caso pregúntate si la caja aumenta o disminuye, y recuerda que la caja es deudora.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>(a) Entra efectivo: la caja aumenta, así que el movimiento va en el debe. (b) Sale efectivo: la caja disminuye, así que va en el haber. (c) Entra efectivo por un cobro: la caja aumenta, así que va en el debe. (d) Sale efectivo para pagar al proveedor: la caja disminuye, así que va en el haber.</p>
+<p><strong>Comprobación:</strong> en la cuenta Caja, todo movimiento que aumente el efectivo va en el debe, y todo movimiento que lo disminuya va en el haber. Si una entrada quedó en el haber, revisa el criterio.</p>
+<p><strong>Error frecuente:</strong> pensar que el cobro a un cliente va en el haber porque «disminuye la cuenta por cobrar». Ese movimiento disminuye otra cuenta, no la caja.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cada operación afecta a más de una cuenta. Para decidir el lado de una sola cuenta, pregúntate por esa cuenta y no por la otra.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Saldo acreedor en Proveedores</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás el saldo de la cuenta Proveedores de Montubia. Los movimientos son los siguientes: compra de telas a crédito por 5.000 dólares, y pago parcial al proveedor por 2.000 dólares. Calcula el saldo y explica qué representa.</p>
+<p class="ayuda">Proveedores es un pasivo. Decide en qué lado aumenta la deuda y en cuál disminuye.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>La compra a crédito aumenta la deuda, así que va en el haber (5.000,00). El pago parcial disminuye la deuda, así que va en el debe (2.000,00).</p>
+<div class="calc">Saldo = total haber − total debe
+Saldo = 5.000,00 − 2.000,00
+Saldo = 3.000,00 acreedor</div>
+<p><strong>Comprobación:</strong> la deuda inicial de 5.000,00 menos el pago de 2.000,00 deja 3.000,00 pendientes. Ese resultado coincide con el saldo acreedor.</p>
+<p><strong>Interpretación.</strong> Montubia todavía debe 3.000,00 dólares a su proveedor. El saldo acreedor es la deuda pendiente, no un error.</p>
+<p><strong>Error frecuente:</strong> restar en el orden contrario y obtener un saldo deudor. En una cuenta acreedora, el saldo es el exceso del haber sobre el debe.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La regla para calcular el saldo es la misma en todas las cuentas. Lo que cambia es el lado en que queda, y eso depende de la naturaleza de la cuenta.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: otro pago parcial</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>Supongamos que, en el ejercicio 4, el pago parcial al proveedor es de 3.000 dólares en lugar de 2.000 dólares. Antes de calcular, predice si el saldo aumenta o disminuye, y en qué lado. Luego calcula el nuevo saldo. El caso original del ejercicio 4 sigue siendo la referencia para comparar.</p>
+<p class="ayuda">Piensa qué le pasa a la deuda cuando la empresa paga más. Tu predicción debe ser coherente con la naturaleza de la cuenta.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Predicción: si la empresa paga más, la deuda disminuye más, así que el saldo acreedor debe bajar. El pago sigue en el debe, pero ahora el importe es mayor.</p>
+<div class="calc">Saldo = 5.000,00 − 3.000,00
+Saldo = 2.000,00 acreedor</div>
+<p><strong>Comprobación:</strong> el nuevo saldo (2.000,00) es menor que el anterior (3.000,00), como anticipaba la predicción. La diferencia de 1.000,00 coincide con el aumento del pago.</p>
+<p><strong>Error frecuente:</strong> concluir que el saldo aumentó porque cambió el número de movimientos. Lo que importa es el importe de cada movimiento y su lado.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Antes de calcular, conviene predecir el sentido del cambio. Si el cálculo contradice la predicción, revisa qué movimiento cambió y en qué lado está.</p></div>
+</div>
+
+<h3>7. Cierre de la sesión</h3>
+<p>Volvamos a la caja de Montubia. Cada entrada y cada salida de efectivo se registra en una cuenta con nombre, naturaleza y lados claros. El saldo resume el resultado de esos movimientos y permite responder si la empresa puede pagar sus deudas. La misma lógica sirve para las cuentas de deudas, de patrimonio y de ingresos, aunque su naturaleza sea acreedora.</p>
+<p>Como tarea de transferencia, elige cuatro movimientos de una pequeña tienda de tu entorno, real o imaginaria. Para cada uno indica la cuenta afectada, la naturaleza de la cuenta, el lado donde iría el movimiento y si la cuenta aumenta o disminuye. Después calcula el saldo de la cuenta de efectivo con los datos que hayas elegido.</p>
+<p>Para revisar según tu dificultad: si confundes el lado de un movimiento, relee el apartado 2 y el ejercicio 3. Si dudas de la naturaleza, relee la tabla 4. Si tienes dudas sobre el saldo, repite el cálculo 1 y compara con la comprobación por entradas y salidas.</p>
+</section>
+
+
+<section class="pestana" id="eval3" data-panel="eval3" aria-labelledby="t-eval3">
+<h2 id="t-eval3">Evaluación de la sesión 03: la cuenta contable</h2>
+<p class="meta">Semana 2 · Unidad 1. Introducción a la contabilidad · 16 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="3"></div>
+</section>
+
+<section class="pestana" id="reflexion" data-panel="reflexion">
+<h2>Reflexión</h2>
+<p class="meta">Semana 2 · Unidad 1 · Reflexiones sin respuesta correcta ni calificación</p>
+
+<h3>La información que nadie quiere revisar</h3>
+<p>Muchas personas creen que una cifra es confiable porque cuadra. Esta semana viste que la confianza necesita algo más: que la información sea relevante, fielmente representada, comparable y verificable. Piensa en un documento de tu entorno que te haya parecido confiable sin que lo verificaras. ¿Qué te dio esa confianza, y qué habrías necesitado para comprobarla?</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Cuántas decisiones cotidianas dependen de información que no has verificado, y qué criterio usas para decidir cuándo confiar en ella?</p>
+
+<h3>Entre la forma y la sustancia</h3>
+<p>Un contrato puede llamar «aporte» a un préstamo, o llamar «venta» a una operación que, en la práctica, es un financiamiento. El marco conceptual pide mirar la sustancia económica, es decir, lo que realmente ocurre, y no solo la forma legal. Esa exigencia afecta a quien prepara la información y también a quien la lee.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿En qué situación cotidiana has visto que el nombre de algo no coincide con lo que realmente ocurre, y qué te costó darte cuenta?</p>
+
+<h3>Lo que el informe no dice</h3>
+<p>El conjunto completo de estados financieros incluye notas que explican criterios y cifras. Un informe que solo muestra números, sin explicarlos, puede ser exacto y aun así confundir a quien no conoce el negocio. La comprensibilidad es una cualidad que se construye pensando en el lector.</p>
+<p><strong>Pregunta de reflexión:</strong> Si tuvieras que explicar a un familiar qué significa un saldo acreedor, ¿qué ejemplo cotidiano usarías, y qué límite tendría ese ejemplo?</p>
+
+<h3>Responsabilidad de quien registra</h3>
+<p>Registrar una cuenta o un movimiento en el lado equivocado no siempre es una falta de honestidad. Muchas veces es una confusión sobre la naturaleza de la cuenta. Aun así, sus efectos pueden alcanzar a socios, bancos y trabajadores que toman decisiones con esos registros.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Qué diferencia hay, para ti, entre un error técnico y una omisión deliberada, y qué debería cambiar en el sistema para que el primero se detecte antes de afectar a alguien?</p>
+</section>
+
+<section class="pestana" id="ia" data-panel="ia">
+<h2>Actividad con IA</h2>
+<p class="meta">Semana 2 · Unidad 1 · Actividad individual de contraste y verificación</p>
+
+<p>Esta actividad te pide usar un asistente de inteligencia artificial para explicar un concepto de la semana y, después, comprobar su respuesta con el material. La respuesta de la IA no es una fuente verificada por sí sola. Su valor está en que la contrastes con lo que estudiaste.</p>
+
+<h4>1. Trabajo inicial propio</h4>
+<p>Antes de usar la IA, escribe en tres o cuatro frases qué diferencia hay entre el debe y el haber, y qué significa que una cuenta sea deudora o acreedora. No consultes el material todavía.</p>
+
+<h4>2. Prompt exacto</h4>
+<div class="prompt">Explícame la diferencia entre el debe y el haber en una cuenta contable. Usa un ejemplo de una pequeña empresa que compra mercadería a crédito y luego paga una parte. Indica el lado de cada movimiento y el saldo final de la cuenta Proveedores. No uses jerga sin definirla.</div>
+
+<h4>3. Contraste con el material</h4>
+<p>Compara la respuesta de la IA con tu trabajo inicial y con la tabla 4 de la sesión 03. Identifica una coincidencia, una diferencia y una frase que te parezca imprecisa.</p>
+
+<h4>4. Verificación</h4>
+<p>Verifica al menos una afirmación de la respuesta. Recalcula el saldo de Proveedores con los mismos importes, decide si el lado de cada movimiento coincide con la naturaleza de la cuenta y comprueba que el saldo sea acreedor. Si la IA usó un importe o un lado distintos, anota la diferencia.</p>
+
+<h4>5. Justificación</h4>
+<p>Escribe un párrafo que indique qué aceptaste de la respuesta, qué corregiste y qué rechazaste, con la razón de cada decisión. Debe apoyarse en la sesión 03 y no en la autoridad de la IA.</p>
+
+<h4>6. Lista de autoevaluación</h4>
+<ul>
+<li>Escribí mi respuesta inicial antes de consultar la IA.</li>
+<li>Contrasté la respuesta con la tabla 4 y con el ejercicio 4.</li>
+<li>Recalculé el saldo de Proveedores y verifiqué su lado.</li>
+<li>Justifiqué qué acepté, corregí y rechacé.</li>
+<li>No introduje datos personales, tributarios ni bancarios reales en el prompt.</li>
+</ul>
+</section>
+
+<section class="pestana" id="biblio" data-panel="biblio">
+<h2>Bibliografía</h2>
+<p class="meta">Referencias verificadas en APA 7 y ordenadas alfabéticamente</p>
+
+<ul class="referencias">
+<li>International Accounting Standards Board. (2018). <em>Conceptual Framework for Financial Reporting</em>. IFRS Foundation. https://www.ifrs.org/content/dam/ifrs/publications/html-standards/english/2024/issued/cf.html</li>
+<li>International Accounting Standards Board. (2024). <em>IAS 1 Presentation of Financial Statements</em>. IFRS Foundation. https://www.ifrs.org/content/dam/ifrs/publications/html-standards/english/2024/issued/ias1.html</li>
+</ul>
+
+<p class="nota">Se recomienda verificar cada referencia en Google Scholar (scholar.google.com) o en el repositorio institucional antes de citar en trabajos académicos. La vigencia de las normas contables debe confirmarse en las fuentes oficiales de cada organismo emisor, ya que Google Scholar no sustituye esa verificación.</p>
+</section>
+</main>
+
+<footer>
+  <p>Universidad de Guayaquil · Facultad de Ciencias Administrativas · Paralelo NIN-SVE-1-19 · Docente: Gabriel Francisco García Gutiérrez.</p>
+  <p>Las empresas Confecciones Montubia S. A., Comercializadora Costa Verde Cía. Ltda. y Servicios Logísticos Andes Global S. A. son ficticias. Sus cifras y hechos son supuestos didácticos.</p>
+  <p>Las puntuaciones de las evaluaciones de práctica no son notas oficiales del examen parcial.</p>
+</footer>
+
+<script>
+/* ==========================================================
+   1. Datos de evaluación (generados desde ej_semana.json)
+   ========================================================== */
+const EVALUACIONES = [{"sesion": 1, "titulo": "Evaluación de la sesión 01: marco conceptual", "items": [{"tipo": "Teórica", "pregunta": "¿Cuál es la función principal del Marco Conceptual para la Información Financiera?", "opciones": ["Reemplazar a las NIIF cuando una norma trata un caso concreto.", "Orientar la elaboración de normas y la preparación de información cuando una norma no trata directamente un caso.", "Fijar las tarifas de los impuestos que paga la empresa.", "Obligar a cada empresa a publicar un informe de gestión."], "correcta": 1, "retro": ["Incorrecto. El marco no reemplaza a las normas: si una NIIF trata específicamente un asunto, esa norma prevalece. Relee el apartado 1 de la sesión 01.", "CORRECTO. El marco es un conjunto de principios que orienta al emisor de normas y ayuda a preparar la información cuando no existe una norma directa para el caso.", "Incorrecto. El marco trata de la información financiera; las tarifas tributarias se verifican en fuentes tributarias oficiales y no forman parte de su función.", "Incorrecto. El marco no obliga a publicar informes de gestión. La sesión 02 explica que esos informes se distinguen de los estados financieros."], "general": "El marco orienta el razonamiento; las normas específicas prevalecen sobre él. Revisa el apartado 1 de la sesión 01."}, {"tipo": "Teórica", "pregunta": "Según el objetivo de la información financiera, ¿para qué debe ser útil?", "opciones": ["Para que los usuarios tomen decisiones económicas sobre la situación financiera, el rendimiento y los flujos de efectivo de la entidad.", "Para calcular los impuestos que la empresa debe pagar al SRI.", "Para mostrar únicamente el saldo de la caja.", "Para registrar solamente las operaciones que ya fueron cobradas."], "correcta": 0, "retro": ["CORRECTO. El objetivo de la información financiera es servir a los usuarios para decidir, con datos sobre situación, rendimiento y flujos de efectivo, como indica el párrafo 9 de la NIC 1.", "Incorrecto. El cálculo de impuestos es una obligación tributaria distinta. La información financiera tiene un objetivo de decisión y no se limita a fines fiscales.", "Incorrecto. El saldo de caja es solo una parte de la situación. El banco del caso necesita también deudas y derechos de cobro para decidir.", "Incorrecto. Registrar solo lo cobrado confunde el ingreso con el cobro. La sesión 01 muestra que una venta a crédito ya afecta la situación de la empresa."], "general": "El objetivo de la información es la decisión de los usuarios. Relee la sección 2 de la sesión 01."}, {"tipo": "Teórica", "pregunta": "¿Qué significa que la información sea relevante?", "opciones": ["Que está redactada con lenguaje técnico para especialistas.", "Que coincide exactamente con los documentos fuente.", "Que puede hacer una diferencia en las decisiones de los usuarios.", "Que se publica el mismo día del cierre del periodo."], "correcta": 2, "retro": ["Incorrecto. El lenguaje técnico afecta a la comprensibilidad, que es una cualidad que mejora la utilidad, no la relevancia.", "Incorrecto. La coincidencia con los documentos corresponde a la verificabilidad. Una cifra puede ser verificable y, aun así, no ser relevante para la decisión.", "CORRECTO. La relevancia depende de que la información pueda influir en una decisión, por ejemplo porque sirve para predecir resultados o para confirmar lo que ya se esperaba.", "Incorrecto. La publicación el mismo día corresponde a la oportunidad, que es otra cualidad de mejora."], "general": "Relevancia se refiere a la influencia de la información en una decisión. Revisa la sección 3 de la sesión 01."}, {"tipo": "Teórica", "pregunta": "¿Cuál de las siguientes cualidades es fundamental, es decir, necesaria para que la información sea útil?", "opciones": ["Comparabilidad.", "Verificabilidad.", "Oportunidad.", "Representación fiel."], "correcta": 3, "retro": ["Incorrecto. La comparabilidad es una cualidad que mejora la utilidad de la información, pero no es fundamental.", "Incorrecto. La verificabilidad es una cualidad que mejora la utilidad. Ayuda a comprobar la información, pero no reemplaza a la representación fiel.", "Incorrecto. La oportunidad mejora la utilidad al llegar a tiempo, pero es una cualidad de mejora, no fundamental.", "CORRECTO. La relevancia y la representación fiel son las cualidades fundamentales. La representación fiel muestra lo que realmente ocurrió en la economía de la empresa, y no solo el nombre del documento."], "general": "Las cualidades fundamentales son relevancia y representación fiel. Revisa la tabla 2 de la sesión 01."}, {"tipo": "Teórica", "pregunta": "Un informe de Montubia contiene cifras que otra persona puede comprobar con las facturas, pero se entrega en el cuarto mes posterior al cierre. ¿Qué cualidad se cumple y cuál falla?", "opciones": ["Se cumple la oportunidad y falla la verificabilidad.", "Se cumple la verificabilidad y falla la oportunidad.", "Se cumple la comparabilidad y falla la comprensibilidad.", "Se cumple la relevancia y falla la comprensibilidad."], "correcta": 1, "retro": ["Incorrecto. Es al revés: las cifras son comprobables, así que la verificabilidad se cumple; el informe llega tarde, así que falla la oportunidad.", "CORRECTO. La verificabilidad se cumple porque las cifras pueden comprobarse con los documentos. La oportunidad falla porque el informe llega después de cuando se necesitaba.", "Incorrecto. El caso no menciona cambios de criterio ni dificultad de lectura, por lo que la comparabilidad y la comprensibilidad no son las cualidades afectadas.", "Incorrecto. El caso no indica que la información sea irrelevante, y la comprensibilidad no se menciona. Revisa qué dice exactamente el enunciado."], "general": "Verificabilidad pregunta si otros pueden comprobar; oportunidad pregunta si llega a tiempo. Revisa la tabla 2."}, {"tipo": "Análisis", "pregunta": "Montubia compró telas a crédito a un proveedor. Las telas ya están en la bodega y el pago vence en sesenta días. ¿Qué clasificación corresponde a las telas recibidas?", "opciones": ["Activo, porque es un recurso controlado por la empresa que resulta de una compra ya realizada.", "Pasivo, porque la empresa tiene que pagar al proveedor.", "Patrimonio, porque las telas aumentan el capital de los socios.", "Ninguno, porque todavía no se ha pagado."], "correcta": 0, "retro": ["CORRECTO. Las telas son un recurso que la empresa controla porque ya las compró, es decir, por un suceso pasado. Cumplen la definición de activo del párrafo 4.3.", "Incorrecto. La deuda con el proveedor es un pasivo distinto. Las telas son el recurso; la obligación de pagar es otra partida que nace de la misma compra.", "Incorrecto. El patrimonio es el interés residual de los propietarios después de deducir pasivos. Las telas no aumentan el capital por sí mismas.", "Incorrecto. El pago no es la condición para reconocer el activo. La empresa ya controla el recurso desde que lo recibió."], "general": "Para clasificar un bien, busque el recurso controlado y el suceso pasado que lo origina. Revisa el apartado 4 de la sesión 01."}, {"tipo": "Análisis", "pregunta": "La gerencia de Montubia aprobó un presupuesto para comprar maquinaria el próximo año. No hay contrato firmado, no se ha entregado nada y no se ha pagado. ¿Qué corresponde en este momento?", "opciones": ["Reconocer un activo por el valor de la maquinaria.", "Reconocer un pasivo por el valor de la compra prevista.", "Ninguno de los dos, porque no existe un recurso controlado ni una obligación presente nacida de un suceso pasado.", "Reconocer un gasto por el valor de la compra prevista."], "correcta": 2, "retro": ["Incorrecto. Un presupuesto no da control sobre un recurso. La empresa aún no tiene la maquinaria ni ha adquirido un derecho sobre ella.", "Incorrecto. Un pasivo requiere una obligación presente. Un presupuesto aprobado no crea esa obligación.", "CORRECTO. Un presupuesto no es un recurso controlado ni una obligación presente. Por eso no se reconoce activo ni pasivo.", "Incorrecto. Un gasto se define por disminuciones de activos o aumentos de pasivos. Como no ha ocurrido ninguna transacción, no hay gasto."], "general": "Un plan o presupuesto no siempre genera activos ni pasivos. Revisa el ejercicio 3 de la sesión 01."}, {"tipo": "Análisis", "pregunta": "Un cliente de Montubia deposita 500 dólares por un pedido de camisetas que la empresa todavía no ha entregado. ¿Qué clasificación corresponde a la obligación de entregar las camisetas?", "opciones": ["Activo, porque el efectivo entró a la caja.", "Pasivo, porque la empresa debe transferir un bien al cliente como consecuencia de un suceso pasado.", "Ingreso del periodo, porque la empresa recibió dinero.", "Patrimonio, porque el cliente es el futuro propietario del bien."], "correcta": 1, "retro": ["Incorrecto. El efectivo sí es un recurso, pero la obligación que nace del depósito es la que debe clasificarse. Recibir efectivo no elimina la obligación.", "CORRECTO. La empresa tiene una obligación presente de transferir camisetas, originada en el depósito recibido. Cumple la definición de pasivo.", "Incorrecto. Recibir efectivo no equivale a un ingreso. El ingreso requiere que la empresa cumpla su obligación de entregar el bien.", "Incorrecto. El cliente no es propietario de la entidad por hacer un pedido. El depósito no genera patrimonio."], "general": "Recibir efectivo no equivale a ingreso ni a patrimonio. Revisa el ejemplo del depósito en la sesión 01."}, {"tipo": "Teórica", "pregunta": "¿Cómo se define el patrimonio según el Marco Conceptual?", "opciones": ["Como el interés residual en los activos de la entidad después de deducir todos sus pasivos.", "Como la suma de todos los activos de la empresa.", "Como el total de efectivo disponible en los bancos.", "Como la utilidad acumulada del último año."], "correcta": 0, "retro": ["CORRECTO. El patrimonio es lo que queda a los propietarios después de deducir los pasivos, como indica el párrafo 4.63.", "Incorrecto. La suma de los activos es el total de recursos. El patrimonio es la parte que queda después de descontar las obligaciones.", "Incorrecto. El efectivo es solo un tipo de activo. El patrimonio depende de todos los activos y pasivos, no solo de la caja.", "Incorrecto. La utilidad acumulada es una parte posible del patrimonio, pero la definición general es el interés residual."], "general": "Patrimonio es un residuo: activos menos pasivos. Revisa el apartado 4 de la sesión 01."}, {"tipo": "Teórica", "pregunta": "Según el Marco Conceptual, ¿qué es un ingreso?", "opciones": ["Un cobro en efectivo realizado por la empresa.", "Un pago realizado a los proveedores.", "Una compra de activos realizada en el periodo.", "Un aumento de activos o una disminución de pasivos que produce un aumento del patrimonio, distinto de las aportaciones de los propietarios."], "correcta": 3, "retro": ["Incorrecto. Un cobro es una entrada de efectivo. El ingreso se define por su efecto sobre activos, pasivos y patrimonio, y no por el dinero que entra.", "Incorrecto. Un pago a proveedores es una salida de efectivo. No se define el ingreso por la salida de dinero.", "Incorrecto. Una compra de activos cambia la composición de los recursos, pero no aumenta el patrimonio por sí misma.", "CORRECTO. Esa es la definición de ingreso del párrafo 4.68. La diferencia entre ingreso y cobro se retoma en la sesión 03."], "general": "Ingreso y cobro son hechos distintos. Revisa el apartado 4 de la sesión 01."}, {"tipo": "Análisis", "pregunta": "Un socio de Montubia transfirió 10.000 dólares a la empresa. El contrato lo llama «aporte de capital», pero la empresa debe devolver ese monto en doce meses, con un interés pactado. ¿Qué clasificación corresponde al monto recibido?", "opciones": ["Patrimonio, porque el contrato lo denomina aporte de capital.", "Ingreso, porque el socio transfirió dinero a la empresa.", "Pasivo, porque la empresa tiene una obligación presente de devolver el monto y pagar interés.", "Activo, porque el dinero está en la caja."], "correcta": 2, "retro": ["Incorrecto. La denominación del contrato no decide la clasificación. Debe observarse la sustancia: la empresa tiene que devolver el monto.", "Incorrecto. Un aporte de un socio no es un ingreso. El ingreso se origina en la actividad de la empresa y no en aportes de los propietarios.", "CORRECTO. Hay una obligación presente, nacida de la transferencia recibida, de devolver recursos. Esa es la sustancia económica de un pasivo.", "Incorrecto. El efectivo es un activo, pero la clasificación de lo que se debe devolver depende de la obligación, no del lugar donde se guarda el dinero."], "general": "La forma legal no reemplaza la sustancia económica. Revisa el ejercicio 4 de la sesión 01."}, {"tipo": "Análisis", "pregunta": "Otro socio transfirió 8.000 dólares a Montubia como aporte permanente. La empresa no tiene obligación de devolverlos ni de pagar intereses. ¿Qué clasificación corresponde?", "opciones": ["Patrimonio, porque no existe obligación de transferir recursos.", "Pasivo, porque el socio podría recuperar su dinero en algún momento.", "Ingreso del periodo, porque el dinero aumenta la caja.", "Activo, porque el socio es propietario de la empresa."], "correcta": 0, "retro": ["CORRECTO. Sin obligación presente de transferir recursos, el monto aumenta el interés residual de los propietarios, es decir, el patrimonio.", "Incorrecto. Una posibilidad futura y no garantizada no crea una obligación presente. Lo decisivo es si la empresa debe transferir recursos.", "Incorrecto. El aumento de la caja no convierte el aporte en ingreso. Los aportes de los propietarios se excluyen de la definición de ingreso.", "Incorrecto. El socio es propietario, pero la pertenencia no crea un activo de la empresa. Un activo es un recurso controlado por la entidad."], "general": "Cuando no hay obligación, el monto recibido de los propietarios se trata como patrimonio. Revisa el ejercicio 5 de la sesión 01."}, {"tipo": "Teórica", "pregunta": "¿Cuál de las siguientes decisiones depende de información sobre la capacidad de pago de la empresa?", "opciones": ["Elegir el color de las camisetas que se confeccionan.", "Decidir si se concede un crédito a la empresa.", "Escoger el diseño del empaque de un producto.", "Seleccionar la música que se usa en el local comercial."], "correcta": 1, "retro": ["Incorrecto. El color del producto es una decisión de producción o diseño, no depende de la información financiera sobre la capacidad de pago.", "CORRECTO. Quien concede un crédito necesita saber si la empresa podrá pagar sus deudas. Esa es una decisión típica de los usuarios de la información financiera.", "Incorrecto. El diseño del empaque es una decisión comercial o de producto. No requiere información sobre la capacidad de pago.", "Incorrecto. La música del local no tiene relación con la capacidad de pago de la empresa."], "general": "Identifica qué decisión toma el usuario para saber qué información necesita. Revisa el apartado 2 de la sesión 01."}, {"tipo": "Teórica", "pregunta": "¿Qué significa que la información tenga representación fiel?", "opciones": ["Que describe la sustancia del fenómeno económico y es completa, neutral y libre de errores.", "Que coincide con la forma legal del documento aunque la sustancia sea distinta.", "Que se publica el mismo día en que termina el periodo contable.", "Que todas las cifras son exactas, sin ninguna estimación."], "correcta": 0, "retro": ["CORRECTO. La representación fiel exige describir lo que realmente ocurre, de forma completa, neutral y sin errores. Las estimaciones deben explicarse, no ocultarse.", "Incorrecto. Eso describe la forma legal del documento. La representación fiel exige mirar lo que realmente ocurre, por ejemplo cuando un préstamo se llama aporte.", "Incorrecto. La publicación el mismo día corresponde a la oportunidad, no a la representación fiel.", "Incorrecto. Las estimaciones tienen incertidumbre y forman parte de muchas partidas. Lo que se exige es explicarlas, no eliminarlas."], "general": "Representación fiel significa sustancia, completitud y neutralidad. Revisa la sección 3 de la sesión 01."}, {"tipo": "Análisis", "pregunta": "Montubia cambió el criterio de valoración de sus inventarios respecto del año anterior y no lo advirtió en los informes. ¿Qué cualidad de la información se ve más afectada?", "opciones": ["La relevancia.", "La verificabilidad.", "La oportunidad.", "La comparabilidad."], "correcta": 3, "retro": ["Incorrecto. La relevancia se refiere a si la información puede cambiar una decisión. El cambio no advertido afecta sobre todo la posibilidad de comparar.", "Incorrecto. La verificabilidad se refiere a que otros puedan comprobar las cifras con sus documentos. El problema aquí es que los periodos no se pueden contrastar.", "Incorrecto. La oportunidad se refiere a la fecha de entrega. El caso no menciona retraso.", "CORRECTO. Si el criterio cambia sin advertirlo, los periodos no son comparables: el lector podría atribuir a la gestión un cambio que proviene del criterio."], "general": "Comparabilidad exige usar los mismos criterios o advertir los cambios. Revisa la tabla 2 de la sesión 01."}, {"tipo": "Análisis", "pregunta": "El banco sabe que Montubia tiene deudas con proveedores, pero no conoce cuánto vence en los próximos treinta días. ¿Qué puede concluir sobre la capacidad de pago de la empresa?", "opciones": ["Que la empresa no podrá pagar sus deudas.", "Que la empresa sí podrá pagar sus deudas.", "Que la información no basta para concluir, y se necesita conocer los vencimientos y el efectivo disponible.", "Que las deudas no son relevantes para el banco."], "correcta": 2, "retro": ["Incorrecto. Sin los vencimientos no se puede afirmar que la empresa no pagará. Concluir eso sería afirmar más de lo que los datos permiten.", "Incorrecto. Tampoco puede afirmarse que pagará. La falta de información impide cualquiera de las dos conclusiones absolutas.", "CORRECTO. Una conclusión válida reconoce el límite de la información y señala qué dato permitiría decidir: el calendario de vencimientos y el efectivo disponible.", "Incorrecto. Las deudas son relevantes para evaluar la capacidad de pago, precisamente porque pueden afectar la decisión del banco."], "general": "Cuando faltan datos, la conclusión debe declarar qué puede afirmarse y qué información falta. Revisa la sección 1 de la sesión 01."}]}, {"sesion": 2, "titulo": "Evaluación de la sesión 02: NIC 1 y estados financieros", "items": [{"tipo": "Teórica", "pregunta": "¿Cuántos componentes integra el conjunto completo de estados financieros según la NIC 1?", "opciones": ["Dos.", "Tres.", "Cinco.", "Siete."], "correcta": 2, "retro": ["Incorrecto. Dos componentes serían insuficientes. El conjunto incluye el estado de situación, el estado de resultados y otro resultado integral, el estado de cambios en el patrimonio, el estado de flujos de efectivo y las notas.", "Incorrecto. Tres componentes dejarían fuera estados necesarios. Revisa el párrafo 10 de la NIC 1 en la sesión 02.", "CORRECTO. Son cinco componentes: a) situación financiera; b) resultados y otro resultado integral; c) cambios en el patrimonio; d) flujos de efectivo; e) notas.", "Incorrecto. El conjunto tiene cinco componentes, y las notas son uno de ellos. Siete suma informes o partidas que no forman parte del conjunto."], "general": "El conjunto completo tiene cinco componentes. Revisa la sección 2 de la sesión 02."}, {"tipo": "Teórica", "pregunta": "¿Qué mide el estado de situación financiera?", "opciones": ["Los activos, pasivos y patrimonio de la entidad a una fecha determinada.", "El desempeño de la entidad durante un periodo.", "Los flujos de efectivo durante un periodo.", "Las explicaciones de las políticas contables."], "correcta": 0, "retro": ["CORRECTO. El estado de situación financiera es una fotografía: muestra lo que la empresa tiene y debe en una fecha.", "Incorrecto. El desempeño durante un periodo corresponde al estado de resultados y otro resultado integral, que es una película, no una fotografía.", "Incorrecto. Los flujos de efectivo durante un periodo corresponden al estado de flujos, que es otro componente del conjunto.", "Incorrecto. Las explicaciones de las políticas se presentan en las notas, que son un componente distinto del conjunto."], "general": "Situación a una fecha y desempeño durante un periodo son mediciones distintas. Revisa la sección 4 de la sesión 02."}, {"tipo": "Teórica", "pregunta": "¿Cuál de los siguientes elementos forma parte del conjunto completo de estados financieros?", "opciones": ["El informe de gestión de la gerencia.", "El estado de cambios en el patrimonio.", "El informe de sostenibilidad ambiental.", "El presupuesto anual aprobado."], "correcta": 1, "retro": ["Incorrecto. El informe de gestión es información que acompaña a los estados, pero no es un componente del conjunto según el párrafo 13.", "CORRECTO. El estado de cambios en el patrimonio es uno de los cinco componentes del párrafo 10.", "Incorrecto. El informe de sostenibilidad es información complementaria y no un componente del conjunto de estados financieros.", "Incorrecto. Un presupuesto es un plan y no un registro de la situación o el desempeño. No forma parte del conjunto."], "general": "Distinga los componentes del conjunto de la información complementaria. Revisa la sección 2 de la sesión 02."}, {"tipo": "Teórica", "pregunta": "¿Qué significa que los estados del conjunto tengan igual importancia?", "opciones": ["Que deben tener el mismo número de páginas.", "Que basta con presentar solo el estado de situación financiera.", "Que el informe de gestión puede reemplazar a uno de los estados.", "Que ninguno de los estados puede ocultarse ni quedar subordinado a otro."], "correcta": 3, "retro": ["Incorrecto. La igualdad de importancia no se refiere a la extensión del documento, sino a que cada estado tiene su función dentro del conjunto.", "Incorrecto. Presentar solo un estado omite información necesaria. El conjunto completo exige todos sus componentes.", "Incorrecto. El informe de gestión no reemplaza a ningún estado. Los estados tienen contenido que la norma exige.", "CORRECTO. La norma exige que los componentes tengan igual importancia en la presentación, de modo que ninguno quede escondido detrás de otro."], "general": "Igual importancia significa que ningún componente puede ocultarse. Revisa la sección 2 de la sesión 02."}, {"tipo": "Teórica", "pregunta": "¿Cuándo corresponde que una entidad declare, en las notas, que sus estados cumplen las NIIF?", "opciones": ["Cuando presenta un informe de gestión junto con los estados.", "Cuando los estados cumplen todos los requisitos de las NIIF.", "Cuando el estado de resultados muestra utilidad.", "Cuando las notas se publican en el sitio web de la empresa."], "correcta": 1, "retro": ["Incorrecto. Presentar un informe de gestión no es condición para declarar el cumplimiento. Ese informe no forma parte de los estados.", "CORRECTO. La declaración explícita y sin reservas solo puede hacerse si el conjunto cumple todos los requisitos de las NIIF, según el párrafo 16.", "Incorrecto. La utilidad no determina el cumplimiento de las NIIF. Una empresa puede tener pérdida y aun así cumplir o no cumplir.", "Incorrecto. El medio de publicación no cambia el cumplimiento. Lo que importa es la conformidad de los estados con los requisitos."], "general": "La declaración de cumplimiento depende del contenido de los estados. Revisa la sección 3 de la sesión 02."}, {"tipo": "Teórica", "pregunta": "Si una política contable es inapropiada, ¿puede corregirse solamente con una nota explicativa?", "opciones": ["No, porque una revelación no corrige un criterio inadecuado; la política debe aplicarse correctamente.", "Sí, siempre que la nota sea extensa y detallada.", "Sí, porque las notas tienen más fuerza que los estados.", "Solo si un auditor externo aprueba la nota."], "correcta": 0, "retro": ["CORRECTO. La norma indica que las revelaciones no corrigen una política inapropiada. Lo que se exige es la presentación razonable de los estados.", "Incorrecto. La extensión de la nota no cambia el problema. Una explicación detallada de un criterio inadecuado sigue siendo un criterio inadecuado.", "Incorrecto. Las notas explican los estados y no tienen más fuerza que ellos. Un criterio incorrecto no se convierte en correcto por explicarse.", "Incorrecto. La aprobación de un tercero no es el criterio de la norma. La presentación razonable depende de la aplicación correcta de las políticas."], "general": "Una nota explica, pero no corrige un criterio inadecuado. Revisa la sección 3 de la sesión 02."}, {"tipo": "Análisis", "pregunta": "El banco solicitó a Montubia únicamente el estado de resultados del año. ¿Qué información le falta para evaluar si la empresa puede pagar sus deudas a la fecha de cierre?", "opciones": ["Ninguna, porque el estado de resultados basta para evaluar la capacidad de pago.", "El estado de flujos de efectivo solamente.", "El estado de situación financiera a la fecha de cierre.", "El informe de sostenibilidad ambiental."], "correcta": 2, "retro": ["Incorrecto. El estado de resultados mide el desempeño durante el periodo. No muestra qué tiene y qué debe la empresa a la fecha de cierre.", "Incorrecto. El estado de flujos ayuda a entender el efectivo, pero la situación de deudas y derechos a la fecha se presenta en el estado de situación financiera.", "CORRECTO. Para evaluar deudas pendientes a la fecha de cierre se necesita el estado de situación financiera, porque mide activos, pasivos y patrimonio a esa fecha.", "Incorrecto. El informe de sostenibilidad es información complementaria y no muestra la situación financiera de la empresa."], "general": "Para saber qué debe la empresa a una fecha, se usa el estado de situación. Revisa la tabla 3 de la sesión 02."}, {"tipo": "Análisis", "pregunta": "Montubia vendió camisetas a crédito por 2.000 dólares durante el año, y a la fecha de cierre el cliente no ha pagado. ¿Dónde aparece cada efecto?", "opciones": ["Solo en el estado de resultados, como ingreso.", "Solo en el estado de flujos, como efectivo.", "En el informe de gestión, porque es una venta.", "En el estado de situación financiera como derecho a cobrar a la fecha, y el ingreso por la venta en el estado de resultados."], "correcta": 3, "retro": ["Incorrecto. El ingreso aparece en el estado de resultados, pero el derecho a cobrar a la fecha también debe reflejarse en el estado de situación financiera.", "Incorrecto. El efectivo no entró, porque el cliente no ha pagado. El estado de flujos no registra la venta como cobro.", "Incorrecto. El informe de gestión no es un componente del conjunto. Las cifras de la venta deben aparecer en los estados.", "CORRECTO. La venta es un ingreso del periodo y el derecho a cobrar es un activo a la fecha. Cada efecto aparece en el estado que responde a su pregunta."], "general": "Una misma operación puede aparecer en dos estados porque cada uno mide algo distinto. Revisa el ejercicio 4 de la sesión 02."}, {"tipo": "Análisis", "pregunta": "Montubia pagó en efectivo los sueldos del mes. ¿En qué estado aparece ese gasto?", "opciones": ["En el estado de resultados, porque es un gasto del periodo.", "En el estado de situación financiera, porque es una deuda.", "En ninguno de los dos, porque es un pago y no un gasto.", "En el estado de situación financiera, como activo."], "correcta": 0, "retro": ["CORRECTO. El sueldo es una disminución de activos o un aumento de pasivos del periodo que reduce el patrimonio, es decir, un gasto que se presenta en el estado de resultados.", "Incorrecto. Una deuda aparecería solo si el sueldo quedara pendiente de pago. Aquí el pago ya se realizó en efectivo.", "Incorrecto. Confundir gasto con pago es un error frecuente. El gasto se define por su efecto sobre el patrimonio, no por la salida de dinero.", "Incorrecto. Un sueldo no genera un activo. Es un costo del periodo que disminuye el patrimonio."], "general": "Gasto y pago son hechos distintos. Revisa el apartado 4 de la sesión 01 y la tabla 3 de la sesión 02."}, {"tipo": "Análisis", "pregunta": "La empresa informó una utilidad de 3.000 dólares en el año, pero su efectivo disminuyó. ¿Qué puede concluir sin más información?", "opciones": ["Que la empresa tuvo pérdidas durante el año.", "Que la utilidad no equivale por sí sola a efectivo disponible, y que hace falta revisar cobros, pagos y otros movimientos.", "Que la disminución de efectivo se debe a un error de registro.", "Que el estado de resultados está incorrecto."], "correcta": 1, "retro": ["Incorrecto. La utilidad informada indica un resultado positivo del periodo. La caja no es el único indicador de resultado.", "CORRECTO. La utilidad y el efectivo son magnitudes distintas. Una venta a crédito puede generar utilidad sin entrada de caja, y otros pagos pueden reducir la caja.", "Incorrecto. Suponer un error sin evidencia es una conclusión no justificada. La diferencia puede explicarse por la forma de cobros y pagos.", "Incorrecto. Que la utilidad y la caja sean distintas no significa que el estado de resultados esté equivocado."], "general": "No confunda utilidad con efectivo disponible. Revisa la sección 4 de la sesión 02."}, {"tipo": "Análisis", "pregunta": "¿Qué posición ocupa el informe de gestión respecto de los estados financieros?", "opciones": ["Es el primer componente del conjunto completo.", "Es una partida del estado de situación financiera.", "Es información fuera de los estados financieros, aunque puede ser útil para el usuario.", "Reemplaza al estado de flujos de efectivo."], "correcta": 2, "retro": ["Incorrecto. El primer componente del conjunto es el estado de situación financiera. El informe de gestión no es un componente del conjunto.", "Incorrecto. El informe de gestión no es una partida. Las partidas son los elementos que se presentan dentro de los estados.", "CORRECTO. La norma lo describe como información externa a los estados (párrafo 13). Puede ser útil, pero no sustituye ni forma parte de los componentes.", "Incorrecto. Ningún informe de gestión reemplaza el estado de flujos. Los componentes del conjunto tienen contenido que la norma exige."], "general": "Distinga los componentes del conjunto de la información complementaria. Revisa el apartado 5 de la sesión 02."}, {"tipo": "Teórica", "pregunta": "¿Qué exige la presentación razonable de los estados financieros?", "opciones": ["Copiar las cifras del año anterior sin modificaciones.", "Presentar solamente las partidas de efectivo.", "Mostrar las ventas sin registrar sus costos.", "Representar fielmente los efectos de las transacciones de acuerdo con las definiciones de activo, pasivo, patrimonio, ingresos y gastos."], "correcta": 3, "retro": ["Incorrecto. Copiar cifras anteriores no representa la situación actual. La presentación razonable exige reflejar los efectos de las transacciones del periodo.", "Incorrecto. Presentar solo efectivo omite activos, pasivos y resultados. El conjunto debe representar la situación y el desempeño de la entidad.", "Incorrecto. Mostrar ventas sin costos produce una imagen incompleta del desempeño. La presentación razonable exige representar fielmente los efectos.", "CORRECTO. La presentación razonable se apoya en las definiciones del marco. Por eso la sesión 01 y la sesión 02 se conectan."], "general": "La presentación razonable se apoya en las definiciones de los elementos. Revisa la sección 3 de la sesión 02."}, {"tipo": "Teórica", "pregunta": "¿Qué incluye, al menos una vez al año, el conjunto completo de estados financieros?", "opciones": ["Cifras del periodo actual y cifras comparativas del periodo anterior.", "Solamente cifras del periodo actual.", "Cifras proyectadas para el año siguiente.", "Solamente cifras de dos años anteriores."], "correcta": 0, "retro": ["CORRECTO. La presentación incluye información comparativa del periodo anterior, lo que permite la comparabilidad estudiada en la sesión 01.", "Incorrecto. Presentar solo el periodo actual impide comparar con el año anterior, y la norma exige cifras comparativas.", "Incorrecto. Las proyecciones no forman parte del conjunto presentado. Los estados muestran información histórica del periodo.", "Incorrecto. Las cifras de dos años atrás no son el requisito. La norma exige las cifras del periodo anterior como comparativas."], "general": "El conjunto se presenta con cifras del periodo y comparativas. Revisa la sección 2 de la sesión 02."}, {"tipo": "Análisis", "pregunta": "Los intereses pagados por Montubia al banco durante el año, por el uso de un préstamo, ¿en qué estado aparecen?", "opciones": ["En el estado de situación financiera, como activo.", "En el estado de resultados, como gasto del periodo.", "En el informe de gestión, como información complementaria.", "En ninguno de los dos, porque son un pago."], "correcta": 1, "retro": ["Incorrecto. Un interés pagado no crea un activo. Es un costo del periodo por el uso de recursos ajenos.", "CORRECTO. Los intereses son un gasto del periodo, porque disminuyen el patrimonio y se miden durante el año, por lo que aparecen en el estado de resultados.", "Incorrecto. El informe de gestión no es un componente del conjunto. El gasto debe presentarse en el estado correspondiente.", "Incorrecto. Igual que en otros casos, el pago no determina el estado. El gasto se identifica por su efecto sobre el patrimonio del periodo."], "general": "Gastos del periodo se presentan en el estado de resultados. Revisa la tabla 3 de la sesión 02."}, {"tipo": "Análisis", "pregunta": "¿Qué cambia si Montubia prepara el estado de resultados mensual en lugar del anual?", "opciones": ["Cambia la naturaleza de la medición, que pasa a ser una situación a una fecha.", "Deja de incluir ingresos y gastos.", "No cambia la naturaleza, pero sí la extensión del periodo que se mide.", "Pasa a mostrar solamente las deudas pendientes."], "correcta": 2, "retro": ["Incorrecto. El estado mensual sigue midiendo un desempeño durante un periodo. Cambiar la frecuencia no lo convierte en una situación a una fecha.", "Incorrecto. El estado mensual sigue incluyendo ingresos y gastos del mes. Lo que cambia es el intervalo de tiempo.", "CORRECTO. La naturaleza del estado es medir el desempeño durante un periodo. Lo que cambia es la extensión del periodo, y las comparaciones deben hacerse con cuidado.", "Incorrecto. Las deudas pendientes corresponden al estado de situación financiera, no al estado de resultados mensual."], "general": "La duración del periodo cambia el alcance del informe, no la pregunta que responde. Revisa el ejercicio 5 de la sesión 02."}, {"tipo": "Análisis", "pregunta": "Un estudiante afirma que, con el estado de situación al cierre y el estado de resultados del año, ya es posible conocer el número exacto de clientes que pagarán la semana siguiente. ¿Cuál es la evaluación correcta?", "opciones": ["Correcta, porque los estados muestran las cuentas por cobrar y los ingresos.", "Correcta solo si la empresa es grande.", "Incorrecta, porque los estados no muestran esa información; se requeriría el detalle de vencimientos y cobranzas.", "Correcta, porque el estado de resultados muestra los ingresos del año."], "correcta": 2, "retro": ["Incorrecto. Las cuentas por cobrar muestran un saldo total a la fecha, no qué clientes pagarán ni cuándo. Confundir el total con el detalle es un error frecuente.", "Incorrecto. El tamaño de la empresa no cambia la información que muestran los estados. Lo que falta es el detalle de vencimientos.", "CORRECTO. Los estados muestran totales y resultados, no el detalle por cliente ni las fechas de cobro. Esa conclusión reconoce el límite de la información disponible.", "Incorrecto. El ingreso del año mide el desempeño pasado. No indica qué cobros ocurrirán en la semana siguiente."], "general": "Los estados financieros muestran totales; los vencimientos requieren un detalle adicional. Revisa la sección 6 de la sesión 02."}]}, {"sesion": 3, "titulo": "Evaluación de la sesión 03: la cuenta contable", "items": [{"tipo": "Teórica", "pregunta": "¿Qué es el debe de una cuenta contable?", "opciones": ["El lado izquierdo de la cuenta, donde se anotan los importes de los movimientos del debe.", "El lado derecho de la cuenta, donde se anotan los importes del haber.", "El lugar donde siempre se registran los aumentos de una cuenta.", "El lugar donde siempre se registran las disminuciones de una cuenta."], "correcta": 0, "retro": ["CORRECTO. El debe es el lado izquierdo de la cuenta T. Es solo un lugar de registro, no indica por sí mismo si la cuenta aumenta o disminuye.", "Incorrecto. El lado derecho es el haber. Confundir los dos lados es frecuente al inicio; relee la sección 2 de la sesión 03.", "Incorrecto. El debe no siempre registra aumentos. Si la cuenta es acreedora, un movimiento en el debe disminuye su saldo.", "Incorrecto. El debe tampoco registra siempre disminuciones. Depende de la naturaleza de la cuenta."], "general": "Debe y haber son lados; el efecto depende de la naturaleza de la cuenta. Revisa la sección 2 de la sesión 03."}, {"tipo": "Teórica", "pregunta": "¿Qué significa que se cargó una cuenta?", "opciones": ["Que su saldo aumentó.", "Que se anotó un importe en el debe.", "Que se anotó un importe en el haber.", "Que la cuenta es acreedora."], "correcta": 1, "retro": ["Incorrecto. Cargar una cuenta no implica que su saldo aumente. Un cargo en una cuenta acreedora disminuye su saldo.", "CORRECTO. Cargo y debe son equivalentes: indican que el importe se anotó en el lado izquierdo de la cuenta.", "Incorrecto. Un importe en el haber es un abono, no un cargo.", "Incorrecto. La naturaleza de la cuenta no se indica por el cargo. El cargo solo indica el lado del movimiento."], "general": "Cargo equivale a debe, y abono equivale a haber. Revisa la sección 2 de la sesión 03."}, {"tipo": "Teórica", "pregunta": "¿Cuál es la naturaleza de una cuenta de activo?", "opciones": ["Acreedora.", "Ni deudora ni acreedora.", "Deudora.", "Depende del saldo que la cuenta presente en un momento concreto."], "correcta": 2, "retro": ["Incorrecto. Las cuentas acreedoras son pasivo, patrimonio e ingreso. Los activos aumentan con movimientos en el debe.", "Incorrecto. Todas las cuentas tienen una naturaleza definida. Los activos son deudores.", "CORRECTO. Las cuentas de activo son deudoras: aumentan en el debe y disminuyen en el haber.", "Incorrecto. La naturaleza no depende del saldo del momento, sino de la clase de cuenta. El saldo puede cambiar de lado; la naturaleza no."], "general": "La naturaleza depende de la clase de cuenta. Revisa la tabla 4 de la sesión 03."}, {"tipo": "Teórica", "pregunta": "¿Con qué lado aumenta una cuenta de pasivo?", "opciones": ["Con el debe.", "Con ambos lados por igual.", "Con ninguno, porque es una cuenta de resultados.", "Con el haber."], "correcta": 3, "retro": ["Incorrecto. El debe disminuye un pasivo, por ejemplo cuando la empresa paga una deuda.", "Incorrecto. Una cuenta no aumenta con ambos lados a la vez. El lado de aumento depende de su naturaleza.", "Incorrecto. Los pasivos son cuentas del estado de situación, no de resultados. Confundirlos con resultados es un error frecuente.", "CORRECTO. Los pasivos son acreedores: aumentan con movimientos en el haber, por ejemplo cuando la empresa compra a crédito."], "general": "Los pasivos son acreedores. Revisa la tabla 4 de la sesión 03."}, {"tipo": "Teórica", "pregunta": "Una cuenta tiene más importe anotado en el debe que en el haber. ¿Qué saldo tiene?", "opciones": ["Deudor.", "Acreedor.", "Cero.", "No tiene saldo, porque no está equilibrada."], "correcta": 0, "retro": ["CORRECTO. Si el debe supera al haber, la diferencia queda en el lado del debe y el saldo es deudor.", "Incorrecto. El saldo acreedor corresponde a un haber mayor que el debe.", "Incorrecto. El saldo es cero solo cuando ambos lados suman lo mismo.", "Incorrecto. Una cuenta siempre tiene saldo mientras tenga movimientos. El equilibrio entre lados no es requisito para tener saldo."], "general": "El saldo es la diferencia entre ambos lados. Revisa la sección 4 de la sesión 03."}, {"tipo": "Teórica", "pregunta": "¿Qué significa un saldo deudor en la cuenta Caja?", "opciones": ["Que la empresa debe efectivo a sus socios.", "Que hay efectivo disponible según los movimientos registrados.", "Que la caja registra una pérdida del periodo.", "Que la empresa debe pagar un impuesto."], "correcta": 1, "retro": ["Incorrecto. Deber efectivo a socios correspondería a otra cuenta, y el saldo de Caja no indica una deuda con socios.", "CORRECTO. La caja es deudora. Un saldo deudor indica el efectivo disponible según los movimientos registrados.", "Incorrecto. La caja no registra pérdidas. Las pérdidas se analizan en el estado de resultados, con cuentas de ingresos y gastos.", "Incorrecto. El saldo de la caja no indica impuestos. Los impuestos se registran en cuentas propias."], "general": "El saldo deudor de Caja indica efectivo disponible. Revisa la sección 5 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "Montubia cobra 600 dólares a un cliente que le debía esa cantidad. ¿En qué lado de la cuenta Caja se registra el cobro?", "opciones": ["En el haber, porque disminuye la cuenta por cobrar.", "En el haber, porque es una salida de efectivo.", "En el debe, porque la caja aumenta.", "No se registra en Caja, porque el efectivo no cambia."], "correcta": 2, "retro": ["Incorrecto. Ese movimiento disminuye la cuenta por cobrar, no la caja. Cada cuenta se analiza por separado.", "Incorrecto. El cobro es una entrada de efectivo, no una salida. Revisa el ejercicio 3 de la sesión 03.", "CORRECTO. El efectivo entra, por lo que la caja aumenta. Un aumento de un activo deudor va en el debe.", "Incorrecto. El efectivo sí cambia: entra dinero a la caja. Por eso el cobro se registra en esa cuenta."], "general": "Analiza cada cuenta por separado y pregunta si aumenta o disminuye. Revisa el ejercicio 3 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "Montubia paga 800 dólares a un proveedor con efectivo de su caja. ¿En qué lado de la cuenta Proveedores se registra el pago?", "opciones": ["En el haber, porque disminuye la caja.", "En el haber, porque aumenta la deuda.", "No se registra en Proveedores, porque el pago se hizo en caja.", "En el debe, porque disminuye la deuda."], "correcta": 3, "retro": ["Incorrecto. El haber de la caja disminuye la caja; la cuenta Proveedores requiere su propio análisis.", "Incorrecto. Aumentar la deuda ocurre con una compra a crédito, no con un pago. El pago reduce la deuda.", "Incorrecto. El pago sí afecta a Proveedores, porque reduce la obligación con el proveedor.", "CORRECTO. Proveedores es acreedora. Su disminución se registra en el debe, por lo que el pago de 800 dólares va en ese lado."], "general": "Proveedores es acreedora: sus disminuciones van en el debe. Revisa la tabla 4 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "Montubia vende mercadería al contado por 1.200 dólares. ¿En qué lado de la cuenta Ventas se registra la venta?", "opciones": ["En el haber, porque el ingreso es una cuenta acreedora que aumenta en el haber.", "En el debe, porque la venta aumenta el efectivo.", "Por mitad en el debe y en el haber.", "No se registra en Ventas, porque se cobró al contado."], "correcta": 0, "retro": ["CORRECTO. Ventas es un ingreso y su naturaleza es acreedora: aumenta con movimientos en el haber.", "Incorrecto. El efecto en la caja se registra en la cuenta Caja, en el debe. La cuenta Ventas es otra y tiene su propio lado de aumento.", "Incorrecto. Un movimiento no se divide por mitad. Cada importe se anota en un solo lado de cada cuenta.", "Incorrecto. Aunque se cobre al contado, la venta es un ingreso del periodo y debe registrarse en su cuenta."], "general": "Ventas es acreedora. Revisa la tabla 4 y el apartado 3 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "En una cuenta, el debe suma 5.000 dólares y el haber suma 1.500 dólares. En otro movimiento posterior, el debe suma 500 dólares y el haber suma 2.000 dólares. ¿Cuál es el saldo final?", "opciones": ["3.500 dólares deudor.", "2.000 dólares deudor.", "2.000 dólares acreedor.", "8.500 dólares deudor."], "correcta": 1, "retro": ["Incorrecto. El total del haber es 3.500 dólares, pero el saldo es la diferencia entre el debe total (5.500) y el haber total (3.500).", "CORRECTO. El debe total es 5.500 dólares y el haber total es 3.500 dólares. La diferencia de 2.000 dólares queda en el debe, por lo que el saldo es deudor.", "Incorrecto. El lado del saldo es deudor porque el debe supera al haber. Confundir el lado es un error frecuente al calcular.", "Incorrecto. Sumar los dos lados como si fueran del mismo signo produce un importe que no representa el saldo."], "general": "El saldo es la diferencia entre el total del debe y el total del haber. Revisa la sección 4 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "Montubia compró telas a crédito por 7.000 dólares y, después, pagó 4.500 dólares al proveedor. ¿Cuál es el saldo de la cuenta Proveedores?", "opciones": ["11.500 dólares deudor.", "2.500 dólares deudor.", "2.500 dólares acreedor.", "4.500 dólares acreedor."], "correcta": 2, "retro": ["Incorrecto. Sumar la compra y el pago produce un importe que no es el saldo. El pago disminuye la deuda y no la aumenta.", "Incorrecto. El saldo de una cuenta acreedora no puede ser deudor cuando la deuda sigue pendiente. El haber supera al debe.", "CORRECTO. La compra aumenta la deuda en el haber (7.000) y el pago la disminuye en el debe (4.500). La deuda pendiente es 2.500 dólares, saldo acreedor.", "Incorrecto. El pago de 4.500 dólares no es el saldo. El saldo es la diferencia entre el haber y el debe."], "general": "En una cuenta acreedora, el saldo es el exceso del haber sobre el debe. Revisa el ejercicio 4 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "Una cuenta Proveedores presenta un saldo deudor de 300 dólares. ¿Qué conviene revisar?", "opciones": ["Nada, porque es un resultado normal en una cuenta de pasivo.", "Que la cuenta corresponde a un activo.", "Que la empresa tiene utilidad en el periodo.", "Que puede existir un pago mayor que la deuda registrada, o un movimiento anotado en el lado contrario, y conviene revisar los movimientos."], "correcta": 3, "retro": ["Incorrecto. Un saldo deudor en una cuenta acreedora es una señal de alerta. No es un resultado normal sin una explicación en los movimientos.", "Incorrecto. Que el saldo sea deudor no convierte la cuenta en activo. Su naturaleza sigue siendo acreedora.", "Incorrecto. La cuenta Proveedores no indica utilidad. El saldo debe analizarse con los movimientos de esa misma cuenta.", "CORRECTO. Un saldo contrario a la naturaleza sugiere pagos superiores a la deuda o un registro en el lado equivocado. La revisión debe hacerse con los documentos."], "general": "Un saldo contrario a la naturaleza es una señal para revisar los movimientos. Revisa la sección 4 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "La cuenta Ventas tiene dos movimientos en el haber: 1.000 dólares y 400 dólares. ¿Cuál es su saldo?", "opciones": ["1.400 dólares acreedor.", "1.400 dólares deudor.", "400 dólares acreedor.", "Cero, porque no hay movimientos en el debe."], "correcta": 0, "retro": ["CORRECTO. Ambos movimientos están en el haber, por lo que el total del haber es 1.400 dólares y el saldo es acreedor, como corresponde a un ingreso.", "Incorrecto. El saldo es deudor solo cuando el debe supera al haber. Aquí no hay debe, así que el saldo es acreedor.", "Incorrecto. El saldo incluye los dos movimientos. Tomar solo el segundo deja fuera el primer importe.", "Incorrecto. Que no haya movimientos en el debe no significa que el saldo sea cero. El saldo es la suma de los movimientos del haber menos el debe."], "general": "El saldo suma todos los movimientos de la cuenta. Revisa la sección 4 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "En una cuenta T, el total del debe es 6.000 dólares y el total del haber también es 6.000 dólares. ¿Cuál es el saldo?", "opciones": ["6.000 dólares deudor.", "6.000 dólares acreedor.", "Cero, porque ambos lados se compensan exactamente.", "12.000 dólares deudor."], "correcta": 2, "retro": ["Incorrecto. El debe no supera al haber, por lo que no hay saldo deudor.", "Incorrecto. El haber no supera al debe, por lo que no hay saldo acreedor.", "CORRECTO. Cuando ambos lados suman lo mismo, la diferencia es cero. La cuenta queda saldada.", "Incorrecto. Sumar ambos lados no produce el saldo. El saldo es la diferencia entre ellos."], "general": "Saldo cero significa que ambos lados suman lo mismo. Revisa la sección 4 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "En la cuenta Caja, un movimiento de 300 dólares de entrada de efectivo se registró en el haber, cuando correspondía al debe. ¿Qué efecto tiene este error sobre el saldo?", "opciones": ["Ninguno, porque el importe es el mismo.", "Aumenta el saldo en 300 dólares.", "Disminuye el saldo en 300 dólares.", "Disminuye el saldo en 600 dólares frente al saldo correcto."], "correcta": 3, "retro": ["Incorrecto. El importe no cambia, pero el lado sí. El lado determina el efecto sobre el saldo, por lo que el error altera el resultado.", "Incorrecto. Un error que sitúa una entrada en el haber resta esa cantidad en lugar de sumarla. El efecto no es de aumento.", "Incorrecto. El error no equivale a 300 dólares. Hay que comparar dos caminos: sumar 300 dólares o restarlos. La diferencia entre ambos es de 600 dólares.", "CORRECTO. Si el movimiento debía sumarse y se restó, la diferencia es el doble del importe: 600 dólares menos que el saldo correcto."], "general": "Un error de lado cambia el saldo. Revisa la sección 2 de la sesión 03."}, {"tipo": "Análisis", "pregunta": "Una cuenta muestra un saldo deudor de 1.000 dólares según sus movimientos. ¿Qué puede concluir sin más información?", "opciones": ["Que la empresa tiene una utilidad de 1.000 dólares.", "Que la cuenta registra una deuda de 1.000 dólares.", "Que el saldo es 1.000 dólares deudor según los movimientos registrados, pero no basta para saber si el registro es correcto sin revisar los documentos.", "Que la cuenta es acreedora, porque el saldo es positivo."], "correcta": 2, "retro": ["Incorrecto. Un saldo deudor no indica utilidad. La utilidad se obtiene del estado de resultados a partir de ingresos y gastos.", "Incorrecto. Un saldo deudor en una cuenta de activo indica un recurso, no una deuda. El lado del saldo depende de la naturaleza de la cuenta.", "CORRECTO. El saldo describe lo que muestran los movimientos. Para confirmar que el registro es correcto se necesitan los documentos que respaldan cada movimiento.", "Incorrecto. El signo positivo no determina la naturaleza. Un saldo se interpreta por su lado, no por su signo."], "general": "El saldo refleja los movimientos registrados; su exactitud se comprueba con los documentos. Revisa la sección 4 de la sesión 03."}]}];
+
+/* ==========================================================
+   2. Navegación por pestañas
+   ========================================================== */
+(function () {
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('[data-panel]'));
+
+  function mostrar(id, enfocar) {
+    panels.forEach(p => { p.hidden = (p.dataset.panel !== id); });
+    tabs.forEach(t => {
+      const activa = t.dataset.target === id;
+      t.setAttribute('aria-selected', activa ? 'true' : 'false');
+      t.tabIndex = activa ? 0 : -1;
+      if (activa && enfocar) t.focus();
+    });
+    const panel = document.querySelector('[data-panel="' + id + '"]');
+    if (panel) {
+      const titulo = panel.querySelector('h2');
+      if (titulo) { titulo.setAttribute('tabindex', '-1'); titulo.focus({ preventScroll: true }); }
+    }
+    try { history.replaceState(null, '', '#' + id); } catch (e) { /* vista previa sin permiso para cambiar la URL: se ignora */ }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => mostrar(t.dataset.target, false));
+    t.addEventListener('keydown', e => {
+      let j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (j !== null) { e.preventDefault(); tabs[j].focus(); mostrar(tabs[j].dataset.target, true); }
+    });
+  });
+
+  const inicial = (location.hash || '').replace('#', '');
+  mostrar(panels.some(p => p.dataset.panel === inicial) ? inicial : 'intro', false);
+})();
+
+/* ==========================================================
+   3. Evaluaciones de práctica
+   Cada evaluación se dibuja desde EVALUACIONES. Las respuestas
+   se guardan solo en memoria de la pestaña mientras esté abierta.
+   ========================================================== */
+(function () {
+  const LETRAS = ['a', 'b', 'c', 'd'];
+
+  function dibujar(ev, raiz) {
+    const n = ev.items.length;
+    let respuestas = Array(n).fill(null);
+    const nombre = 'ev' + ev.sesion + '-';
+
+    raiz.innerHTML = '';
+
+    // 3.1 Cabecera
+    const cab = document.createElement('div');
+    cab.className = 'cabecera-eval';
+    cab.innerHTML = '<p class="nota-practica">' + (ev.diagnostica
+      ? 'Esta prueba es diagnóstica y formativa: no tiene nota. Sirve para identificar qué conviene repasar.'
+      : 'Esta evaluación es de práctica. Sus respuestas le muestran qué comprende y qué conviene revisar; no sustituye a las evaluaciones oficiales.') + '</p>';
+    const prog = document.createElement('p');
+    prog.className = 'progreso';
+    prog.setAttribute('aria-live', 'polite');
+    cab.appendChild(prog);
+    raiz.appendChild(cab);
+
+    // 3.2 Preguntas
+    const formulario = document.createElement('form');
+    formulario.setAttribute('novalidate', 'novalidate');
+    formulario.addEventListener('submit', e => e.preventDefault());
+    raiz.appendChild(formulario);
+
+    ev.items.forEach((it, i) => {
+      const fs = document.createElement('fieldset');
+      const leyenda = document.createElement('legend');
+      leyenda.innerHTML = 'Pregunta ' + (i + 1) + ' de ' + n;
+      fs.appendChild(leyenda);
+
+      const badge = document.createElement('span');
+      badge.className = 'insignia';
+      badge.textContent = '[' + it.tipo + ']';
+      fs.appendChild(badge);
+
+      const enun = document.createElement('p');
+      enun.textContent = it.pregunta;
+      fs.appendChild(enun);
+
+      const opts = document.createElement('div');
+      opts.className = 'opts';
+      it.opciones.forEach((texto, k) => {
+        const id = nombre + 'p' + i + '-' + k;
+        const etiqueta = document.createElement('label');
+        etiqueta.setAttribute('for', id);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = nombre + 'p' + i;
+        radio.id = id;
+        radio.value = String(k);
+        const letra = document.createElement('span');
+        letra.className = 'letra';
+        letra.textContent = LETRAS[k] + ')';
+        const txt = document.createElement('span');
+        txt.textContent = texto;
+        etiqueta.appendChild(radio);
+        etiqueta.appendChild(letra);
+        etiqueta.appendChild(txt);
+        opts.appendChild(etiqueta);
+        radio.addEventListener('change', () => elegir(i, k));
+      });
+      fs.appendChild(opts);
+
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.setAttribute('aria-live', 'polite');
+      fs.appendChild(fb);
+
+      const gen = document.createElement('p');
+      gen.className = 'gen';
+      gen.textContent = 'Idea que conviene recordar: ' + it.general;
+      fs.appendChild(gen);
+
+      formulario.appendChild(fs);
+    });
+
+    // 3.3 Resultado y acciones
+    const resultado = document.createElement('div');
+    resultado.className = 'resultado';
+    resultado.setAttribute('aria-live', 'polite');
+    raiz.appendChild(resultado);
+
+    const acciones = document.createElement('div');
+    acciones.className = 'acciones';
+    const btnReintento = document.createElement('button');
+    btnReintento.type = 'button';
+    btnReintento.className = 'btn principal';
+    btnReintento.textContent = 'Intentar nuevamente';
+    btnReintento.hidden = true;
+    btnReintento.addEventListener('click', () => reiniciar(false));
+    const btnReinicio = document.createElement('button');
+    btnReinicio.type = 'button';
+    btnReinicio.className = 'btn';
+    btnReinicio.textContent = 'Reiniciar cuestionario';
+    btnReinicio.addEventListener('click', () => reiniciar(true));
+    acciones.appendChild(btnReintento);
+    acciones.appendChild(btnReinicio);
+    raiz.appendChild(acciones);
+
+    // 3.4 Lógica de respuesta
+    function elegir(i, k) {
+      if (bloqueado) return;
+      respuestas[i] = k;
+      const it = ev.items[i];
+      const fieldset = formulario.querySelectorAll('fieldset')[i];
+      const fb = fieldset.querySelector('.fb');
+      const gen = fieldset.querySelector('.gen');
+      const acierto = (k === it.correcta);
+      fb.className = 'fb ' + (acierto ? 'ok' : 'mal');
+      fb.textContent = it.retro[k];
+      gen.classList.add('visible');
+      actualizar();
+    }
+
+    // 3.5 Cálculo de progreso, aciertos y bloqueo
+    let bloqueado = false;
+    function actualizar() {
+      const contestadas = respuestas.filter(x => x !== null).length;
+      const aciertos = respuestas.reduce((s, x, i) => s + (x === ev.items[i].correcta ? 1 : 0), 0);
+      prog.textContent = 'Respondidas: ' + contestadas + ' de ' + n + '. Aciertos hasta ahora: ' + aciertos + '.';
+
+      if (contestadas < n) {
+        bloqueado = false;
+        resultado.innerHTML = '';
+        btnReintento.hidden = true;
+        return;
+      }
+
+      // Evaluación completa: se bloquea la edición hasta reiniciar.
+      bloqueado = true;
+      formulario.querySelectorAll('input').forEach(inp => inp.disabled = true);
+      const porcentaje = Math.round((aciertos / n) * 100);
+      const nota = (aciertos / n * 10).toFixed(1).replace('.', ',');
+      let texto = '<strong>Resultado: ' + aciertos + ' de ' + n + ' respuestas correctas (' + porcentaje + ' %).</strong>';
+      if (ev.diagnostica) {
+        texto += '<br>Esta prueba no tiene calificación. Revisa las preguntas erradas con sus retroalimentaciones.';
+      } else {
+        texto += '<br>Puntaje de práctica: ' + nota + ' sobre 10. No es una nota oficial.';
+      }
+      if (aciertos < n) {
+        texto += '<br>Revisa las preguntas erradas y, si lo deseas, intenta nuevamente con las mismas preguntas en el mismo orden.';
+        btnReintento.hidden = false;
+      } else {
+        texto += '<br>Respondió todas las preguntas correctamente. No es necesario repetir el cuestionario.';
+        btnReintento.hidden = true;
+      }
+      resultado.innerHTML = texto;
+    }
+
+    // 3.6 Reinicio y reintento
+    function reiniciar(completo) {
+      respuestas = Array(n).fill(null);
+      bloqueado = false;
+      formulario.querySelectorAll('input').forEach(inp => { inp.disabled = false; inp.checked = false; });
+      formulario.querySelectorAll('.fb').forEach(f => { f.className = 'fb'; f.textContent = ''; });
+      formulario.querySelectorAll('.gen').forEach(g => g.classList.remove('visible'));
+      btnReintento.hidden = true;
+      resultado.innerHTML = '';
+      actualizar();
+      if (completo) {
+        const primera = formulario.querySelector('input');
+        if (primera) primera.focus();
+      }
+    }
+
+    actualizar();
+  }
+
+  document.querySelectorAll('.quiz[data-eval]').forEach(raiz => {
+    const num = parseInt(raiz.dataset.eval, 10);
+    const ev = EVALUACIONES.find(e => e.sesion === num);
+    if (ev) dibujar(ev, raiz);
+  });
+})();
+</script>
+</body>
+</html>

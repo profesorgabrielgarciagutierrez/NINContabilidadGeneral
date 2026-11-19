@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contabilidad General · Semana 04</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- 1. Variables y base ---------- */
+:root{
+  --azul:#003366; --celeste:#87CEEB; --azul-claro:#E8F4FD; --texto:#1d1d1d;
+  --ok:#14532d; --ok-fondo:#e6f4ea; --mal:#7f1d1d; --mal-fondo:#fdecec; --borde:#c9d6e2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.6;color:var(--texto);background:#fff}
+h1,h2,h3,h4{font-family:Lora,Georgia,"Times New Roman",serif;color:var(--azul);line-height:1.25}
+h2{font-size:1.6rem;margin:.2rem 0 .6rem}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem}
+h4{font-size:1.05rem;margin:1.1rem 0 .4rem}
+p{margin:.6rem 0;max-width:72ch}
+ul,ol{max-width:72ch;padding-left:1.4rem}
+li{margin:.3rem 0}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:6px 10px;z-index:10}
+.meta{font-size:.92rem;color:#3b4a5a;margin:0 0 1rem}
+.tiempos{font-size:.95rem}
+
+/* ---------- 2. Encabezado y menú ---------- */
+header.cabecera{background:var(--azul);color:#fff;padding:14px 16px}
+header.cabecera h1{color:#fff;font-size:1.25rem;margin:0}
+header.cabecera p{margin:2px 0 0;font-size:.92rem;color:#e3eef8}
+nav.menu{background:var(--celeste);color:#000;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;border-bottom:1px solid #6fbcd9}
+nav.menu ul{display:flex;list-style:none;margin:0;padding:0;max-width:none}
+nav.menu li{margin:0}
+nav.menu button{font:inherit;font-size:.95rem;background:transparent;color:#000;border:0;padding:12px 14px;cursor:pointer;min-height:44px}
+nav.menu button:hover{background:rgba(255,255,255,.35)}
+nav.menu button[aria-selected="true"]{background:#fff;color:var(--azul);font-weight:700}
+
+main{padding:16px 16px 48px;max-width:860px;margin:0 auto}
+
+/* ---------- 3. Secciones y bloques ---------- */
+.pestana[hidden]{display:none}
+.concepto{border-left:5px solid var(--azul);padding:.6rem .9rem;margin:1rem 0;background:#f7fafd}
+.concepto h4{margin-top:.1rem}
+.ejemplo{background:var(--azul-claro);padding:.7rem .9rem;margin:1rem 0;border-radius:4px}
+.ejemplo h4{margin-top:.1rem}
+.nota-lateral{border:1px solid var(--borde);border-left:5px solid #2a7fb8;background:#fbfdff;padding:.7rem .9rem;margin:0 0 1.2rem;border-radius:4px}
+.nota-lateral h3{margin-top:.1rem}
+.nota-lateral p:first-of-type{margin-top:.2rem}
+.pausa{font-style:normal}
+.prompt{background:#f4f4f4;padding:.6rem .8rem;border-radius:4px}
+.ejercicio{border-top:1px solid var(--borde);margin-top:1.4rem;padding-top:.4rem}
+.ejercicio .tiempo{font-size:.92rem;color:#3b4a5a;margin:0}
+.ayuda{font-style:italic}
+.tabla-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;margin:.8rem 0;min-width:60%}
+caption{caption-side:top;text-align:left;font-weight:700;padding:4px 0;color:var(--azul);font-family:Lora,Georgia,serif}
+th,td{border:1px solid var(--borde);padding:6px 8px;vertical-align:top;text-align:left;min-width:110px}
+th{background:var(--azul-claro)}
+.referencias li{margin-bottom:.7rem;padding-left:1.4rem;text-indent:-1.4rem;list-style:none;max-width:72ch}
+.nota{font-size:.95rem;border-top:1px solid var(--borde);padding-top:.6rem}
+.calc{font-family:Consolas,"Courier New",monospace;font-size:.95rem;background:#f7f9fb;border:1px solid var(--borde);padding:.5rem .7rem;overflow-x:auto;white-space:pre;max-width:100%}
+.tcuenta{display:flex;flex-wrap:wrap;gap:12px;margin:.8rem 0}
+.tcuenta table{min-width:0;width:100%}
+
+/* ---------- 4. Solución desplegable ---------- */
+details.solucion{margin:.7rem 0;border:1px solid var(--azul);border-radius:4px;background:#fff}
+details.solucion>summary{cursor:pointer;padding:.55rem .8rem;font-weight:700;color:var(--azul);background:#eef5fb;min-height:44px;display:flex;align-items:center}
+details.solucion>*:not(summary){padding:0 .8rem}
+details.solucion[open]>summary{border-bottom:1px solid var(--borde)}
+details.solucion>*:last-child{padding-bottom:.8rem}
+
+/* ---------- 5. Evaluación ---------- */
+.quiz{margin-top:.5rem}
+.quiz .cabecera-eval{background:var(--azul-claro);padding:.7rem .9rem;border-radius:4px;margin-bottom:1rem}
+.quiz .progreso{font-weight:600;margin:.2rem 0}
+.quiz fieldset{border:1px solid var(--borde);border-radius:4px;padding:.7rem .9rem;margin:0 0 1rem}
+.quiz legend{font-weight:700;color:var(--azul);padding:0 .3rem;font-family:Lora,Georgia,serif}
+.quiz .insignia{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:10px;background:var(--azul);color:#fff;margin-right:6px;vertical-align:middle}
+.quiz .opts{display:grid;gap:6px;margin:.5rem 0}
+.quiz .opts label{display:flex;gap:10px;align-items:flex-start;padding:10px 10px;border:1px solid var(--borde);border-radius:4px;cursor:pointer;min-height:44px}
+.quiz .opts label:hover{background:#f5faff}
+.quiz .opts input{margin-top:5px;min-width:18px;min-height:18px}
+.quiz .letra{font-weight:700;color:var(--azul)}
+.quiz .fb{margin-top:.5rem;padding:.6rem .8rem;border-radius:4px;display:none}
+.quiz .fb.ok{display:block;background:var(--ok-fondo);color:var(--ok);border-left:5px solid var(--ok)}
+.quiz .fb.mal{display:block;background:var(--mal-fondo);color:var(--mal);border-left:5px solid var(--mal)}
+.quiz .gen{font-size:.93rem;margin-top:.4rem;color:#34434f;display:none}
+.quiz .gen.visible{display:block}
+.quiz .resultado{border:2px solid var(--azul);border-radius:4px;padding:.8rem 1rem;margin:1rem 0;background:#fff}
+.quiz .acciones{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0}
+.quiz button.btn{font:inherit;font-weight:600;padding:10px 14px;min-height:44px;border-radius:4px;border:2px solid var(--azul);background:#fff;color:var(--azul);cursor:pointer}
+.quiz button.btn.principal{background:var(--azul);color:#fff}
+.quiz button.btn[hidden]{display:none}
+.quiz .nota-practica{font-size:.93rem;color:#34434f}
+
+/* ---------- 6. Pie ---------- */
+footer{background:#f2f5f8;color:#2a3440;padding:14px 16px;font-size:.9rem;border-top:1px solid var(--borde)}
+footer p{margin:.2rem 0}
+
+/* ---------- 7. Pantallas estrechas ---------- */
+@media (max-width:420px){
+  body{font-size:16px}
+  main{padding:12px 12px 40px}
+  h2{font-size:1.4rem}
+  table{font-size:.92rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#principal">Ir al contenido</a>
+<header class="cabecera">
+  <h1>Contabilidad General</h1>
+  <p>Licenciatura en Negocios Internacionales · Ciclo II de 2026 · Semana 04: IVA y retenciones: de la factura al registro</p>
+</header>
+
+<nav class="menu" aria-label="Secciones de la semana">
+  <ul role="tablist">
+    <li><button type="button" role="tab" id="tab-intro" data-target="intro" aria-controls="intro" aria-selected="false" tabindex="-1">Repaso</button></li>
+    <li><button type="button" role="tab" id="tab-ses01" data-target="ses01" aria-controls="ses01" aria-selected="false" tabindex="-1">Sesión 01</button></li>
+    <li><button type="button" role="tab" id="tab-eval1" data-target="eval1" aria-controls="eval1" aria-selected="false" tabindex="-1">Evaluación 01</button></li>
+    <li><button type="button" role="tab" id="tab-ses02" data-target="ses02" aria-controls="ses02" aria-selected="false" tabindex="-1">Sesión 02</button></li>
+    <li><button type="button" role="tab" id="tab-eval2" data-target="eval2" aria-controls="eval2" aria-selected="false" tabindex="-1">Evaluación 02</button></li>
+    <li><button type="button" role="tab" id="tab-ses03" data-target="ses03" aria-controls="ses03" aria-selected="false" tabindex="-1">Sesión 03</button></li>
+    <li><button type="button" role="tab" id="tab-eval3" data-target="eval3" aria-controls="eval3" aria-selected="false" tabindex="-1">Evaluación 03</button></li>
+    <li><button type="button" role="tab" id="tab-reflexion" data-target="reflexion" aria-controls="reflexion" aria-selected="false" tabindex="-1">Reflexión</button></li>
+    <li><button type="button" role="tab" id="tab-ia" data-target="ia" aria-controls="ia" aria-selected="false" tabindex="-1">Actividad con IA</button></li>
+    <li><button type="button" role="tab" id="tab-biblio" data-target="biblio" aria-controls="biblio" aria-selected="false" tabindex="-1">Bibliografía</button></li>
+  </ul>
+</nav>
+
+<main id="principal">
+<section class="pestana" id="intro" data-panel="intro">
+<h2>Repaso · De la ecuación al impuesto</h2>
+<p class="meta">Semana 4 · Unidad 2 · Normas tributarias y pasos para el proceso contable, primera parte · Tiempo orientativo de lectura: 5 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>En las semanas anteriores aprendiste a leer las cuentas, a identificar su naturaleza y a registrar operaciones con partida doble: cada hecho económico afecta al menos a dos cuentas, el debe iguala al haber y cada glosa explica lo ocurrido. Esta semana se añade una capa nueva. Cuando Confecciones Montubia S. A., una empresa manufacturera que fabrica camisetas, vende a un cliente, no cobra solo el precio de lo que vende: también cobra un impuesto que luego debe entregar al Estado. Ese impuesto no es un gasto de la empresa, y tampoco es un ingreso. Esta semana aprenderás a separar el precio de la venta del impuesto que la acompaña, y a registrar cada parte en su cuenta.</p>
+<p>Al terminar la unidad podrás calcular la base imponible, la tarifa y el impuesto de una factura; distinguir el impuesto al valor agregado (IVA) que una empresa paga en sus compras del que cobra en sus ventas; liquidar el IVA de un período; y registrar esas operaciones con sus asientos y glosas.</p>
+</div>
+
+<h3>Lo que debes recordar de las semanas anteriores</h3>
+<p>Tres ideas sostienen todo lo que viene. La primera es la ecuación contable: activo es igual a pasivo más patrimonio. La segunda es la naturaleza de las cuentas: los activos y los gastos aumentan en el debe, mientras que los pasivos, el patrimonio y los ingresos aumentan en el haber. La tercera es la glosa «P/R», abreviatura de «por», que explica el motivo del asiento: por ejemplo, «P/R venta de 40 camisetas».</p>
+<p>Con estas tres ideas puedes seguir cualquier operación con impuesto. Pensemos en una venta cualquiera. El precio que la empresa cobra por la venta es un ingreso, porque aumenta el patrimonio por la actividad de la empresa. El derecho a recibir el dinero, si la venta es a crédito, es un activo. Y el impuesto que se cobró junto con el precio es una obligación frente al Estado, es decir, un pasivo. Cada parte tiene su cuenta y su lado del asiento. El impuesto no se mezcla con el precio: aparece como una cuenta aparte, aunque salga de la misma factura.</p>
+
+<h3>Cómo estudiar esta unidad</h3>
+<p>Trabaja cada sesión en el orden en que aparece, con lápiz y papel a tu lado. Antes de abrir cada solución desplegable, escribe tu respuesta, aunque sea incompleta. El aprendizaje ocurre en el intento y en la comparación posterior, no en la lectura de la solución. Cuando un cálculo no te cuadre, revisa primero a qué cifra aplicaste el porcentaje: casi todos los errores de esta unidad vienen de aplicar una tarifa o un porcentaje a la cantidad equivocada. Solo después busca el error en otra parte.</p>
+<p>Si una explicación te parece insuficiente, vuelve a la sección que trata el mismo concepto. Cada sesión repite las ideas clave con otra situación, para que puedas comprobar si las entendiste o si necesitas releer una parte concreta.</p>
+</section>
+
+
+<section class="pestana" id="ses01" data-panel="ses01">
+<h2>Sesión 01 · El IVA en la factura: base, tarifa e impuesto</h2>
+<p class="meta">Semana 4 · Unidad 2 · Principales impuestos en Ecuador (IVA), base imponible y tarifa en una factura (sesión global 10) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que Confecciones Montubia S. A., una empresa manufacturera que fabrica camisetas, vende 40 camisetas a un comercio de su ciudad. El comercio paga el precio de las camisetas y, además, un valor adicional que aparece en la factura con el nombre de impuesto al valor agregado (IVA). ¿Cuánto de lo que paga el comercio es precio de las camisetas y cuánto es impuesto? Y si Montubia recibe el pago completo, ¿todo ese dinero es ingreso de la empresa?</p>
+<p>Esta sesión responde a esas preguntas. Al terminar podrás explicar qué es el IVA y quién lo soporta; identificar la base imponible, la tarifa y el valor del impuesto en una factura; calcular el IVA a partir del precio sin impuesto y, a la inversa, separar la base cuando solo conoces el total; y comprobar si una factura está bien calculada.</p>
+<p>Para estudiar, calcula primero y compara después. Si un resultado te parece demasiado grande, pregúntate sobre qué base se aplicó el porcentaje. Esa pregunta resuelve la mayoría de los errores de esta sesión.</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. Qué es el IVA y por qué la factura lo separa</h3>
+<p>El impuesto al valor agregado es un impuesto que recae sobre el consumo de bienes y servicios. Su nombre describe cómo funciona: grava el valor que se agrega en cada etapa de la cadena productiva y comercial. Una tela se transforma en camiseta, la camiseta llega al comercio y el comercio la vende al consumidor. En cada paso se agrega valor, y en cada paso se cobra un impuesto sobre ese valor. Por eso la empresa que vende cobra el impuesto a su cliente, y la empresa que compra lo paga a su proveedor. Esa idea explica el mecanismo que verás en la sesión 02.</p>
+<p>Conviene distinguir tres figuras que a menudo se confunden. El <strong>consumidor final</strong> es quien usa o consume el bien o el servicio, y es quien finalmente soporta el impuesto. La <strong>empresa que cobra</strong> el impuesto en su venta es quien lo declara y lo entrega al Estado. El <strong>Servicio de Rentas Internas (SRI)</strong>, la institución que administra el impuesto en Ecuador, recibe esos valores según lo que establece la normativa.</p>
+<p>Por eso la factura muestra el valor del impuesto por separado del precio. Si un documento mostrara solo un precio final, ni el comprador ni el vendedor podrían saber con facilidad qué parte del pago es precio y qué parte es impuesto. Los requisitos exactos de la factura dependen de la normativa de comprobantes de venta, que no se desarrolla en esta sesión. Lo que sí debes retener es la idea: el impuesto se muestra aparte para que ambas partes puedan controlarlo.</p>
+
+<h3>2. Base imponible, tarifa e impuesto</h3>
+<p>Tres términos aparecen en cada factura con IVA, y conviene que los identifiques antes de calcular. La <strong>base imponible</strong> es el valor del bien o servicio sobre el que se calcula el impuesto, sin incluir el IVA. La <strong>tarifa</strong> es el porcentaje que la norma fija para ese bien o servicio. El <strong>impuesto</strong> es el resultado de multiplicar la base por la tarifa. El total de la factura es la base más el impuesto.</p>
+<p>Para este material, la tarifa general es del 15 %. La fuente es la Circular NAC-DGECCGC25-00000006 del SRI, emitida el 26 de diciembre de 2025, que recuerda que, mientras no exista un decreto que modifique la tarifa general, se mantiene la última tarifa establecida, que es el 15 %. Todos los ejemplos de esta sesión dependen de esa tarifa. Si la norma cambiara, habría que recalcularlos.</p>
+<p>La fórmula es sencilla:</p>
+<p><strong>IVA = base imponible × tarifa</strong></p>
+<p>Y el total de la factura es:</p>
+<p><strong>Total = base imponible + IVA</strong></p>
+<p>Cada símbolo tiene un significado preciso. «Base» es el precio sin impuesto. «Tarifa» es el porcentaje, que en un cálculo se escribe como fracción de la unidad: el 15 % equivale a 0,15, porque 15 de cada 100 es 0,15. «IVA» es el impuesto en dólares, y «×» indica multiplicación. Para no equivocarte con el porcentaje, recuerda siempre sobre qué cantidad se calcula. El 15 % se aplica a la base, no al total, porque el total ya contiene el impuesto. Si lo aplicaras al total, estarías cobrando impuesto sobre el impuesto.</p>
+
+<div class="concepto">
+<h4>Cálculo 1. Calcular el IVA a partir de la base</h4>
+<p><strong>Situación.</strong> Montubia vende 40 camisetas a un comercio a 10 dólares cada una. La factura debe mostrar el precio sin IVA, el IVA y el total.</p>
+<p><strong>Supuesto didáctico.</strong> El precio unitario de 10 dólares es un dato del caso. La tarifa aplicable es la general, de 15 %.</p>
+<p><strong>Qué buscamos.</strong> La base imponible, el IVA y el total, en dólares.</p>
+<p><strong>Datos.</strong> Cantidad: 40 camisetas. Precio unitario: 10,00 dólares. Tarifa general: 15 %.</p>
+<p><strong>Por qué esta operación.</strong> La base es el valor de la venta, y se obtiene multiplicando cantidad por precio: 40 unidades, cada una a 10 dólares. El IVA se calcula sobre esa base porque el impuesto grava el valor de la transferencia, no lo que el comercio pagará después.</p>
+<p><strong>Procedimiento.</strong> Base = 40 × 10,00 = 400,00 dólares. IVA = 400,00 × 0,15 = 60,00 dólares. Total = 400,00 + 60,00 = 460,00 dólares.</p>
+<p><strong>Resultado.</strong> Base 400,00; IVA 60,00; total 460,00 dólares.</p>
+<p><strong>Comprobación.</strong> Por una vía distinta de la multiplicación directa: el 10 % de 400 es 40, y la mitad de ese 10 % es 20, porque el 5 % es la mitad del 10 %. Sumados, 40 + 20 dan 60, que es el 15 %. El resultado coincide y tiene sentido en orden de magnitud: el impuesto es algo menos de una sexta parte del precio.</p>
+<p><strong>Interpretación.</strong> El comercio paga 460,00 dólares, pero solo 400,00 corresponden al precio de las camisetas. El error que se evita es calcular el IVA sobre 460,00 dólares, lo que daría 69,00 dólares: un impuesto inflado porque se calcula sobre el propio impuesto.</p>
+</div>
+
+<h3>3. Cómo se lee una factura</h3>
+<p>La factura es el documento que respalda la operación. Antes de registrar nada, conviene leerla de arriba abajo y comprobar las cifras. La tabla 1 muestra la factura didáctica que usaremos en los ejemplos de esta sesión. Léela por columnas: primero el concepto, después la cantidad y el precio, luego la base, el impuesto y el total.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 1. Factura didáctica de Confecciones Montubia S. A. (dato del caso didáctico)</caption>
+<thead><tr><th>Concepto</th><th>Cantidad</th><th>Precio unitario (dólares)</th><th>Base imponible (dólares)</th><th>IVA 15 % (dólares)</th><th>Total (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Camisetas de algodón</td><td>40</td><td>10,00</td><td>400,00</td><td>60,00</td><td>460,00</td></tr>
+</tbody></table></div>
+
+<p>Observa que la tabla separa el valor del bien y el impuesto, y que el total resulta de sumar ambos. Si la factura mostrara un único precio final, para conocer la base y el impuesto tendrías que hacer la operación inversa, que es más fácil de equivocar. Por eso las facturas separan las cifras: facilitan el control de la operación por ambas partes.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Supón que el comercio le dice a Montubia que solo puede pagar 400 dólares, porque el IVA lo pagará el fabricante. ¿Qué error está cometiendo? Explica quién soporta el impuesto en esa operación y quién lo entrega al Estado.</p>
+<p class="ayuda">Piensa en quién consume finalmente las camisetas. El IVA lo soporta el consumidor final, aunque la empresa que vende sea quien lo cobra y lo declara. Si respondiste que el fabricante paga el impuesto, revisa la sección 1: quien vende cobra el impuesto, pero quien lo soporta es quien compra para consumir.</p>
+</div>
+
+<h3>4. Calcular la base cuando se conoce el total</h3>
+<p>Muchas veces conoces el total que se pagó y necesitas saber cuánto corresponde al precio y cuánto al impuesto. Por ejemplo, una boleta de compra muestra un único monto. En ese caso se opera al revés, y conviene entender por qué funciona el método.</p>
+<p>Si la base es la cantidad que llamamos «base», el total es la base más el 15 % de la base. Dicho de otra forma, el total es la base multiplicada por 1 más 0,15, es decir, por 1,15. Por eso la base se obtiene dividiendo el total entre 1,15: estás deshaciendo la multiplicación. El IVA es el total menos la base. Esta es la razón del número 1,15 que verás en los cálculos: no es un valor arbitrario, sino la suma del precio y del impuesto, expresada como un solo factor.</p>
+
+<div class="concepto">
+<h4>Cálculo 2. Separar la base y el IVA de un total</h4>
+<p><strong>Situación.</strong> Un restaurante recibe una factura de 1.150,00 dólares por un servicio de catering, con el IVA incluido en el total. Necesita registrar el gasto por su valor sin impuesto y el impuesto por separado.</p>
+<p><strong>Supuesto didáctico.</strong> El servicio está gravado con la tarifa general de 15 %.</p>
+<p><strong>Qué buscamos.</strong> La base imponible y el IVA, en dólares.</p>
+<p><strong>Datos.</strong> Total: 1.150,00 dólares. Tarifa: 15 %. Como el total es la base más el 15 % de la base, el total equivale a la base multiplicada por 1,15.</p>
+<p><strong>Por qué esta operación.</strong> Si el total es base × 1,15, despejar la base consiste en dividir el total entre 1,15. No conviene restar el 15 % del total, porque ese 15 % se calcularía sobre una cantidad que ya contiene el impuesto.</p>
+<p><strong>Procedimiento.</strong> Base = 1.150,00 ÷ 1,15 = 1.000,00 dólares. IVA = 1.150,00 − 1.000,00 = 150,00 dólares.</p>
+<p><strong>Resultado.</strong> Base 1.000,00; IVA 150,00 dólares.</p>
+<p><strong>Comprobación.</strong> Dos controles. Primero, la suma: 1.000,00 + 150,00 = 1.150,00. Segundo, la tarifa: 1.000,00 × 0,15 = 150,00. El primer control confirma la suma; el segundo confirma que el impuesto corresponde al 15 % de la base. Conviene usar los dos, porque el primero no detecta si la tarifa es correcta.</p>
+<p><strong>Interpretación.</strong> El gasto del restaurante es 1.000,00 dólares. Los 150,00 dólares restantes no son gasto del servicio: son un impuesto que se utilizará en la declaración del período. El error que se evita es restar el 15 % del total, lo que daría 977,50 dólares como base, una cifra que no corresponde a la tarifa.</p>
+</div>
+
+<h3>5. La tarifa 0 % y el papel de la norma</h3>
+<p>La tarifa no la decide la empresa. La fija la norma para cada bien o servicio. Por eso una misma empresa puede vender productos con tarifa del 15 % y otros con tarifa 0 %. Cuando la tarifa es 0 %, el impuesto es cero y el total de la factura coincide con la base. Eso no significa que la venta no exista: la base sigue siendo el valor de la operación, solo que el impuesto vale cero.</p>
+<p>En esta semana no enumeramos qué bienes o servicios tienen tarifa 0 %, porque esa lista debe consultarse en la norma vigente. En 2026, el Servicio de Rentas Internas emitió circulares que aclaran qué alimentos pagan 15 % y cuáles siguen con tarifa 0 %, según informaron medios de comunicación. Ese caso muestra por qué la lista cambia y por qué debe consultarse en la fuente oficial. Lo que debes aprender ahora es el mecanismo: la misma base, con una tarifa diferente, produce un impuesto diferente.</p>
+
+<div class="ejemplo">
+<h4>Ejemplo razonado: la tarifa cambia el impuesto, no la base</h4>
+<p>Supongamos que un bien tiene base de 400,00 dólares y que está gravado con 15 %. El IVA sería 60,00 dólares y el total 460,00 dólares. Si, en cambio, un bien tuviera tarifa 0 %, el IVA sería 0,00 dólares y el total 400,00 dólares. La base no cambió; cambió la tarifa que la norma fija para ese bien. Este ejemplo sirve para comparar el mecanismo y no afirma que ningún bien concreto tenga esa tarifa.</p>
+</div>
+
+<h3>6. Qué comprobar en una factura</h3>
+<p>Una factura, en su forma habitual, muestra el valor sin impuesto, la tarifa aplicada, el valor del impuesto y el total. Los nombres exactos de cada campo y las exigencias de la factura electrónica dependen de la normativa de comprobantes, que no se desarrolla en esta sesión. Lo importante es que la factura permite reconstruir la operación: qué se vendió, cuánto vale sin impuesto, cuánto es el IVA y cuánto se paga en total.</p>
+<p>Al leer una factura, verifica tres cosas. La primera: la base multiplicada por la tarifa debe dar el IVA. La segunda: la base más el IVA debe dar el total. La tercera: la tarifa debe corresponder al bien o servicio. Si la primera falla, el impuesto está mal calculado. Si la segunda falla, hay un error de suma. Si la tercera falla, la tarifa no corresponde y hay que revisar la norma, no la aritmética. Una factura puede pasar los dos primeros controles y, aun así, estar mal si usó una tarifa que no corresponde. Por eso el tercer control importa.</p>
+
+<h3>7. Preguntas que suelen aparecer</h3>
+<p><strong>¿Por qué el IVA se calcula sobre la base y no sobre el total?</strong> Porque el total ya incluye el impuesto. Si calculas el 15 % sobre el total, estarías cobrando impuesto sobre el impuesto. La base es el valor de la operación, y la tarifa se aplica a ese valor.</p>
+<p><strong>Si el precio que muestra el comercio ya incluye el IVA, ¿qué hago?</strong> Lo separas. Divides el total entre 1,15 para obtener la base, y restas la base del total para obtener el impuesto. Este es el caso del cálculo 2.</p>
+<p><strong>¿Por qué el divisor es 1,15 y no 0,85?</strong> Porque el total es mayor que la base, y se obtiene multiplicando la base por 1,15. Dividir entre 0,85 daría un resultado equivocado: quitaría el 15 % del total, que es lo que el error de restar el 15 % intenta hacer.</p>
+<p><strong>Si la tarifa es 0 %, ¿la operación desaparece?</strong> No. La venta existe y tiene base, pero el impuesto es cero. Por eso el total y la base son iguales.</p>
+
+<h3>8. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Antes de abrir cada solución, escribe tu respuesta y tu procedimiento. Trabaja de manera individual. Si tu resultado no coincide con la solución, compara paso a paso: el error casi siempre está en una de las tres decisiones de la sección 2, es decir, qué cantidad es la base, qué tarifa corresponde y sobre qué se aplica el porcentaje.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Calcular la factura de un comercio</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás la base, el IVA y el total de una venta. Un comercio vende 25 gorras a 12 dólares cada una. Supongamos que la tarifa aplicable es la general, de 15 %. Determina la base imponible, el IVA y el total de la factura.</p>
+<p class="ayuda">Primero multiplica cantidad por precio para obtener la base. Después aplica el 15 % a esa base, no al total. Si tu base no es 300,00, revisa la multiplicación antes de seguir.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 25 × 12,00 = 300,00 dólares. IVA = 300,00 × 0,15 = 45,00 dólares. Total = 300,00 + 45,00 = 345,00 dólares.</p>
+<p><strong>Comprobación:</strong> 300,00 + 45,00 = 345,00. Por otra vía, el 10 % de 300 es 30 y la mitad de ese 10 % es 15; sumados dan 45, que confirma el impuesto.</p>
+<p><strong>Error frecuente:</strong> calcular el 15 % sobre 345,00, lo que daría 51,75 dólares. Ese error infla el impuesto porque el IVA ya está incluido en el total y no debe volver a calcularse sobre él.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La base es siempre el valor sin impuesto. El IVA se calcula sobre la base, y el total se obtiene sumando el impuesto a la base. Si en un ejercicio te dan el total, eso ya es otro caso, que verás en el ejercicio 2.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Separar la base cuando se conoce el total</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad separarás la base y el IVA de un total pagado. Una empresa de servicios paga 2.300,00 dólares por una consultoría, con el IVA incluido. Supongamos que la tarifa general es 15 %. Determina la base imponible y el IVA.</p>
+<p class="ayuda">Recuerda que el total equivale a la base multiplicada por 1,15. Despeja la base dividiendo el total entre 1,15 y calcula después el impuesto por diferencia. Si no sabes por qué se divide, relee la sección 4.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 2.300,00 ÷ 1,15 = 2.000,00 dólares. IVA = 2.300,00 − 2.000,00 = 300,00 dólares.</p>
+<p><strong>Comprobación:</strong> 2.000,00 × 0,15 = 300,00. El cálculo del IVA sobre la base confirma el resultado, y la suma 2.000,00 + 300,00 también da 2.300,00.</p>
+<p><strong>Error frecuente:</strong> restar el 15 % del total. Así se obtendría 1.955,00 dólares como base (2.300,00 − 345,00), que no corresponde a la tarifa, porque el 15 % se calculó sobre un total que ya incluye el impuesto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cuando el total es conocido, el impuesto no se calcula sobre él, sino que se extrae de él. La división entre 1,15 expresa que el total ya contiene el impuesto, y deshace la multiplicación que lo produjo.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Comparar la tarifa general con la tarifa 0 %</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás qué cambia cuando una misma base tiene tarifas diferentes. Supongamos que dos bienes tienen cada uno una base de 200,00 dólares. El primero está gravado con 15 %. El segundo tiene tarifa 0 %; este dato es un supuesto para comparar el mecanismo, no una afirmación sobre un bien real. Calcula el IVA y el total de cada uno y explica qué diferencia produce la tarifa.</p>
+<p class="ayuda">Aplica la tarifa de cada bien a su propia base. Cambiar la tarifa no cambia la base. Compara después los dos totales.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Bien gravado con 15 %: IVA = 200,00 × 0,15 = 30,00 dólares; total = 200,00 + 30,00 = 230,00 dólares. Bien con tarifa 0 %: IVA = 200,00 × 0 = 0,00 dólares; total = 200,00 + 0,00 = 200,00 dólares.</p>
+<p><strong>Comprobación:</strong> en el segundo caso el total coincide con la base, porque el impuesto es cero. La diferencia entre los dos totales, 30,00 dólares, es exactamente el IVA del primero.</p>
+<p><strong>Error frecuente:</strong> pensar que la tarifa 0 % significa que el bien no se factura o que no tiene base. La base existe; lo que vale cero es el impuesto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La tarifa es un dato de la norma para cada bien o servicio. Sirve para calcular el impuesto sobre la base, y no altera la base misma. Por eso dos bienes con la misma base pueden tener totales diferentes.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Revisar una factura con un error</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás un error en una factura y lo corregirás. Un comercio recibe de Montubia una factura por 300,00 dólares de base, con IVA de 36,00 dólares y total de 336,00 dólares. Supongamos que la tarifa aplicable es la general, de 15 %. Revisa si la factura está bien calculada, identifica el error, si lo hay, y corrige el valor.</p>
+<p class="ayuda">Usa los tres controles de la sección 6. Compara el IVA de la factura con el que resulta de aplicar la tarifa a la base. Después comprueba si la suma de base e IVA coincide con el total.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>El IVA correcto es 300,00 × 0,15 = 45,00 dólares. La factura muestra 36,00 dólares, que corresponde al 12 % de la base (300,00 × 0,12 = 36,00). Como la tarifa aplicable es 15 %, la factura está mal calculada. El total correcto es 300,00 + 45,00 = 345,00 dólares.</p>
+<p><strong>Comprobación:</strong> 300,00 + 45,00 = 345,00. La suma de base e IVA corregidos coincide con el total corregido.</p>
+<p><strong>Error frecuente:</strong> aceptar la factura porque la suma cuadra (300 + 36 = 336). La igualdad de la suma no prueba que la tarifa sea la correcta. Por eso el segundo control no basta y hace falta el tercero.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Una factura puede sumar bien y estar mal calculada. Por eso se verifican dos cosas: la suma y el impuesto frente a la tarifa. Un error de tarifa se detecta solo si calculas el impuesto de nuevo.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: cambio del precio unitario</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad observarás cómo un cambio en la base se traslada al impuesto. Supongamos que, en la factura de la tabla 1, Confecciones Montubia S. A. vende las mismas 40 camisetas, pero a 12,50 dólares cada una. El caso original sigue siendo el de la tabla 1. Calcula la nueva base, el IVA y el total, y compara cada resultado con los de la tabla 1.</p>
+<p class="ayuda">Identifica qué cifra cambia y cuál se mantiene. La cantidad sigue siendo 40 y la tarifa sigue siendo 15 %. Aplica la tarifa de nuevo sobre la base nueva.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 40 × 12,50 = 500,00 dólares. IVA = 500,00 × 0,15 = 75,00 dólares. Total = 500,00 + 75,00 = 575,00 dólares.</p>
+<p><strong>Comparación:</strong> la base sube de 400,00 a 500,00 dólares (+100,00). El IVA sube de 60,00 a 75,00 dólares (+15,00), que es el 15 % del aumento de la base. El total sube de 460,00 a 575,00 dólares (+115,00).</p>
+<p><strong>Error frecuente:</strong> pensar que el IVA sube en la misma cantidad que el precio. El impuesto solo sube en la proporción de la tarifa: por cada dólar adicional de base se agregan 0,15 dólares de impuesto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un cambio en la base se traslada al impuesto en la proporción de la tarifa. Esa relación permite anticipar el efecto de un cambio de precio sin recalcular todo desde el inicio.</p></div>
+</div>
+
+<h3>9. Cierre de la sesión</h3>
+<p>Volvamos a la situación inicial: el comercio que paga por las camisetas. La factura te permite separar lo que paga por el producto de lo que paga por el impuesto. La base imponible es el precio sin impuesto; la tarifa la fija la norma para ese bien; el IVA es la base por la tarifa; y el total es la suma de ambos. Cuando solo conoces el total, extraes la base dividiendo entre 1,15.</p>
+<p>Como tarea de transferencia, calcula la factura de una venta de 60 pares de medias a 4,00 dólares cada uno, con tarifa general de 15 %. Después explica qué cifra no debe usarse como base del impuesto y por qué. Por último, comprueba si tu factura cumple los tres controles de la sección 6.</p>
+<p>Para revisar por dificultad: si confundes la base con el total, relee la sección 2 y el cálculo 1; si no sabes qué hacer con un total dado, relee el cálculo 2 y el ejercicio 2; si la tarifa te parece arbitraria, relee la sección 5 y las preguntas de la sección 7.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>IVA:</strong> impuesto al valor agregado, que se calcula sobre la base de una venta o de un servicio.</li>
+<li><strong>Base imponible:</strong> valor sin IVA sobre el que se aplica la tarifa.</li>
+<li><strong>Tarifa:</strong> porcentaje que la norma fija para cada bien o servicio.</li>
+<li><strong>Total de la factura:</strong> base más IVA.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval1" data-panel="eval1" aria-labelledby="t-eval1">
+<h2 id="t-eval1">Evaluación de la sesión 01 · Base, tarifa e IVA en la factura</h2>
+<p class="meta">Semana 4 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="1"></div>
+</section>
+
+<section class="pestana" id="ses02" data-panel="ses02">
+<h2>Sesión 02 · IVA pagado, IVA cobrado y liquidación</h2>
+<p class="meta">Semana 4 · Unidad 2 · IVA en compras y ventas, crédito tributario, IVA cobrado e IVA por pagar (sesión global 11) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Costa Verde Cía. Ltda. es una comercializadora ficticia. No fabrica camisetas: las compra terminadas a Confecciones Montubia S. A., la empresa manufacturera que conociste en la sesión 01, y luego las vende a sus clientes. Supongamos que, en el mes 1, Costa Verde compra 80 camisetas a Montubia por 800,00 dólares más IVA, y que vende 40 de ellas por 960,00 dólares más IVA. En ambas operaciones aparece un impuesto. ¿Ese impuesto es un gasto de Costa Verde? ¿Es un ingreso? ¿Cuánto debe entregar al Servicio de Rentas Internas (SRI) al final del período?</p>
+<p>Al terminar esta sesión podrás distinguir el IVA pagado en las compras del IVA cobrado en las ventas; explicar qué es el crédito tributario y por qué el IVA pagado no forma parte del costo de la mercadería; calcular la liquidación del IVA de un período; y registrar la compra, la venta y la liquidación con sus asientos y glosas, desde ambas perspectivas.</p>
+<p>Recuerda lo que viste en la sesión 01: la base imponible es el valor sin IVA, la tarifa general es del 15 % y el total es la base más el impuesto. Ahora aplicarás esa misma lógica desde los dos lados de la operación: el de quien paga el impuesto al comprar y el de quien lo cobra al vender.</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. Dos lados de la misma transacción</h3>
+<p>Toda transferencia de bienes tiene dos perspectivas: la del vendedor y la del comprador. Ambas registran la misma operación, pero cada una la anota desde su posición. La empresa que vende registra el ingreso por la venta y el impuesto que cobra. La empresa que compra registra el costo del bien y el impuesto que paga. En el caso de Costa Verde, las dos perspectivas aparecen en el mismo mes: como compradora frente a Montubia y como vendedora frente a su cliente.</p>
+<p>Cuando Costa Verde compra, paga un IVA que se llama <strong>IVA pagado</strong>. Cuando vende, cobra un IVA que se llama <strong>IVA cobrado</strong>. Estos nombres describen la operación desde la empresa que la registra. Conviene no confundirlos con el impuesto que la empresa entrega al Estado. El IVA pagado en una compra todavía no ha salido hacia el SRI: lo que ocurre es que la empresa tendrá derecho a utilizarlo más adelante, al liquidar el impuesto.</p>
+<p>Una analogía puede ayudarte a visualizar el mecanismo, siempre que recuerdes su alcance. Piensa en un cajero de un almacén que cobra a sus clientes el precio de la mercadería más un recargo, y que debe entregar ese recargo a un tercero. El dinero pasa por la caja, pero el recargo no es ingreso del cajero. La analogía termina ahí. En el IVA, la empresa también paga un impuesto cuando compra, y ese pago le da un derecho a descontar. El cajero no tiene nada equivalente. Esa diferencia es la que estudiaremos ahora.</p>
+
+<h3>2. Por qué el IVA no es gasto ni ingreso</h3>
+<p>El IVA cobrado en una venta no pertenece a la empresa como ingreso. Es un valor que la empresa recibe por cuenta del Estado y que debe entregar. Por eso se registra como una obligación, es decir, como un pasivo: algo que la empresa debe a otro. El precio de la venta sí es ingreso, porque aumenta el patrimonio por la actividad de la empresa; el impuesto no lo es, porque la empresa no lo conserva.</p>
+<p>El IVA pagado en una compra tampoco es costo de la mercadería. La Norma Internacional de Contabilidad (NIC) 2, sobre inventarios, indica en su párrafo 11 que el costo de los inventarios no incluye los impuestos que la entidad puede recuperar de las autoridades fiscales. Esa norma se refiere al costo de los inventarios, no a la declaración del impuesto, pero explica la idea central: si el IVA puede recuperarse, no forma parte del valor de la camiseta. Por eso el IVA pagado se registra en una cuenta propia, el crédito tributario.</p>
+<p>El <strong>crédito tributario</strong> es el derecho de la empresa a descontar el IVA pagado en sus compras del IVA que cobró en sus ventas. La Ley de Régimen Tributario Interno (LRTI), en su artículo 66, regula el crédito tributario del IVA. Los requisitos de detalle para que un IVA pagado sea utilizable no se desarrollan en esta sesión: aquí basta con entender el mecanismo general.</p>
+<p>Al final del período, la empresa compara dos cifras: el IVA cobrado en sus ventas y el crédito tributario de sus compras. Si el IVA cobrado es mayor, la diferencia es lo que debe entregar al SRI. Si el crédito es mayor, en ese período no hay IVA por pagar, y el destino del saldo depende de la normativa, que no se analiza en este material. Lo verás en el ejercicio 3.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Si Costa Verde registrara el IVA pagado en su compra como parte del costo de las camisetas, ¿qué cambiaría en el valor del inventario? Antes de responder, piensa si la empresa va a recuperar ese impuesto.</p>
+<p class="ayuda">Compara el valor del inventario con y sin el IVA. Si la empresa puede descontar ese IVA, no es un sacrificio que deba sumarse al valor de la mercadería. Si respondiste que el inventario sería más alto, vas por buen camino: esa es precisamente la sobrevaloración que se evita.</p>
+</div>
+
+<h3>3. Las cuentas que intervienen</h3>
+<p>Cada cuenta se define por lo que representa y por su naturaleza. La naturaleza indica si la cuenta aumenta en el debe o en el haber. La tabla 2 resume las cuentas de esta sesión. Algunas tienen código en el plan didáctico de la asignatura. Las cuentas de IVA todavía no tienen código asignado, y por eso se indican como provisionales: el nombre es válido para esta semana, pero el código lo decidirá el docente.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 2. Cuentas del IVA en la contabilidad de Costa Verde (dato del caso didáctico)</caption>
+<thead><tr><th>Cuenta</th><th>Tipo</th><th>Naturaleza</th><th>Aumenta en</th><th>Qué representa</th></tr></thead>
+<tbody>
+<tr><td>Inventarios de mercaderías (1104)</td><td>Activo</td><td>Deudora</td><td>Debe</td><td>Camisetas adquiridas para vender, sin IVA</td></tr>
+<tr><td>Crédito tributario de IVA (provisional, sin código)</td><td>Activo</td><td>Deudora</td><td>Debe</td><td>IVA pagado en compras, que se usará para descontar</td></tr>
+<tr><td>IVA cobrado (provisional, sin código)</td><td>Pasivo</td><td>Acreedora</td><td>Haber</td><td>IVA recibido de clientes, que debe entregarse al Estado</td></tr>
+<tr><td>IVA por pagar (provisional, sin código)</td><td>Pasivo</td><td>Acreedora</td><td>Haber</td><td>Saldo que resulta de la liquidación y queda por pagar</td></tr>
+<tr><td>Proveedores por pagar (2101)</td><td>Pasivo</td><td>Acreedora</td><td>Haber</td><td>Deuda de Costa Verde con Montubia por la compra a crédito</td></tr>
+<tr><td>Caja (1101)</td><td>Activo</td><td>Deudora</td><td>Debe</td><td>Dinero disponible; aumenta con las cobranzas al contado</td></tr>
+<tr><td>Ventas (4101)</td><td>Ingreso</td><td>Acreedora</td><td>Haber</td><td>Valor sin IVA de las ventas</td></tr>
+</tbody></table></div>
+
+<p>Observa que el IVA cobrado es un pasivo y no un ingreso, aunque aparezca en la misma factura que la venta. Observa también que el crédito tributario es un activo de naturaleza deudora, porque representa un derecho a descontar. Si confundes la naturaleza de estas dos cuentas, el asiento se invierte y la liquidación no cierra. Antes de registrar, pregúntate siempre: ¿esta cuenta representa algo que la empresa tiene a su favor o algo que debe a otro?</p>
+
+<h3>4. La compra a crédito con IVA</h3>
+<p>Supongamos que Costa Verde compra a Confecciones Montubia S. A. 80 camisetas terminadas, a un precio de 10,00 dólares cada una sin IVA, y que la compra es a crédito: Costa Verde pagará después. Supongamos también que la tarifa aplicable es la general, de 15 %. La operación está respaldada por una factura de Montubia, que es el documento fuente: el papel que prueba lo ocurrido.</p>
+<p>Antes de calcular, identifica la perspectiva. Costa Verde compra para revender, así que las camisetas son mercadería, es decir, inventario. El IVA que paga es un derecho a descontar. Y como no paga de inmediato, aparece una deuda con el proveedor.</p>
+
+<div class="concepto">
+<h4>Cálculo 3. Base, IVA y total de la compra a crédito</h4>
+<p><strong>Situación.</strong> Costa Verde debe registrar cuánto adeuda a Montubia y cuánto corresponde al IVA pagado.</p>
+<p><strong>Supuesto didáctico.</strong> Las 80 camisetas son bienes gravados con la tarifa general de 15 %. La factura del proveedor muestra la base y el IVA por separado.</p>
+<p><strong>Qué buscamos.</strong> La base de la compra, el IVA pagado y el total de la deuda, en dólares.</p>
+<p><strong>Datos.</strong> Cantidad: 80 camisetas. Precio unitario sin IVA: 10,00 dólares. Tarifa general: 15 %.</p>
+<p><strong>Por qué esta operación.</strong> La base es el valor de la compra, que se obtiene de cantidad por precio. El IVA se calcula sobre esa base, como aprendiste en la sesión 01, porque el impuesto grava la transferencia de las camisetas.</p>
+<p><strong>Procedimiento.</strong> Base = 80 × 10,00 = 800,00 dólares. IVA pagado = 800,00 × 0,15 = 120,00 dólares. Total de la deuda = 800,00 + 120,00 = 920,00 dólares.</p>
+<p><strong>Resultado.</strong> Base 800,00; IVA pagado 120,00; deuda con el proveedor 920,00 dólares.</p>
+<p><strong>Comprobación.</strong> Por una vía distinta del cálculo directo: el 10 % de 800 es 80, y el 5 % es la mitad de 80, es decir, 40. Sumados dan 120, que coincide con el 15 %.</p>
+<p><strong>Interpretación.</strong> Costa Verde debe 920,00 dólares a Montubia. De esa deuda, 800,00 dólares corresponden al costo de las camisetas y 120,00 dólares son un derecho a descontar. Los errores que se evitan son registrar la deuda por 800,00 dólares, lo que omitiría el IVA pagado, o registrarla por 920,00 dólares dentro del inventario, lo que sobrevaloraría la mercadería.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 1. Compra de mercaderías a crédito con IVA (perspectiva de Costa Verde como compradora)</h4>
+<p>Fecha del caso (dato didáctico): mes 1. Entidad que registra: Costa Verde Cía. Ltda. Documento: factura de Confecciones Montubia S. A. (documento didáctico).</p>
+<div class="tabla-wrap"><table>
+<thead><tr><th>Fecha</th><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Mes 1</td><td>Inventarios de mercaderías (1104)</td><td>800,00</td><td></td></tr>
+<tr><td></td><td>Crédito tributario de IVA (provisional)</td><td>120,00</td><td></td></tr>
+<tr><td></td><td>Proveedores por pagar (2101)</td><td></td><td>920,00</td></tr>
+<tr><td></td><td>Glosa: P/R compra de 80 camisetas a crédito a Confecciones Montubia S. A., con IVA.</td><td></td><td></td></tr>
+</tbody></table></div>
+<p><strong>Comprobación de igualdad.</strong> Debe: 800,00 + 120,00 = 920,00. Haber: 920,00. Ambos lados son iguales.</p>
+<p><strong>Explicación.</strong> El inventario aumenta en el debe porque la empresa recibe mercadería para vender, y su naturaleza es deudora. El crédito tributario aumenta en el debe porque es un derecho a descontar. Proveedores por pagar aumenta en el haber porque es una deuda, cuya naturaleza es acreedora. La igualdad de 920,00 confirma la suma, pero no prueba por sí sola que el inventario sea correcto. Por eso debes revisar también que el IVA no se haya incluido en el costo.</p>
+</div>
+
+<h3>5. La venta de Montubia y la perspectiva del vendedor</h3>
+<p>Antes de seguir con Costa Verde, conviene registrar la misma compra desde el otro lado. Confecciones Montubia S. A. es la vendedora: entregó 80 camisetas terminadas y tiene derecho a cobrar 920,00 dólares en el futuro. Como la venta es a crédito, la cuenta que se usa para ese derecho es <strong>Cuentas por cobrar a clientes</strong>, que es un activo deudor. El ingreso de Montubia es la base de 800,00 dólares, y el IVA que cobra, 120,00 dólares, es una obligación frente al Estado.</p>
+<p>Observa que Montubia no registra el IVA como ingreso ni como gasto, igual que Costa Verde. Lo que cambia es el lado desde el que se mira la operación: Costa Verde tiene un derecho a descontar, y Montubia tiene una obligación que deberá entregar.</p>
+
+<div class="asiento">
+<h4>Asiento 2. Venta a crédito con IVA (perspectiva de Montubia como vendedora)</h4>
+<p>Entidad que registra: Confecciones Montubia S. A. Documento: factura de venta a Costa Verde (documento didáctico).</p>
+<div class="tabla-wrap"><table>
+<thead><tr><th>Fecha</th><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Mes 1</td><td>Cuentas por cobrar a clientes (1103)</td><td>920,00</td><td></td></tr>
+<tr><td></td><td>Ventas (4101)</td><td></td><td>800,00</td></tr>
+<tr><td></td><td>IVA cobrado (provisional, sin código)</td><td></td><td>120,00</td></tr>
+<tr><td></td><td>Glosa: P/R venta a crédito de 80 camisetas a Costa Verde Cía. Ltda., con IVA del 15 %.</td><td></td><td></td></tr>
+</tbody></table></div>
+<p><strong>Comprobación de igualdad.</strong> Debe: 920,00. Haber: 800,00 + 120,00 = 920,00. Ambos lados son iguales.</p>
+<p><strong>Explicación.</strong> Cuentas por cobrar aumenta en el debe porque Montubia tiene el derecho a recibir 920,00 dólares; es un activo deudor. Ventas aumenta en el haber por la base, que es el ingreso. IVA cobrado aumenta en el haber porque el impuesto debe entregarse al Estado. Compara este asiento con el asiento 1: las cifras son las mismas, pero las cuentas y los lados cambian según quién registra. Esa comparación es el mejor control de que entendiste las dos perspectivas.</p>
+</div>
+
+<h3>6. La venta al contado con IVA</h3>
+<p>Supongamos que Costa Verde vende 40 de esas camisetas a un cliente final, al contado, a 24,00 dólares cada una, sin IVA. Supongamos que la tarifa es 15 %. El cliente paga el total de inmediato. Aquí el dinero entra a Caja, pero el ingreso no es el total cobrado: el IVA cobrado debe separarse.</p>
+
+<div class="concepto">
+<h4>Cálculo 4. Separar el ingreso del IVA cobrado</h4>
+<p><strong>Situación.</strong> Costa Verde recibe 1.104,00 dólares y debe decidir cuánto registra como ingreso y cuánto como obligación frente al Estado.</p>
+<p><strong>Supuesto didáctico.</strong> La venta es de bienes gravados con 15 %, al contado, con factura que muestra la base y el IVA por separado.</p>
+<p><strong>Qué buscamos.</strong> El ingreso por ventas, el IVA cobrado y el total cobrado, en dólares.</p>
+<p><strong>Datos.</strong> Cantidad: 40 camisetas. Precio unitario sin IVA: 24,00 dólares. Tarifa general: 15 %.</p>
+<p><strong>Por qué esta operación.</strong> El ingreso es el valor de la venta sin IVA; el IVA cobrado es el 15 % de esa base, que el cliente paga y que la empresa debe entregar al Estado.</p>
+<p><strong>Procedimiento.</strong> Base = 40 × 24,00 = 960,00 dólares. IVA cobrado = 960,00 × 0,15 = 144,00 dólares. Total cobrado = 960,00 + 144,00 = 1.104,00 dólares.</p>
+<p><strong>Resultado.</strong> Ingreso 960,00; IVA cobrado 144,00; total cobrado 1.104,00 dólares.</p>
+<p><strong>Comprobación.</strong> Por una vía distinta: el 10 % de 960 es 96, y el 5 % es la mitad de 96, es decir, 48. Sumados dan 144. Además, 960 + 144 = 1.104, que coincide con el total cobrado.</p>
+<p><strong>Interpretación.</strong> Aunque Caja aumenta en 1.104,00 dólares, el ingreso de Costa Verde es 960,00 dólares. Registrar 1.104,00 como ingreso inflaría las ventas en 144,00 dólares. Es el error de confundir el efectivo que entra con el ingreso de la empresa.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 3. Venta al contado con IVA (perspectiva de Costa Verde como vendedora)</h4>
+<p>Entidad que registra: Costa Verde Cía. Ltda. Documento: factura de venta de Costa Verde a su cliente final (documento didáctico).</p>
+<div class="tabla-wrap"><table>
+<thead><tr><th>Fecha</th><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Mes 1</td><td>Caja (1101)</td><td>1.104,00</td><td></td></tr>
+<tr><td></td><td>Ventas (4101)</td><td></td><td>960,00</td></tr>
+<tr><td></td><td>IVA cobrado (provisional, sin código)</td><td></td><td>144,00</td></tr>
+<tr><td></td><td>Glosa: P/R venta al contado de 40 camisetas a un cliente final, con IVA del 15 %.</td><td></td><td></td></tr>
+</tbody></table></div>
+<p><strong>Comprobación de igualdad.</strong> Debe: 1.104,00. Haber: 960,00 + 144,00 = 1.104,00. Ambos lados son iguales.</p>
+<p><strong>Explicación.</strong> Caja aumenta en el debe porque entra dinero. Ventas aumenta en el haber porque es un ingreso, por su valor sin impuesto. IVA cobrado aumenta en el haber porque es una obligación que la empresa debe entregar. Si la venta fuera a crédito, en lugar de Caja se usaría Cuentas por cobrar a clientes; la diferencia entre ingreso y cobro ya se estudió en la unidad 1.</p>
+</div>
+
+<h3>7. El costo de la mercadería vendida: una anticipación</h3>
+<p>Cuando Costa Verde vende camisetas, además del ingreso debe reconocer el costo de las camisetas que salieron del inventario. Ese registro depende del sistema de inventarios y del método de costeo, temas que se estudiarán en las semanas 9 y 10. Aquí lo mencionamos solo para mostrar que el IVA no entra en ese costo y para que comprendas la continuidad de las existencias.</p>
+<p>Costa Verde compró 80 camisetas a 10,00 dólares cada una y vendió 40. Quedan 40 en el almacén, con un valor de 400,00 dólares (40 × 10,00). Como todas las unidades se compraron al mismo precio, el costo de cada camiseta vendida es 10,00 dólares, y el costo de las 40 vendidas es 400,00 dólares. Esta cifra depende de que todas las unidades tengan el mismo costo de compra; los métodos que se usan cuando los costos difieren se estudiarán más adelante. Por esa razón, el asiento siguiente es una anticipación y no se evalúa en esta sesión.</p>
+
+<div class="asiento">
+<h4>Asiento 4. Costo de las mercaderías vendidas (anticipación no evaluable)</h4>
+<p>Entidad que registra: Costa Verde Cía. Ltda. Su estudio formal corresponde a las semanas 9 y 10. La cuenta Costo de ventas no tiene código en el plan didáctico.</p>
+<div class="tabla-wrap"><table>
+<thead><tr><th>Fecha</th><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Mes 1</td><td>Costo de ventas (sin código)</td><td>400,00</td><td></td></tr>
+<tr><td></td><td>Inventarios de mercaderías (1104)</td><td></td><td>400,00</td></tr>
+<tr><td></td><td>Glosa: P/R costo de 40 camisetas vendidas a 10,00 dólares cada una.</td><td></td><td></td></tr>
+</tbody></table></div>
+<p><strong>Comprobación de igualdad.</strong> Debe: 400,00. Haber: 400,00.</p>
+<p><strong>Explicación.</strong> Costo de ventas aumenta en el debe porque registra lo que costaron las camisetas que salieron a la venta; reduce el resultado del período. Inventarios de mercaderías disminuye en el haber porque esas camisetas ya no están en el almacén. Observa que el IVA no aparece en este asiento: el valor de la mercadería es el de la compra sin IVA. El saldo del inventario queda en 400,00 dólares: 800,00 de compra menos 400,00 de salida.</p>
+</div>
+
+<h3>8. La liquidación del IVA del período</h3>
+<p>Al cierre del período, Costa Verde compara el IVA cobrado con el crédito tributario. La diferencia determina el saldo que debe pagar. En nuestro caso, el IVA cobrado es 144,00 dólares y el crédito tributario es 120,00 dólares. Supongamos que no hay otras compras ni ventas en el período.</p>
+
+<div class="concepto">
+<h4>Cálculo 5. Saldo a pagar por el IVA del período</h4>
+<p><strong>Situación.</strong> Costa Verde debe determinar cuánto IVA corresponde entregar al Estado por el período, después de descontar el IVA que pagó en sus compras.</p>
+<p><strong>Supuesto didáctico.</strong> No existen otras operaciones con IVA en el período, y la liquidación se hace por la diferencia entre el IVA cobrado y el crédito tributario.</p>
+<p><strong>Qué buscamos.</strong> El saldo a pagar, en dólares.</p>
+<p><strong>Datos.</strong> IVA cobrado: 144,00 dólares. Crédito tributario (IVA pagado): 120,00 dólares.</p>
+<p><strong>Por qué esta operación.</strong> El IVA pagado puede descontarse del IVA cobrado, porque es un derecho de la empresa. Lo que queda es lo que la empresa debe entregar.</p>
+<p><strong>Procedimiento.</strong> Saldo a pagar = 144,00 − 120,00 = 24,00 dólares.</p>
+<p><strong>Resultado.</strong> IVA por pagar: 24,00 dólares.</p>
+<p><strong>Comprobación.</strong> Por otra vía, partiendo de las bases y no de los impuestos ya calculados: el IVA de las ventas es 15 % de 960, es decir, 144,00; el IVA de las compras es 15 % de 800, es decir, 120,00. La diferencia de impuestos es igual al 15 % de la diferencia de bases: 15 % de 160 = 160 × 0,15 = 24,00. Coincide con la resta.</p>
+<p><strong>Interpretación.</strong> Costa Verde debe entregar 24,00 dólares al Estado. Este valor no es un gasto de la operación: es la parte del IVA que la empresa cobró y que no pudo descontar con sus compras. Los errores frecuentes serían declarar como gasto los 144,00 dólares del IVA cobrado, o no descontar los 120,00 del crédito.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 5. Liquidación del IVA del período</h4>
+<p>Entidad que registra: Costa Verde Cía. Ltda. Documento: declaración de IVA del período (documento didáctico).</p>
+<div class="tabla-wrap"><table>
+<thead><tr><th>Fecha</th><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Fin del mes 1</td><td>IVA cobrado (provisional, sin código)</td><td>144,00</td><td></td></tr>
+<tr><td></td><td>Crédito tributario de IVA (provisional, sin código)</td><td></td><td>120,00</td></tr>
+<tr><td></td><td>IVA por pagar (provisional, sin código)</td><td></td><td>24,00</td></tr>
+<tr><td></td><td>Glosa: P/R liquidación del IVA del período: IVA cobrado menos crédito tributario.</td><td></td><td></td></tr>
+</tbody></table></div>
+<p><strong>Comprobación de igualdad.</strong> Debe: 144,00. Haber: 120,00 + 24,00 = 144,00. Ambos lados son iguales.</p>
+<p><strong>Explicación.</strong> IVA cobrado disminuye en el debe porque su saldo se traslada a la liquidación; su naturaleza es acreedora, y una disminución de una cuenta acreedora va al debe. Crédito tributario disminuye en el haber porque el derecho fue utilizado. IVA por pagar aumenta en el haber porque es la obligación que queda pendiente. El pago posterior al SRI, cuando corresponda, se registrará con IVA por pagar en el debe y Caja en el haber; la fecha depende del calendario de declaraciones, que no se estudia aquí.</p>
+</div>
+
+<h3>9. Qué muestra el conjunto de asientos</h3>
+<p>Revisa el efecto de los cinco asientos sobre las cuentas de Costa Verde. Caja recibió 1.104,00 dólares. Las ventas muestran 960,00 dólares de ingreso. El inventario de la compra fue de 800,00 dólares, de los que salieron 400,00 dólares, de modo que quedan 400,00 dólares en el almacén. El crédito tributario de 120,00 dólares se usó por completo, y queda un IVA por pagar de 24,00 dólares. La deuda con Montubia por 920,00 dólares sigue pendiente, porque la compra fue a crédito.</p>
+<p>Una igualdad de debe y haber en cada asiento es necesaria, pero no prueba que el tratamiento sea correcto. Si el IVA pagado de 120,00 dólares se hubiera registrado en el inventario, cada asiento seguiría cuadrado. Lo que cambiaría es el valor del inventario, que quedaría sobrevalorado, y la liquidación no tendría el crédito que le corresponde. La revisión de cuentas y naturalezas es parte del control, no solo la suma.</p>
+
+<h3>10. Errores previsibles</h3>
+<p>Si registras el IVA cobrado como ingreso, las ventas aparecerán por 1.104,00 dólares en lugar de 960,00. Revisa si la cuenta de ventas recibió el total de la factura o solo su base. Si registras el IVA pagado como parte del inventario, la mercadería aparecerá por 920,00 dólares en lugar de 800,00 y el crédito tributario quedará en cero. Pregúntate qué recibió la empresa y si podrá descontar ese impuesto: en la liquidación, el IVA pagado es un derecho y no un costo. Si olvidas la liquidación, el IVA cobrado quedará sin compensar, con un saldo acreedor de 144,00 dólares, y el cierre del impuesto quedará incompleto.</p>
+
+<h3>11. Ejercicios</h3>
+<p>A continuación encontrarás cinco actividades. Resuelve cada una por escrito antes de abrir su solución. Trabaja de manera individual. Si tu asiento no cuadra con la solución, compara cuenta por cuenta: primero la naturaleza de cada cuenta, después el lado en que la pusiste y, por último, el importe.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Clasificar el IVA desde cada perspectiva</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás si el IVA de una operación corresponde al pagado o al cobrado, y en qué lado se registra cada uno. Costa Verde compra 20 camisetas a Montubia con IVA, y después vende 15 de esas camisetas a un cliente con IVA. Para cada operación, indica si el IVA es pagado o cobrado, qué cuenta lo recibe y si aumenta en el debe o en el haber.</p>
+<p class="ayuda">Pregúntate primero quién compra y quién vende en cada operación. El IVA de una compra lo paga quien compra; el de una venta lo cobra quien vende. Después decide si la empresa tiene un derecho o una obligación.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Compra: IVA pagado, registrado en crédito tributario de IVA, que aumenta en el debe porque es un derecho a descontar. Venta: IVA cobrado, registrado en IVA cobrado, que aumenta en el haber porque es una obligación frente al Estado.</p>
+<p><strong>Comprobación:</strong> cada cuenta debe coincidir con la naturaleza del derecho o la obligación. Un derecho se registra como activo deudor; una obligación, como pasivo acreedor.</p>
+<p><strong>Error frecuente:</strong> pensar que el IVA de la compra es un gasto porque se pagó en efectivo. Lo que importa es si la empresa podrá descontarlo, no solo si lo pagó.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La perspectiva determina el lado del impuesto. Quien compra tiene un derecho; quien vende tiene una obligación. Si dudas, pregunta quién recibirá el dinero al final y quién deberá entregarlo.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Calcular la compra de otra empresa</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás la base, el IVA y el total de una compra de mercadería a crédito. Un comercio minorista compra 30 bolsos a 25,00 dólares cada uno, sin IVA, a crédito. Supongamos que la tarifa es la general, de 15 %. Determina la base, el IVA pagado y la deuda con el proveedor.</p>
+<p class="ayuda">Calcula primero la base multiplicando cantidad por precio. Después aplica el 15 % a esa base y suma el IVA para obtener la deuda.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 30 × 25,00 = 750,00 dólares. IVA pagado = 750,00 × 0,15 = 112,50 dólares. Deuda con el proveedor = 750,00 + 112,50 = 862,50 dólares.</p>
+<p><strong>Comprobación:</strong> el 10 % de 750 es 75 y el 5 % es 37,50; sumados dan 112,50. La deuda de 862,50 coincide con base más IVA.</p>
+<p><strong>Error frecuente:</strong> registrar el inventario por 862,50 dólares. El inventario se registra por la base de 750,00 dólares, y el IVA va al crédito tributario.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La compra se separa en dos partes: la mercadería, por su base, y el derecho al IVA, por el impuesto. La deuda es la suma de ambas, porque el proveedor cobra el total.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Liquidación con crédito mayor que el IVA cobrado</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás qué ocurre cuando el crédito tributario supera al IVA cobrado. Supongamos que, en otro período, una empresa cobró 90,00 dólares de IVA en sus ventas y tiene un crédito tributario de 120,00 dólares por sus compras. Determina la diferencia, indica si la empresa debe pagar algo y explica qué tipo de saldo representa la diferencia.</p>
+<p class="ayuda">Compara los dos valores. Si el crédito es mayor, la diferencia no es una obligación de pago en ese período. Pregúntate qué tipo de saldo representa y si puede registrarse como ingreso o como gasto.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Diferencia = 90,00 − 120,00 = −30,00. El resultado negativo indica que el crédito excede al IVA cobrado: la empresa no tiene IVA por pagar en este período, y queda un saldo a su favor de 30,00 dólares.</p>
+<p><strong>Qué no debe hacerse:</strong> registrar ese saldo como ingreso o como gasto. Su tratamiento como derecho frente al Estado o como otra cuenta depende de la normativa vigente, que no se analiza en este material. Por eso la conclusión que sí puede darse es que no existe IVA por pagar, y que el saldo a favor requiere verificar la normativa antes de registrarlo.</p>
+<p><strong>Error frecuente:</strong> afirmar que la empresa «recupera» 30,00 dólares en efectivo. La normativa, y no el cálculo aritmético, determina si ese saldo se devuelve, se compensa o se mantiene.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La liquidación compara dos cifras. Cuando el crédito supera al cobrado, el resultado no es una deuda en ese período, pero tampoco es un ingreso: el destino del saldo debe verificarse en la norma.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Registrar una venta al contado</h4>
+<p class="tiempo">Tiempo orientativo: 15 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás una venta al contado con IVA y justificarás cada cuenta. Costa Verde vende 25 camisetas a un cliente final, al contado, a 36,00 dólares cada una, sin IVA. Supongamos que la tarifa es la general, de 15 %. Calcula la base, el IVA y el total, y elabora el asiento con su glosa, indicando la naturaleza de cada cuenta.</p>
+<p class="ayuda">Calcula primero la base, después el IVA cobrado y el total. En el asiento, Caja recibe el total; Ventas registra solo la base; IVA cobrado registra el impuesto. Si tu Ventas tiene el total, revisa la sección 6.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 25 × 36,00 = 900,00 dólares. IVA cobrado = 900,00 × 0,15 = 135,00 dólares. Total = 900,00 + 135,00 = 1.035,00 dólares.</p>
+<p><strong>Asiento:</strong> Debe Caja (1101) 1.035,00; Haber Ventas (4101) 900,00; Haber IVA cobrado 135,00. Glosa: P/R venta al contado de 25 camisetas con IVA del 15 %.</p>
+<p><strong>Comprobación:</strong> debe 1.035,00; haber 900,00 + 135,00 = 1.035,00. Ambos lados son iguales. Por otra vía: el 10 % de 900 es 90 y el 5 % es 45; sumados dan 135.</p>
+<p><strong>Error frecuente:</strong> registrar 1.035,00 en Ventas. Ese error infla el ingreso en 135,00 dólares.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>En una venta con IVA, el dinero que entra es el total, el ingreso es la base y la diferencia es una obligación frente al Estado. Si Caja y Ventas no suman el mismo valor, falta la cuenta del impuesto.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: el IVA pagado registrado en el inventario</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás las consecuencias de un error de clasificación, aunque el asiento esté cuadrado. Supongamos el caso de Costa Verde del asiento 1, con la diferencia de que el registro se hizo con el total de la factura, 920,00 dólares, en Inventarios de mercaderías, y no se registró crédito tributario. Compara el asiento erróneo con el correcto y explica qué cuentas y qué saldos cambian.</p>
+<p class="ayuda">Compara las cuentas de cada asiento y pregúntate qué cuenta cambia de valor. Después piensa qué ocurre en la liquidación si no existe crédito tributario.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento erróneo:</strong> Debe Inventarios 920,00; Haber Proveedores 920,00. Cuadra: debe 920,00 y haber 920,00.</p>
+<p><strong>Asiento correcto:</strong> Debe Inventarios 800,00 y Crédito tributario 120,00; Haber Proveedores 920,00. Cuadra igualmente.</p>
+<p><strong>Efecto del error:</strong> el inventario queda sobrevalorado en 120,00 dólares; el crédito tributario queda en cero, por lo que la liquidación no descuenta esos 120,00 y el IVA por pagar sería de 144,00 dólares en lugar de 24,00. La empresa pagaría 120,00 dólares de más si liquidara con esa cifra.</p>
+<p><strong>Conclusión:</strong> ambos asientos cuadran, pero solo el segundo refleja la naturaleza del IVA pagado. La igualdad de debe y haber no prueba que la clasificación sea correcta.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un asiento puede cuadrar y tener un error de cuenta. Revisa qué representa cada cuenta antes de confiar en la suma, y no te bases solo en que el debe y el haber coincidan.</p></div>
+</div>
+
+<h3>12. Cierre de la sesión</h3>
+<p>Volvamos a la situación inicial: Costa Verde compra y vende con IVA en el mismo mes. El IVA pagado en la compra se registra como crédito tributario, porque es un derecho a descontar; el IVA cobrado en la venta se registra como obligación, porque debe entregarse al Estado; y la liquidación determina el saldo a pagar, que en el caso son 24,00 dólares. El ingreso de la venta es de 960,00 dólares, no el total cobrado. Además, recuerda que la misma compra aparece en el asiento 1 de Costa Verde y en el asiento 2 de Montubia, con lados opuestos.</p>
+<p>Como tarea de transferencia, elabora el asiento de la compra y el de la venta de una empresa que compre 50 cuadernos a 4,00 dólares a crédito y que venda 30 de ellos a 6,00 dólares al contado, con tarifa general de 15 %. Calcula la liquidación y explica por qué el IVA pagado no se suma al costo de los cuadernos. Si la liquidación da un saldo a favor, aplica lo que aprendiste en el ejercicio 3 y no lo registres como ingreso.</p>
+<p>Para revisar por dificultad: si confundes el IVA cobrado con un ingreso, relee la sección 2 y el cálculo 4; si no sabes en qué lado registrar el crédito, relee la tabla 2 y el ejercicio 1; si no entiendes por qué Montubia registra la misma operación con otro lado, relee la sección 5; si la liquidación no te cuadra, relee el cálculo 5 y el ejercicio 3.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>IVA pagado:</strong> IVA que la empresa paga al proveedor en una compra.</li>
+<li><strong>IVA cobrado:</strong> IVA que la empresa cobra al cliente en una venta; es una obligación frente al Estado.</li>
+<li><strong>Crédito tributario:</strong> derecho a descontar el IVA pagado en compras del IVA cobrado.</li>
+<li><strong>Liquidación del IVA:</strong> comparación de IVA cobrado y crédito tributario al cierre del período.</li>
+<li><strong>Cuentas por cobrar a clientes:</strong> derecho de la empresa a recibir dinero de un cliente por una venta a crédito.</li>
+<li><strong>NIC 2:</strong> Norma Internacional de Contabilidad sobre inventarios.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval2" data-panel="eval2" aria-labelledby="t-eval2">
+<h2 id="t-eval2">Evaluación de la sesión 02 · IVA pagado, IVA cobrado y liquidación</h2>
+<p class="meta">Semana 4 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="2"></div>
+</section>
+
+<section class="pestana" id="ses03" data-panel="ses03">
+<h2>Sesión 03 · Retenciones de IVA: quién retiene, cuánto y cómo se registra</h2>
+<p class="meta">Semana 4 · Unidad 2 · Retenciones de IVA, porcentajes y comprobante de retención (sesión global 12) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Servicios Logísticos Andes Global S. A. es una empresa de servicios ficticia, vinculada con Negocios Internacionales: coordina operaciones logísticas de comercio exterior. Supongamos que compra a Costa Verde Cía. Ltda. 50 camisetas que usará como uniforme de su personal, no para venderlas. Costa Verde cobra el precio y el IVA, pero Andes Global no paga el IVA completo a Costa Verde: retiene una parte y la entrega al Estado. ¿Por qué ocurre eso? ¿Quién debe retener, cuánto, y cómo registran ambas empresas la misma operación?</p>
+<p>Este caso es independiente del de la sesión 02: ocurre en otro período (mes 2), con otra venta de Costa Verde y otro precio, porque se trata de una operación con una empresa compradora. Lo que sí se conserva son las empresas y su actividad.</p>
+<p>Al terminar esta sesión podrás explicar qué es una retención de IVA y quién la aplica; identificar el porcentaje que corresponde según el tipo de bien o servicio adquirido; calcular la retención sobre el IVA de una factura; y registrar la operación desde la perspectiva de la empresa que vende y de la que retiene.</p>
+<p>Esta sesión se apoya en la sesión 02. El IVA que Costa Verde cobra es una obligación, y el que Andes Global paga es un derecho. La retención cambia la forma en que el IVA llega al Estado, pero no cambia la base ni el total de la factura.</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. Qué es una retención de IVA</h3>
+<p>Una retención es una forma de cobrar un impuesto en el momento del pago, en lugar de esperar a que el vendedor lo declare por su cuenta. Quien compra y que la normativa designa como agente de retención retiene un porcentaje del IVA de la operación y lo entrega directamente al Servicio de Rentas Internas (SRI). El vendedor recibe menos dinero en efectivo, pero recibe un comprobante que acredita lo retenido. La retención, por tanto, adelanta una parte del impuesto que el vendedor deberá declarar.</p>
+<p>Conviene separar tres figuras. El <strong>agente de retención</strong> es quien tiene la obligación de retener. El <strong>sujeto retenido</strong> es quien vende o presta el servicio y cuyo IVA se retiene. El <strong>comprobante de retención</strong> es el documento que acredita lo retenido. En el caso de esta sesión, Andes Global es el agente de retención, Costa Verde es el sujeto retenido y el comprobante lo emite Andes Global.</p>
+<p>La condición de agente de retención depende de la normativa vigente y de la designación que corresponda a cada contribuyente. En este material, Andes Global se considera agente de retención por un supuesto didáctico. Su designación real no se ha verificado, y por eso no debe interpretarse como un hecho sobre una empresa real.</p>
+
+<h3>2. El porcentaje depende de lo que se compra</h3>
+<p>La retención no tiene un solo porcentaje. El Servicio de Rentas Internas fija porcentajes distintos según el tipo de operación y la condición del sujeto que vende o presta el servicio. La Resolución NAC-DGERCGC20-00000061, de 29 de septiembre de 2020, es la norma que los establece; fue reformada después, en 2023, por la Resolución NAC-DGERCGC23-00000026, que amplió los agentes de retención y precisó algunos casos. La tabla 3 resume las disposiciones que necesitas para este caso. Las filas de los artículos 7 y 8 de la resolución no aparecen aquí porque no se desarrollan en esta semana.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 3. Porcentajes de retención de IVA según la Resolución NAC-DGERCGC20-00000061 (artículos seleccionados)</caption>
+<thead><tr><th>Artículo</th><th>Operación</th><th>Porcentaje del IVA</th></tr></thead>
+<tbody>
+<tr><td>Art. 4, literal a)</td><td>Transferencia de bienes gravados con tarifa diferente de 0 %</td><td>30 %</td></tr>
+<tr><td>Art. 4, literal b)</td><td>Adquisición de servicios y derechos, comisiones y contratos de consultoría gravados con tarifa diferente de 0 %</td><td>70 %</td></tr>
+<tr><td>Art. 4, literal c)</td><td>Casos específicos que la resolución enumera (no se desarrollan en esta semana)</td><td>100 %</td></tr>
+<tr><td>Art. 5</td><td>Operaciones con contribuyentes especiales, distinguiendo bienes y servicios</td><td>10 % (bienes) o 20 % (servicios)</td></tr>
+<tr><td>Art. 15</td><td>Operaciones que combinan bienes y servicios cuyos porcentajes no pueden diferenciarse</td><td>Se aplica el porcentaje mayor</td></tr>
+</tbody></table></div>
+
+<p>Observa que la tabla no se refiere a la tarifa del IVA, sino al porcentaje que se aplica sobre el IVA de la operación. La tarifa general de 15 % determina cuánto IVA se genera; el porcentaje de retención determina qué parte de ese IVA se retiene. Confundir ambos porcentajes es uno de los errores más frecuentes en esta unidad. Para comprobarlo, pregúntate siempre: ¿este número sale de la tarifa o del porcentaje de retención?</p>
+<p>Para esta sesión usaremos sobre todo el literal a) del artículo 4, porque la operación es una transferencia de bienes: Andes Global recibe camisetas, no un servicio. El literal b) corresponde a servicios, derechos y contratos de consultoría. Los demás casos se mencionan para que puedas compararlos, pero no deben aplicarse sin revisar sus condiciones completas en la resolución.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Si Andes Global comprara a Costa Verde un servicio de consultoría en lugar de camisetas, ¿qué porcentaje correspondería en la tabla 3? Antes de responder, identifica si el objeto de la compra es un bien o un servicio.</p>
+<p class="ayuda">Un bien se transfiere, por ejemplo una camiseta. Un servicio se presta, por ejemplo una asesoría. Compara la fila del artículo 4, literal a), con la del literal b). Si respondiste 30 %, revisa qué se compra: un servicio tiene 70 % según la tabla.</p>
+</div>
+
+<h3>3. Cómo se calcula la retención</h3>
+<p>La retención se calcula en tres pasos. Primero determinas la base y el IVA de la operación, como en la sesión 01. Después identificas el porcentaje de retención según la tabla 3. Por último, la retención es ese porcentaje aplicado al IVA, no a la base ni al total. Esta última decisión es la que más se equivoca, así que conviene recordarla en cada cálculo.</p>
+<p>¿Por qué sobre el IVA y no sobre la base? Porque la retención es una parte del impuesto que se adelanta. El impuesto que se adelanta es el IVA de la operación. La base es el valor del bien, y sobre ella solo se calcula el impuesto, no la retención.</p>
+
+<div class="concepto">
+<h4>Cálculo 6. Retención de IVA en la compra de uniformes</h4>
+<p><strong>Situación.</strong> Andes Global compra 50 camisetas a Costa Verde para uniformar a su personal. Debe determinar cuánto IVA se retiene, cuánto paga a Costa Verde y cuánto debe entregar al SRI como retención.</p>
+<p><strong>Supuestos didácticos.</strong> Andes Global es agente de retención de IVA. Costa Verde no es contribuyente especial. Las camisetas son bienes gravados con tarifa general de 15 %, y la transferencia está gravada. El precio de venta de Costa Verde a Andes Global es de 12,00 dólares por camiseta: es un precio de esta operación con una empresa compradora, y no se compara con el precio de 24,00 dólares de la sesión 02, que fue a un cliente final.</p>
+<p><strong>Qué buscamos.</strong> La base, el IVA, la retención y el valor que Andes Global paga a Costa Verde, en dólares.</p>
+<p><strong>Datos.</strong> Cantidad: 50 camisetas. Precio unitario sin IVA: 12,00 dólares. Tarifa general: 15 %. Porcentaje de retención para transferencia de bienes gravados: 30 % del IVA (tabla 3, artículo 4, literal a).</p>
+<p><strong>Por qué esta operación.</strong> La operación es una transferencia de bienes, por eso corresponde el literal a) del artículo 4 y no el literal b), que es para servicios. La retención se aplica sobre el IVA de la transferencia.</p>
+<p><strong>Procedimiento.</strong> Base = 50 × 12,00 = 600,00 dólares. IVA = 600,00 × 0,15 = 90,00 dólares. Total de la factura = 600,00 + 90,00 = 690,00 dólares. Retención = 90,00 × 0,30 = 27,00 dólares. Valor pagado a Costa Verde = 690,00 − 27,00 = 663,00 dólares.</p>
+<p><strong>Resultado.</strong> Base 600,00; IVA 90,00; retención 27,00; pago a Costa Verde 663,00 dólares.</p>
+<p><strong>Comprobación.</strong> Por otra vía: el 30 % de 90 equivale al 3 % de 900, es decir, 27. Además, el pago y la retención deben sumar el total: 663,00 + 27,00 = 690,00, que coincide con la factura.</p>
+<p><strong>Interpretación.</strong> Andes Global paga 663,00 dólares a Costa Verde y conserva 27,00 dólares para entregarlos al SRI. El error que se evita es calcular la retención sobre la base de 600,00 dólares (180,00 dólares), lo que daría una retención muy superior al IVA de la operación, o sobre el total de 690,00 dólares (207,00 dólares).</p>
+</div>
+
+<h3>4. Dos perspectivas de la misma operación</h3>
+<p>Una operación con retención se registra de dos maneras, una por cada empresa. Costa Verde, que vende, reconoce el ingreso sin IVA, la obligación de IVA cobrado y un derecho frente al Estado por la parte del impuesto que Andes Global retiene y que, por tanto, no recibe en efectivo. Andes Global, que compra y retiene, reconoce el uso de las camisetas, el derecho al crédito por el IVA pagado, la parte del IVA que debe entregar al SRI y el pago neto a Costa Verde.</p>
+<p>Para que ambos registros cuadren, lo que Costa Verde recibe en efectivo más lo que recibe como comprobante de retención debe ser igual al total de la factura. Esa coincidencia es lo que debes comprobar en cada caso. Si no coincide, uno de los dos registros tiene un error de importe o de cuenta.</p>
+
+<div class="asiento">
+<h4>Asiento 6. Venta con retención (perspectiva de Costa Verde como vendedora)</h4>
+<p>Entidad que registra: Costa Verde Cía. Ltda. Documento: factura de venta a Andes Global y comprobante de retención emitido por Andes Global (documentos didácticos).</p>
+<div class="tabla-wrap"><table>
+<thead><tr><th>Fecha</th><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Mes 2</td><td>Caja (1101)</td><td>663,00</td><td></td></tr>
+<tr><td></td><td>Retenciones de IVA a favor (provisional, sin código)</td><td>27,00</td><td></td></tr>
+<tr><td></td><td>Ventas (4101)</td><td></td><td>600,00</td></tr>
+<tr><td></td><td>IVA cobrado (provisional, sin código)</td><td></td><td>90,00</td></tr>
+<tr><td></td><td>Glosa: P/R venta de 50 camisetas a Servicios Logísticos Andes Global S. A., con IVA del 15 % y retención del 30 % del IVA.</td><td></td><td></td></tr>
+</tbody></table></div>
+<p><strong>Comprobación de igualdad.</strong> Debe: 663,00 + 27,00 = 690,00. Haber: 600,00 + 90,00 = 690,00. Ambos lados son iguales.</p>
+<p><strong>Explicación.</strong> Caja aumenta por el pago recibido, 663,00 dólares. Retenciones de IVA a favor aumenta en el debe porque es un derecho que Costa Verde tendrá frente al Estado por la parte retenida; es un activo deudor. Ventas aumenta en el haber por la base, 600,00 dólares. IVA cobrado aumenta en el haber por los 90,00 dólares del impuesto, que siguen siendo una obligación de Costa Verde, porque la retención solo cambia quién entrega una parte al Estado. Observa que la cuenta de retención es provisional: el plan didáctico no le ha asignado código, y su tratamiento definitivo debe verificarse antes de usarla en una evaluación.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 7. Compra con retención (perspectiva de Andes Global como compradora y agente de retención)</h4>
+<p>Entidad que registra: Servicios Logísticos Andes Global S. A. Documento: factura de Costa Verde y comprobante de retención emitido por Andes Global (documentos didácticos). Las camisetas son uniformes del personal, no mercadería para vender.</p>
+<div class="tabla-wrap"><table>
+<thead><tr><th>Fecha</th><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Mes 2</td><td>Uniformes del personal (provisional, sin código)</td><td>600,00</td><td></td></tr>
+<tr><td></td><td>Crédito tributario de IVA (provisional, sin código)</td><td>90,00</td><td></td></tr>
+<tr><td></td><td>Caja (1101)</td><td></td><td>663,00</td></tr>
+<tr><td></td><td>Retenciones de IVA por pagar (provisional, sin código)</td><td></td><td>27,00</td></tr>
+<tr><td></td><td>Glosa: P/R compra de 50 camisetas como uniformes, con IVA del 15 % y retención del 30 % del IVA pagado a Costa Verde.</td><td></td><td></td></tr>
+</tbody></table></div>
+<p><strong>Comprobación de igualdad.</strong> Debe: 600,00 + 90,00 = 690,00. Haber: 663,00 + 27,00 = 690,00. Ambos lados son iguales.</p>
+<p><strong>Explicación.</strong> Uniformes del personal aumenta en el debe por el valor sin IVA. Su clasificación definitiva depende del uso que la empresa dará a las camisetas y de las condiciones de su entrega; por eso no se impone aquí una única cuenta de gasto o de activo. Crédito tributario de IVA aumenta en el debe por los 90,00 dólares de IVA, porque es el derecho de Andes Global al descuento. <strong>Supuesto explícito:</strong> este asiento supone que el IVA pagado por estos uniformes sí puede utilizarse como crédito tributario. Si esa condición no se cumpliera, el IVA sería parte del costo de los uniformes. Este material no verifica esa condición para uniformes, y la deja como supuesto que el docente debe confirmar. Caja disminuye en el haber por el pago neto. Retenciones de IVA por pagar aumenta en el haber por los 27,00 dólares, que Andes Global debe entregar al SRI. Observa que la empresa no paga 690,00 dólares a Costa Verde: paga 663,00 y conserva 27,00 como obligación.</p>
+</div>
+
+<h3>5. El comprobante de retención</h3>
+<p>El comprobante acredita la retención. La resolución regula el comprobante de retención y el momento en que se efectúa la retención. Este material no fija un plazo para entregar el comprobante al vendedor, porque el texto que se consultó no lo establece con certeza. Por eso el comprobante es el documento que Costa Verde debe conservar para respaldar su cuenta de retención, y no conviene suponer un plazo que no está verificado.</p>
+<p>En la práctica, el comprobante permite que Costa Verde demuestre al SRI que el IVA retenido por Andes Global ya fue entregado en su nombre. Sin ese documento, la cuenta de retención queda sin respaldo, aunque el asiento cuadre.</p>
+
+<h3>6. Qué cambia si cambian los datos</h3>
+<p>Si la operación fuera la compra de un servicio de consultoría gravado con 15 %, por ejemplo por 1.000,00 dólares sin IVA, el IVA sería 150,00 dólares y la retención sería el 70 % de ese IVA, es decir, 105,00 dólares. Si la empresa comprara bienes y servicios en la misma factura, sin poder diferenciar sus porcentajes, el artículo 15 indica aplicar el porcentaje mayor. Estas comparaciones muestran que el tipo de operación determina el porcentaje, mientras que la base y la tarifa pueden ser las mismas.</p>
+<p>Comparemos los dos casos con la misma base de 1.000,00 dólares. Con porcentaje de bienes (30 %), la retención sería 45,00 dólares. Con porcentaje de servicios (70 %), sería 105,00 dólares. La base y la tarifa no cambiaron; lo que cambió fue el tipo de operación. Esa es la diferencia que debes poder explicar.</p>
+
+<h3>7. Errores previsibles</h3>
+<p>Si calculas la retención sobre la base y no sobre el IVA, obtendrás un valor mucho mayor del que corresponde. Revisa si el porcentaje se aplicó al IVA de la factura. Si usas el porcentaje de servicios para una compra de bienes, la retención será distinta: 70 % en lugar de 30 %. Pregúntate qué se transfiere, un bien o un servicio. Si registras el pago neto como si fuera el total de la factura, la cuenta de Caja quedará con 690,00 dólares en lugar de 663,00, y la retención no tendrá su asiento correspondiente. Revisa que la suma de pago y retención coincida con el total.</p>
+<p>Si la empresa compradora no es agente de retención, no corresponde retener. Esa condición debe verificarse antes de registrar la retención, y no puede suponerse por el tamaño de la empresa ni por su nombre.</p>
+
+<h3>8. Preguntas que suelen aparecer</h3>
+<p><strong>¿Por qué la retención no se calcula sobre el total de la factura?</strong> Porque el total incluye la base, que es el valor del bien, y la retención corresponde solo al impuesto. Calcularla sobre el total retendría también una parte del precio, que no es impuesto. La retención siempre se calcula sobre el IVA de la operación.</p>
+<p><strong>¿Por qué Costa Verde registra 27,00 dólares como derecho si nunca los recibió en efectivo?</strong> Porque esa parte del impuesto la entrega Andes Global al Estado en nombre de Costa Verde, y el comprobante de retención acredita ese monto. Costa Verde tiene, entonces, un derecho documentado frente al Estado por esos 27,00 dólares. Por eso se registra como activo deudor, aunque el dinero no haya entrado a Caja.</p>
+<p><strong>¿Y si la retención cambia el ingreso de la venta?</strong> No. El ingreso sigue siendo la base de 600,00 dólares. La retención cambia la forma en que el cobro llega a Caja y deja un derecho documentado, pero no reduce las ventas.</p>
+
+<h3>9. Ejercicios</h3>
+<p>A continuación encontrarás cinco actividades. Resuelve cada una por escrito antes de abrir su solución. Trabaja de manera individual. Si tu resultado difiere de la solución, revisa primero a qué cantidad aplicaste el porcentaje: al IVA, a la base o al total.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Identificar el porcentaje según el objeto de la compra</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás el porcentaje de retención que corresponde a tres compras, usando la tabla 3. Supongamos que Andes Global es agente de retención y que los proveedores no son contribuyentes especiales. Clasifica cada compra y señala el porcentaje: (a) 40 cajas de cartón, que son bienes gravados; (b) una auditoría de operaciones de importación prestada por una sociedad, que es un servicio gravado; (c) una factura de 1.000,00 dólares por camisetas y su estampado, en un solo concepto, en la que no puede separarse el valor de cada uno.</p>
+<p class="ayuda">Pregúntate primero si cada compra es un bien o un servicio. Para el caso (c), revisa qué indica el artículo 15 cuando no se pueden diferenciar los porcentajes.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>(a) Bienes gravados: artículo 4, literal a), 30 %. (b) Servicio gravado prestado por una sociedad: artículo 4, literal b), 70 %. (c) Combina bienes (camisetas) y un servicio (estampado) que no pueden diferenciarse: el artículo 15 indica aplicar el porcentaje mayor, es decir, 70 %.</p>
+<p><strong>Comprobación:</strong> cada porcentaje corresponde a una fila de la tabla 3, y la elección se justifica por el objeto de la compra.</p>
+<p><strong>Error frecuente:</strong> aplicar 70 % al caso (a) por creer que todas las compras son servicios, o aplicar 30 % al caso (c) por considerar que la factura es solo de bienes.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El porcentaje lo determina el objeto de la operación. Cuando los porcentajes no pueden separarse, la resolución indica aplicar el mayor. Este criterio solo se usa cuando de verdad no es posible diferenciar los conceptos.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Calcular la retención de una consultoría</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás la retención de una operación de consultoría. Andes Global contrata a una empresa consultora constituida como sociedad, especializada en comercio exterior, por 2.000,00 dólares sin IVA. Supongamos que el servicio está gravado con 15 %. Determina el IVA, el porcentaje de retención, la retención y el pago neto a la consultora.</p>
+<p class="ayuda">Calcula primero el IVA sobre la base. Luego identifica el porcentaje de la tabla 3 que corresponde a un contrato de consultoría y aplícalo al IVA, no a la base.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>IVA = 2.000,00 × 0,15 = 300,00 dólares. Porcentaje: 70 %, por ser un contrato de consultoría gravado (artículo 4, literal b). Retención = 300,00 × 0,70 = 210,00 dólares. Pago neto = 2.300,00 − 210,00 = 2.090,00 dólares.</p>
+<p><strong>Comprobación:</strong> pago neto más retención = 2.090,00 + 210,00 = 2.300,00, que es el total de la factura. Por otra vía, el 10 % de 300 es 30, y 7 veces 30 es 210.</p>
+<p><strong>Error frecuente:</strong> aplicar el 70 % a la base de 2.000,00, lo que daría 1.400,00 de retención. Ese valor supera el IVA de la operación, y una retención nunca puede ser mayor que el IVA cuando el porcentaje es menor que 100 %.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La retención es un porcentaje del IVA de la operación. Si el porcentaje es menor que 100 %, la retención siempre será menor que el IVA. Ese control rápido te permite detectar un error antes de registrar.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Explicar por qué la base no es la referencia</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad justificarás la base de cálculo de la retención. Un contador registró una retención de 45,00 dólares sobre una compra de bienes gravados de 300,00 dólares sin IVA, aplicando el 15 % sobre la base. Supongamos que el porcentaje de retención para bienes gravados es el 30 % del IVA. Determina la retención correcta y explica qué error cometió el contador.</p>
+<p class="ayuda">Calcula primero el IVA de la compra. Después aplica el 30 % de la tabla 3 al IVA, y compara el resultado con los 45,00 dólares registrados.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>IVA = 300,00 × 0,15 = 45,00 dólares. Retención correcta = 45,00 × 0,30 = 13,50 dólares.</p>
+<p><strong>Explicación del error:</strong> el contador calculó el 15 % sobre la base y obtuvo 45,00 dólares. Esa cifra es el IVA de la operación, no la retención. Al registrarla como retención, retuvo el 100 % del IVA, en lugar del 30 % que corresponde a la tabla 3. La base no es la referencia de la retención; el porcentaje se aplica al IVA de la operación.</p>
+<p><strong>Comprobación:</strong> 13,50 es el 30 % de 45,00. La retención de bienes gravados siempre debe ser menor que el IVA de la operación, porque el porcentaje es menor que 100 %.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Confundir el IVA con la retención produce una cifra que parece correcta, porque usa el 15 %. Revisa a qué cantidad se aplica el porcentaje antes de aceptar un resultado.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Factura con bienes y servicios no separados</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad aplicarás el criterio del artículo 15 a una factura que combina bienes y servicios. Andes Global recibe una factura de 1.000,00 dólares sin IVA por camisetas y un servicio de estampado, sin que el proveedor separe ambos conceptos. Supongamos que la tarifa es 15 %, que los bienes corresponden al 30 % de retención y los servicios al 70 %. Determina el IVA y la retención, y justifica el porcentaje elegido.</p>
+<p class="ayuda">Compara los dos porcentajes de la tabla 3 y pregúntate qué dice el artículo 15 cuando no pueden diferenciarse. Luego aplica el porcentaje elegido al IVA.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>IVA = 1.000,00 × 0,15 = 150,00 dólares. Como los porcentajes no pueden diferenciarse, el artículo 15 indica aplicar el mayor, que es 70 %. Retención = 150,00 × 0,70 = 105,00 dólares.</p>
+<p><strong>Comprobación:</strong> el 70 % de 150 es 105, porque el 10 % de 150 es 15 y 7 veces 15 es 105. Ese valor es mayor que el que resultaría con el 30 % (45,00), como indica la regla.</p>
+<p><strong>Error frecuente:</strong> promediar los porcentajes (50 %) o aplicar el menor. La resolución no autoriza ninguno de esos criterios.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cuando la factura no permite separar los conceptos, la norma prefiere el mayor porcentaje. Si la factura sí separa los valores de bienes y servicios, cada parte se retiene con su porcentaje; el mayor solo se usa cuando no es posible separarlas.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: venta de mayor cantidad</h4>
+<p class="tiempo">Tiempo orientativo: 15 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás la venta con retención desde la perspectiva de Costa Verde. Supongamos que, en lugar de 50 camisetas a 12,00 dólares, Costa Verde vende 80 camisetas a Andes Global al mismo precio unitario, con las mismas condiciones de IVA y retención. Supongamos además que Costa Verde dispone de existencias suficientes para esa venta. El caso original sigue siendo el de la factura de 50 camisetas. Calcula la base, el IVA, la retención, el pago que recibirá Costa Verde y el asiento con su glosa.</p>
+<p class="ayuda">Calcula primero la base. Después el IVA, la retención sobre el IVA y el pago neto. En el asiento, la retención va como derecho frente al Estado, y el total debe cuadrar.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 80 × 12,00 = 960,00 dólares. IVA = 960,00 × 0,15 = 144,00 dólares. Total = 960,00 + 144,00 = 1.104,00 dólares. Retención = 144,00 × 0,30 = 43,20 dólares. Pago neto a Costa Verde = 1.104,00 − 43,20 = 1.060,80 dólares.</p>
+<p><strong>Asiento de Costa Verde:</strong> Debe Caja 1.060,80; Debe Retenciones de IVA a favor 43,20; Haber Ventas 960,00; Haber IVA cobrado 144,00. Glosa: P/R venta de 80 camisetas con IVA y retención del 30 % del IVA.</p>
+<p><strong>Comprobación:</strong> debe 1.060,80 + 43,20 = 1.104,00; haber 960,00 + 144,00 = 1.104,00. Ambos lados son iguales. Por otra vía: el 30 % de 144 es 43,20, porque el 10 % de 144 es 14,40 y 3 veces 14,40 es 43,20.</p>
+<p><strong>Error frecuente:</strong> registrar 1.104,00 en Caja y, además, la retención en el debe, lo que haría que el asiento no cuadre. El pago neto es el valor que entra a Caja.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La retención no reduce el ingreso ni el IVA cobrado: cambia la forma en que el cobro llega a Caja y deja un derecho documentado frente al Estado.</p></div>
+</div>
+
+<h3>10. Cierre de la sesión</h3>
+<p>Volvamos a la situación inicial: Andes Global compra 50 camisetas como uniforme y no paga el IVA completo a Costa Verde. La tabla 3 muestra que, para bienes gravados, la retención es el 30 % del IVA. Con un IVA de 90,00 dólares, la retención es de 27,00 dólares, y Costa Verde recibe 663,00 dólares en efectivo. Andes Global registra la retención como obligación frente al SRI; Costa Verde la registra como un derecho documentado mediante el comprobante.</p>
+<p>Como tarea de transferencia, calcula la retención de una compra de 200 cuadernos a 2,50 dólares cada uno, sin IVA, gravados con 15 %, y elabora el asiento del comprador. Después explica por qué el porcentaje no se aplica a la base y qué cambiaría si la compra fuera un servicio de la misma base.</p>
+<p>Para revisar por dificultad: si no sabes qué porcentaje corresponde, relee la tabla 3 y el ejercicio 1; si confundes la base con el IVA, relee el cálculo 6, la sección 3 y el ejercicio 3; si el asiento no cuadra, relee los asientos 6 y 7 y el ejercicio 5; si dudas sobre el uso de la cuenta de uniformes, relee el supuesto del asiento 7.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Agente de retención:</strong> quien, por designación de la normativa, retiene una parte del IVA al pagar.</li>
+<li><strong>Sujeto retenido:</strong> quien vende o presta el servicio y a quien se retiene el IVA.</li>
+<li><strong>Comprobante de retención:</strong> documento que acredita lo retenido.</li>
+<li><strong>Pago neto:</strong> total de la factura menos la retención; es lo que recibe efectivamente el vendedor.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval3" data-panel="eval3" aria-labelledby="t-eval3">
+<h2 id="t-eval3">Evaluación de la sesión 03 · Retenciones de IVA</h2>
+<p class="meta">Semana 4 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="3"></div>
+</section>
+
+<section class="pestana" id="reflexion" data-panel="reflexion">
+<h2>Reflexión</h2>
+<p class="meta">Semana 4 · Cuatro reflexiones sin respuesta correcta ni calificación.</p>
+
+<h3>El precio no es todo lo que el cliente paga</h3>
+<p>Cuando un comerciante recibe un pago por un producto, a veces piensa que todo el dinero le pertenece. Pero parte de ese dinero corresponde a un impuesto que debe entregar a una institución pública. Reconocer esa diferencia es una forma de honestidad con el cliente y con el Estado, y te ayuda a no confundir el dinero que entra con el ingreso de la empresa.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué consecuencias tendría para un cliente y para la empresa un precio que oculte el impuesto dentro del valor del producto?</p>
+
+<h3>Lo que la factura debe decir</h3>
+<p>Una factura es una prueba de lo ocurrido entre dos partes. Si sus cifras no cuadran, la confianza entre comprador y vendedor se debilita. Cada número debe poder explicarse con la operación que representa, y eso vale tanto para quien la emite como para quien la recibe.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué revisarías tú antes de aceptar una factura que te llega de un proveedor? Enumera tres controles y explica por qué cada uno importa.</p>
+
+<h3>Cuando el documento y la realidad no coinciden</h3>
+<p>En la práctica, a veces una factura se emite con una tarifa que no corresponde al bien vendido. El error puede parecer pequeño, pero afecta a dos partes: quien pagó más de lo debido y quien debe entregar al Estado un monto distinto del que corresponde.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿de quién es la responsabilidad de revisar la tarifa de una factura: de quien la emite, de quien la recibe o de ambos? Justifica tu respuesta con un argumento y su contraargumento.</p>
+
+<h3>Lo que la norma fija y lo que decide la empresa</h3>
+<p>La ley y las normas del SRI fijan la tarifa y los porcentajes, pero la empresa decide cómo organiza su venta y qué documentos emite. Entender esa diferencia evita dos errores: atribuir a la norma decisiones que son de la empresa, y creer que la empresa puede decidir sobre una tarifa que solo la norma puede fijar.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué decisión empresarial puede cambiar el impuesto que se paga, y cuál no?</p>
+</section>
+
+<section class="pestana" id="ia" data-panel="ia">
+<h2>Actividad con IA</h2>
+<p class="meta">Semana 4 · Actividad individual · Tiempo orientativo: 20 minutos, incluidos en la sesión 03</p>
+
+<h3>1. Trabajo inicial propio</h3>
+<p>Antes de consultar cualquier herramienta, calcula la base, el IVA y el total de una factura de 30 cuadernos a 2,50 dólares cada uno, con tarifa general de 15 %. Anota el resultado y el procedimiento. Este trabajo inicial es tuyo: sirve para comparar después tu razonamiento con el de la herramienta.</p>
+
+<h3>2. Prompt exacto</h3>
+<div class="prompt">
+<p>«Calcula paso a paso la base imponible, el IVA y el total de una factura de 30 cuadernos a 2,50 dólares cada uno, con tarifa general del 15 %. Muestra cada operación. Después indica cómo se separaría la base de un total de 1.000 dólares con IVA incluido, mostrando el procedimiento.»</p>
+</div>
+
+<h3>3. Contraste con el material</h3>
+<p>Compara el resultado de la herramienta con tu trabajo inicial y con la sección 2 de la sesión 01. Revisa si la herramienta aplicó el 15 % a la base o al total, y si separó el total dividiendo entre 1,15.</p>
+
+<h3>4. Verificación de al menos una afirmación</h3>
+<p>Verifica la tarifa general de IVA en una fuente oficial del Servicio de Rentas Internas, y compara la fecha del documento con la fecha en que lo consultas. Si la respuesta de la herramienta menciona otra tarifa, identifica la fuente y la fecha. La respuesta de la herramienta no es una fuente verificada por sí sola.</p>
+
+<h3>5. Justificación</h3>
+<p>Escribe en media página qué aceptaste de la respuesta, qué corregiste y qué rechazaste, y por qué. Cita la sección del material que sustenta cada decisión.</p>
+
+<h3>6. Lista de autoevaluación</h3>
+<ul>
+<li>¿Calculé el IVA sobre la base y no sobre el total?</li>
+<li>¿Comprobé que base más IVA diera el total?</li>
+<li>¿Verifiqué la tarifa en una fuente oficial y anoté su fecha?</li>
+<li>¿Distinguí el precio del impuesto en la respuesta de la herramienta?</li>
+<li>¿Justifiqué cada corrección con el material?</li>
+</ul>
+</section>
+
+<section class="pestana" id="biblio" data-panel="biblio">
+<h2>Bibliografía</h2>
+<p class="meta">Referencias en APA 7, en orden alfabético.</p>
+<ul class="referencias">
+<li>Asamblea Nacional del Ecuador. (s. f.). <em>Ley de Régimen Tributario Interno</em>, artículo 66 (crédito tributario del impuesto al valor agregado).</li>
+<li>IFRS Foundation. (s. f.). <em>Norma Internacional de Contabilidad 2: Inventarios</em>, párrafo 11 (texto en español).</li>
+<li>Servicio de Rentas Internas. (2020, 29 de septiembre). <em>Resolución NAC-DGERCGC20-00000061: porcentajes de retención del impuesto al valor agregado</em>. https://www.sri.gob.ec/o/sri-portlet-biblioteca-alfresco-internet/descargar/185c7087-f119-4f0d-8dcd-702c30ebd793/NAC-DGERCGC20-00000061.pdf</li>
+<li>Servicio de Rentas Internas. (2023). <em>Resolución NAC-DGERCGC23-00000026, que reforma la Resolución NAC-DGERCGC20-00000061</em>.</li>
+<li>Servicio de Rentas Internas. (2025, 26 de diciembre). <em>Circular NAC-DGECCGC25-00000006</em> (vigencia de la tarifa general del impuesto al valor agregado).</li>
+<li>Servicio de Rentas Internas. (2026). <em>Circulares NAC-DGECCGC26-00000002 y NAC-DGECCGC26-00000005</em> (aplicación del impuesto al valor agregado a productos alimenticios). Consultar la versión vigente en el sitio oficial del SRI.</li>
+</ul>
+<p class="nota">Se recomienda verificar cada referencia en Google Scholar (scholar.google.com) o en el repositorio institucional antes de citar en trabajos académicos. La vigencia normativa se verifica en fuentes oficiales; Google Scholar no la sustituye.</p>
+</section>
+</main>
+
+<footer>
+  <p>Universidad de Guayaquil · Facultad de Ciencias Administrativas · Paralelo NIN-SVE-1-19 · Docente: Gabriel Francisco García Gutiérrez.</p>
+  <p>Las empresas Confecciones Montubia S. A., Comercializadora Costa Verde Cía. Ltda. y Servicios Logísticos Andes Global S. A. son ficticias. Sus cifras y hechos son supuestos didácticos.</p>
+  <p>Las puntuaciones de las evaluaciones de práctica no son notas oficiales del examen parcial.</p>
+</footer>
+
+<script>
+/* ==========================================================
+   1. Datos de evaluación (generados desde ej_semana.json)
+   ========================================================== */
+const EVALUACIONES = [{"sesion": 1, "titulo": "Evaluación de la sesión 01 · Base, tarifa e IVA en la factura", "items": [{"tipo": "Teórica", "pregunta": "¿Qué es la base imponible de una factura con IVA?", "opciones": ["El total de la factura, con el impuesto incluido.", "El valor del bien o servicio sin IVA, sobre el que se aplica la tarifa.", "El porcentaje que la norma fija para cada bien.", "El impuesto ya calculado en dólares."], "correcta": 1, "retro": ["Incorrecto. El total incluye el impuesto. La base es el valor antes de sumar el IVA, y por eso la tarifa se aplica sobre ella y no sobre el total.", "CORRECTO. La base es el precio sin impuesto. Sobre ese valor se calcula el IVA: base × tarifa.", "Incorrecto. El porcentaje es la tarifa, no la base. La base es una cantidad en dólares que se multiplica por la tarifa.", "Incorrecto. El impuesto es el resultado de multiplicar la base por la tarifa. Es una consecuencia del cálculo, no la base que lo produce."], "general": "La base es el valor sin IVA; la tarifa se aplica sobre ella y el impuesto es el producto de ambas."}, {"tipo": "Teórica", "pregunta": "Según la Circular NAC-DGECCGC25-00000006 del Servicio de Rentas Internas (26 de diciembre de 2025), ¿cuál es la tarifa general del IVA que se toma como vigente para este material?", "opciones": ["12 %", "13 %", "15 %", "0 %"], "correcta": 2, "retro": ["Incorrecto. El 12 % fue la tarifa hasta el 31 de marzo de 2024. Con la norma de diciembre de 2025, la tarifa general vigente es el 15 %.", "Incorrecto. El 13 % no es la tarifa que el material toma como vigente. La circular recuerda que se mantiene la última tarifa establecida, que es el 15 %.", "CORRECTO. Mientras no exista un decreto que modifique la tarifa general, se mantiene la última tarifa establecida, que es el 15 %.", "Incorrecto. El 0 % es una tarifa especial que se aplica a determinados bienes o servicios, no a la tarifa general."], "general": "La tarifa general es la que la norma fija para la mayoría de bienes; la tarifa 0 % es una excepción con su propia lista."}, {"tipo": "Análisis", "pregunta": "Un comercio compra mercadería cuyo total es 1.150,00 dólares, con IVA del 15 % incluido en ese total. ¿Cuál es la base imponible?", "opciones": ["862,50 dólares.", "977,50 dólares.", "1.322,50 dólares.", "1.000,00 dólares."], "correcta": 3, "retro": ["Incorrecto. 862,50 resulta de multiplicar 1.150 por 0,75, un factor que no corresponde a ninguna tarifa del método.", "Incorrecto. 977,50 resulta de restar el 15 % del total (1.150 × 0,85). Ese cálculo usa como referencia un total que ya contiene el impuesto.", "Incorrecto. 1.322,50 resulta de multiplicar el total por 1,15, lo que suma un nuevo impuesto en lugar de separarlo.", "CORRECTO. El total equivale a la base por 1,15. Al dividir 1.150,00 entre 1,15 se obtiene 1.000,00 dólares, y el IVA es 150,00 dólares."], "general": "Para separar la base de un total con IVA incluido se divide entre 1,15, porque el total ya es la base multiplicada por 1,15."}, {"tipo": "Análisis", "pregunta": "Un estudiante calcula el IVA de una venta cuyo total es 345,00 dólares, con IVA incluido, como 345 × 0,15 = 51,75, y luego obtiene una base de 293,25 dólares (345 − 51,75). ¿Qué error cometió?", "opciones": ["Aplicó la tarifa al total, que ya contiene el impuesto.", "Usó una tarifa que no corresponde al bien.", "Olvidó sumar el IVA al total de la factura.", "No cometió ningún error."], "correcta": 0, "retro": ["CORRECTO. El total ya incluye el IVA. Calcular el 15 % sobre el total infla el impuesto. La base correcta es 345 ÷ 1,15 = 300,00 dólares.", "Incorrecto. La tarifa de 15 % es la correcta para este caso. El problema está en la cantidad a la que se aplicó el porcentaje, que fue el total.", "Incorrecto. El total ya incluye el IVA. Sumarlo otra vez duplicaría el impuesto, y el error ocurre al calcularlo, no al sumarlo.", "Incorrecto. La base de 293,25 dólares no es correcta. Con un total de 345,00 dólares y tarifa 15 %, la base es 300,00 dólares."], "general": "El impuesto nunca se calcula sobre un total que ya lo contiene; primero se obtiene la base."}, {"tipo": "Teórica", "pregunta": "¿Quién soporta, en último término, el IVA de una venta de bienes?", "opciones": ["La empresa vendedora, como un gasto del período.", "El consumidor final que compra el bien.", "El Servicio de Rentas Internas, como ingreso propio.", "El proveedor de la empresa vendedora."], "correcta": 1, "retro": ["Incorrecto. La empresa vendedora cobra el impuesto y lo declara, pero no lo soporta como gasto: lo entrega al Estado. Quien lo soporta es quien consume el bien.", "CORRECTO. El IVA lo paga finalmente quien consume el bien. La empresa vendedora lo cobra y lo declara, pero no es quien lo soporta.", "Incorrecto. El SRI administra el impuesto y recibe los valores según la norma. No es el sujeto que soporta el impuesto.", "Incorrecto. El proveedor le vende a la empresa, que a su vez vende al consumidor. El proveedor no soporta el IVA de la venta final."], "general": "El IVA se diseña para recaer sobre el consumo; quien vende lo cobra y quien compra para consumir lo soporta."}, {"tipo": "Análisis", "pregunta": "Una factura de 500,00 dólares de base muestra un IVA de 60,00 dólares y un total de 560,00 dólares. La tarifa aplicable es 15 %. ¿Qué conclusión es válida?", "opciones": ["La factura está correcta, porque la suma de base e IVA da el total.", "La factura está mal porque el total debería ser 56,00 dólares.", "La factura necesita revisión: el IVA debe ser 75,00 dólares, porque la suma no prueba que la tarifa sea la correcta.", "La factura está correcta, porque la tarifa vigente es 12 %."], "correcta": 2, "retro": ["Incorrecto. La suma cuadra, pero el impuesto no corresponde a la tarifa. El control de la suma no detecta una tarifa mal aplicada.", "Incorrecto. 56,00 no se obtiene de 500 con la tarifa de 15 %. El total debería ser 575,00 dólares, con IVA de 75,00.", "CORRECTO. 500,00 × 0,15 = 75,00 dólares. La factura muestra 60,00, por lo que el impuesto está mal calculado. Hay que corregirlo antes de registrar.", "Incorrecto. La tarifa general vigente para este material es 15 %, no 12 %. El 12 % fue la tarifa hasta marzo de 2024."], "general": "Una factura debe pasar tres controles: el impuesto frente a la tarifa, la suma y la tarifa según el bien. Sumar bien no basta."}, {"tipo": "Teórica", "pregunta": "¿Cómo se obtiene el total de una factura con IVA?", "opciones": ["Base menos IVA.", "Base multiplicada por la tarifa.", "IVA multiplicado por la tarifa.", "Base más IVA."], "correcta": 3, "retro": ["Incorrecto. Restar el IVA a la base daría un valor menor que el precio pagado. El total suma el impuesto al precio.", "Incorrecto. Base por tarifa da el IVA, no el total. El total debe sumar el impuesto a la base.", "Incorrecto. IVA por tarifa no tiene sentido: el IVA ya es el resultado de multiplicar la base por la tarifa.", "CORRECTO. El total de la factura es la base más el IVA. Es el monto que paga el comprador."], "general": "Base, IVA y total se relacionan así: IVA = base × tarifa, y total = base + IVA."}, {"tipo": "Análisis", "pregunta": "Un comercio compra 360,00 dólares de mercadería sin IVA, con tarifa general de 15 %. ¿Cuál es el total de la factura?", "opciones": ["414,00 dólares.", "396,00 dólares.", "378,00 dólares.", "360,00 dólares."], "correcta": 0, "retro": ["CORRECTO. El IVA es 360 × 0,15 = 54,00 dólares y el total es 360 + 54 = 414,00 dólares.", "Incorrecto. 396,00 resulta de aplicar 10 % (36,00) en lugar de 15 %. La tarifa vigente es del 15 %.", "Incorrecto. 378,00 resulta de sumar solo el 5 % (18,00). Ese porcentaje no corresponde a la tarifa general.", "Incorrecto. 360,00 es la base. El total debe incluir el IVA de 54,00 dólares."], "general": "El total se obtiene sumando el IVA calculado sobre la base; el porcentaje siempre se aplica a la base."}, {"tipo": "Análisis", "pregunta": "Un cliente paga 115,00 dólares por un bien con IVA del 15 % incluido en ese monto. ¿Cuál es la base imponible?", "opciones": ["97,75 dólares.", "100,00 dólares.", "92,00 dólares.", "115,00 dólares."], "correcta": 1, "retro": ["Incorrecto. 97,75 resulta de restar el 15 % del total (115 × 0,85). Ese cálculo parte de un total que ya contiene el impuesto.", "CORRECTO. 115 ÷ 1,15 = 100,00 dólares. El IVA es 15,00 dólares y la suma de base e IVA da el total pagado.", "Incorrecto. 92,00 resulta de dividir entre 1,25, lo que corresponde a un 25 %. La tarifa de este caso es 15 %.", "Incorrecto. El total incluye el IVA, así que la base siempre es menor que el total cuando la tarifa es mayor que cero."], "general": "Con IVA incluido, la base se encuentra dividiendo entre 1,15 cuando la tarifa es 15 %."}, {"tipo": "Análisis", "pregunta": "Un comercio registra como ingreso de una venta el total cobrado de 115,00 dólares, que incluye un IVA de 15,00 dólares. ¿Qué error comete?", "opciones": ["Ningún error: el ingreso es siempre el total cobrado.", "Usó una tarifa de 0 %, que no corresponde.", "Registra como ingreso un valor que incluye el IVA, que es una obligación frente al Estado.", "Calculó mal la base, que debería ser 115,00 dólares."], "correcta": 2, "retro": ["Incorrecto. El total cobrado incluye el impuesto. El ingreso es la base, sin IVA, porque el IVA se debe entregar al Estado.", "Incorrecto. La tarifa de la venta es 15 %, porque el IVA cobrado es 15,00 dólares. Con tarifa 0 % no habría impuesto.", "CORRECTO. El ingreso es la base de 100,00 dólares. Los 15,00 dólares del IVA son una obligación, y registrarlos como ingreso sobrestima las ventas.", "Incorrecto. La base es 100,00 dólares, no 115,00. El total incluye el impuesto y no debe tomarse como base."], "general": "Entrada de dinero no es lo mismo que ingreso: en una venta con IVA, la parte del impuesto no es ingreso de la empresa."}, {"tipo": "Teórica", "pregunta": "¿Qué determina la tarifa de IVA que se aplica a un bien o servicio?", "opciones": ["La empresa vendedora, según su propia política de precios.", "El precio de venta, de modo que cuanto más caro, más alta la tarifa.", "El comprador, al momento de pagar.", "La norma vigente para ese bien o servicio."], "correcta": 3, "retro": ["Incorrecto. La empresa aplica la tarifa, pero no la fija. Una política de precios no cambia el porcentaje que establece la norma.", "Incorrecto. El precio no determina la tarifa. Dos bienes con el mismo precio pueden tener tarifas distintas según la norma.", "Incorrecto. El comprador no define la tarifa. Lo que hace es pagar el total de la factura, que ya incluye la tarifa que la norma fija.", "CORRECTO. La tarifa la fija la norma para cada bien o servicio. Por eso la empresa debe verificarla y no decidirla."], "general": "La tarifa depende de la norma y del tipo de bien o servicio, no del precio ni de la voluntad de las partes."}, {"tipo": "Análisis", "pregunta": "Un bien tiene base de 200,00 dólares y tarifa 0 %. ¿Cuál es el total de la factura?", "opciones": ["200,00 dólares.", "170,00 dólares.", "0,00 dólares.", "230,00 dólares."], "correcta": 0, "retro": ["CORRECTO. Con tarifa 0 % el IVA es 200 × 0 = 0,00. El total es base más IVA, es decir, 200,00 dólares.", "Incorrecto. 170,00 resulta de restar el 15 % a 200. Con tarifa 0 % no hay impuesto que restar.", "Incorrecto. La base existe aunque el impuesto sea cero. Con tarifa 0 %, el IVA vale cero y el total coincide con la base.", "Incorrecto. 230,00 incluye un 15 % de IVA. Con tarifa 0 % el impuesto es cero."], "general": "La tarifa 0 % cambia el impuesto, no la base; por eso el total coincide con la base."}, {"tipo": "Teórica", "pregunta": "¿Para qué conviene que la factura muestre el IVA por separado del precio?", "opciones": ["Para aumentar el precio que paga el comprador.", "Para que comprador y vendedor puedan controlar la base y el impuesto.", "Porque el impuesto es un gasto que se registra en la factura.", "Para evitar que el vendedor entregue la factura al comprador."], "correcta": 1, "retro": ["Incorrecto. Separar el IVA no cambia el precio. Lo que hace es mostrar con claridad qué parte del pago es impuesto.", "CORRECTO. Al mostrar la base y el impuesto por separado, ambas partes pueden verificar el cálculo y la tarifa aplicada.", "Incorrecto. El IVA no es un gasto. Es un valor que se cobra por cuenta del Estado y se registra según la operación.", "Incorrecto. La factura se entrega al comprador como prueba de la operación. Separar el IVA sirve para controlarla."], "general": "La separación del impuesto en la factura facilita el control de la operación por ambas partes."}, {"tipo": "Análisis", "pregunta": "Una factura cumple que base más IVA es igual al total, pero su IVA no coincide con el 15 % de la base. ¿Qué debe hacerse antes de registrarla?", "opciones": ["Registrarla, porque la suma cuadra y el control está completo.", "Cambiar la base para que el IVA sea correcto y mantener el total.", "Corregir el IVA para que coincida con la tarifa aplicable, y después recalcular el total.", "Registrarla con la tarifa de 0 %, porque así cuadra con el total."], "correcta": 2, "retro": ["Incorrecto. Cuadrar la suma no prueba que la tarifa sea correcta. Una factura puede sumar bien y tener el impuesto mal calculado.", "Incorrecto. La base es el valor de la operación y no debe cambiarse para que cuadre el impuesto. El error está en el IVA.", "CORRECTO. Si el IVA no coincide con la tarifa, el impuesto está mal calculado. Se corrige el IVA y se recalcula el total.", "Incorrecto. Cambiar la tarifa para que cuadre con el total es un error. La tarifa la fija la norma para ese bien o servicio."], "general": "Antes de registrar una factura se verifica el impuesto frente a la tarifa, además de la suma."}, {"tipo": "Análisis", "pregunta": "Un total de 690,00 dólares incluye IVA del 15 %. ¿Cuánto IVA contiene ese total?", "opciones": ["103,50 dólares.", "69,00 dólares.", "600,00 dólares.", "90,00 dólares."], "correcta": 3, "retro": ["Incorrecto. 103,50 dólares resulta de aplicar el 15 % al total (690 × 0,15). Eso cobra impuesto sobre un valor que ya contiene el impuesto.", "Incorrecto. 69,00 dólares es el 10 % del total. La tarifa del caso es 15 % sobre la base, no 10 % sobre el total.", "Incorrecto. 600,00 dólares es la base, no el impuesto. El IVA contenido en el total es la diferencia entre el total y la base.", "CORRECTO. La base es 690 ÷ 1,15 = 600,00 dólares. El IVA contenido es 690 − 600 = 90,00 dólares, o bien 600 × 0,15 = 90,00 dólares."], "general": "Para conocer el IVA contenido en un total se obtiene primero la base y después se resta."}]}, {"sesion": 2, "titulo": "Evaluación de la sesión 02 · IVA pagado, IVA cobrado y liquidación", "items": [{"tipo": "Teórica", "pregunta": "¿En qué clase de cuenta se registra el IVA cobrado en las ventas?", "opciones": ["Activo, porque es dinero de la empresa.", "Ingreso, porque aparece en la factura de venta.", "Pasivo, porque es una obligación de entregar al Estado.", "Gasto, porque el cliente lo paga."], "correcta": 2, "retro": ["Incorrecto. El IVA cobrado no pertenece a la empresa: debe entregarse al Estado. Por eso no es un activo.", "Incorrecto. Aparecer en la factura no lo convierte en ingreso. El ingreso es la base sin impuesto.", "CORRECTO. El IVA cobrado es una obligación frente al Estado. Se registra en el haber, porque su naturaleza es acreedora.", "Incorrecto. Que el cliente lo pague no lo convierte en gasto. El impuesto es un valor que la empresa debe entregar."], "general": "El IVA cobrado es un pasivo porque la empresa lo recibe por cuenta del Estado y debe entregarlo."}, {"tipo": "Teórica", "pregunta": "¿Qué es el crédito tributario de IVA?", "opciones": ["Una cuenta de gasto por los impuestos pagados.", "El costo de la mercadería que se compra.", "La obligación de pagar el IVA al proveedor.", "El derecho a descontar el IVA pagado en compras del IVA cobrado en ventas."], "correcta": 3, "retro": ["Incorrecto. El IVA pagado en compras no es un gasto cuando puede descontarse. Es un derecho frente a la liquidación.", "Incorrecto. El costo de la mercadería no incluye el IVA recuperable. El crédito tributario es una cuenta distinta.", "Incorrecto. La obligación de pagar al proveedor es una deuda por el total de la factura, no el crédito tributario.", "CORRECTO. El crédito tributario es el derecho a restar el IVA pagado del IVA cobrado al liquidar el período."], "general": "El crédito tributario es un activo deudor: representa un derecho de la empresa a descontar el impuesto que pagó."}, {"tipo": "Teórica", "pregunta": "¿Por qué el IVA pagado en una compra no forma parte del costo de la mercadería cuando la empresa puede recuperarlo?", "opciones": ["Porque el costo de los inventarios no incluye los impuestos que la empresa puede recuperar de las autoridades fiscales.", "Porque se paga en efectivo y no se registra.", "Porque el IVA siempre es un gasto del período.", "Porque el proveedor no cobra el IVA a los compradores."], "correcta": 0, "retro": ["CORRECTO. La NIC 2, párrafo 11, indica que el costo de los inventarios no incluye los impuestos recuperables. Por eso el IVA pagado va al crédito tributario.", "Incorrecto. El IVA se registra aunque se pague en efectivo. Lo que importa es si la empresa puede recuperarlo, no la forma de pago.", "Incorrecto. El IVA no es siempre un gasto. Cuando puede descontarse, es un derecho, no un costo ni un gasto.", "Incorrecto. El proveedor sí cobra el IVA a sus compradores, como muestra la factura. La razón está en la recuperación del impuesto."], "general": "Si la empresa puede recuperar el IVA pagado, ese impuesto no aumenta el valor de la mercadería."}, {"tipo": "Análisis", "pregunta": "Una comercializadora compra 80 camisetas a crédito, a 10,00 dólares cada una sin IVA, con tarifa de 15 %. ¿Cuál es el asiento correcto desde su perspectiva?", "opciones": ["Debe Inventarios 920,00; Haber Proveedores por pagar 920,00.", "Debe Inventarios 800,00 y Crédito tributario 120,00; Haber Proveedores por pagar 920,00.", "Debe Inventarios 920,00 y Crédito tributario 0,00; Haber Proveedores por pagar 920,00.", "Debe Gasto de compras 800,00 e IVA 120,00; Haber Proveedores por pagar 920,00."], "correcta": 1, "retro": ["Incorrecto. Este asiento cuadra, pero registra el IVA recuperable en el inventario, lo que sobrevalora la mercadería en 120,00 dólares.", "CORRECTO. La mercadería se registra por la base de 800,00 dólares, el derecho al IVA en crédito tributario por 120,00, y la deuda por el total de 920,00.", "Incorrecto. Dejar el crédito tributario en cero omite el derecho a descontar el IVA pagado. El inventario quedaría sobrevalorado.", "Incorrecto. Las camisetas son para vender, por lo que van a inventario de mercaderías, no a un gasto de compras."], "general": "En una compra para vender, la base va al inventario, el IVA pagado al crédito tributario y la deuda al proveedor por el total."}, {"tipo": "Análisis", "pregunta": "En la misma operación de compra de 80 camisetas a 10,00 dólares más IVA del 15 %, el fabricante que vende registra su parte. ¿Cuál es el asiento correcto del vendedor?", "opciones": ["Debe Cuentas por cobrar 800,00; Haber Ventas 920,00.", "Debe Caja 920,00; Haber Ventas 920,00.", "Debe Cuentas por cobrar 920,00; Haber Ventas 800,00 y Haber IVA cobrado 120,00.", "Debe Ventas 800,00 y Debe IVA cobrado 120,00; Haber Cuentas por cobrar 920,00."], "correcta": 2, "retro": ["Incorrecto. El asiento no cuadra: el debe suma 800,00 y el haber 920,00. El IVA cobrado debe aparecer en el haber.", "Incorrecto. La venta fue a crédito, así que no entró dinero a Caja. Registrar Caja y el total como ingreso sobrestima las ventas en 120,00 dólares.", "CORRECTO. El vendedor tiene el derecho a cobrar 920,00 dólares, registra la base como ingreso y el IVA como obligación frente al Estado. Cuadra y refleja la naturaleza de cada cuenta.", "Incorrecto. Ventas e IVA cobrado son ingresos y obligaciones, cuya naturaleza es acreedora. Van en el haber, no en el debe."], "general": "Cada operación se registra desde ambos lados con cuentas distintas: el vendedor cobra y debe entregar el IVA; el comprador paga y tiene un derecho."}, {"tipo": "Análisis", "pregunta": "Una venta al contado cobra 552,00 dólares, con IVA del 15 % incluido en ese monto. ¿Cuál es el ingreso de la empresa?", "opciones": ["552,00 dólares.", "82,80 dólares.", "72,00 dólares.", "480,00 dólares."], "correcta": 3, "retro": ["Incorrecto. El total cobrado incluye el IVA, que es una obligación. El ingreso es la base sin impuesto.", "Incorrecto. 82,80 dólares es el 15 % del total, calculado sobre un valor que ya incluye el impuesto. La base correcta es 480,00 dólares.", "Incorrecto. 72,00 dólares es el IVA cobrado (552 − 480), no el ingreso. Registrarlo como ingreso lo confundiría con una venta.", "CORRECTO. La base es 552 ÷ 1,15 = 480,00 dólares. El IVA cobrado es 72,00 dólares, y el ingreso es la base."], "general": "El ingreso de una venta con IVA es la base; el total cobrado incluye un impuesto que no es ingreso."}, {"tipo": "Análisis", "pregunta": "En un período, una empresa tiene IVA cobrado de 96,00 dólares y crédito tributario de 60,00 dólares. ¿Cuál es el IVA por pagar del período?", "opciones": ["36,00 dólares.", "156,00 dólares.", "60,00 dólares.", "96,00 dólares."], "correcta": 0, "retro": ["CORRECTO. La liquidación es 96,00 − 60,00 = 36,00 dólares. Ese es el saldo que la empresa debe entregar al Estado.", "Incorrecto. 156,00 dólares es la suma de ambos valores. La liquidación resta el crédito del IVA cobrado, no lo suma.", "Incorrecto. 60,00 dólares es el crédito tributario. Si no se compensa con el IVA cobrado, la liquidación queda incompleta.", "Incorrecto. 96,00 dólares es el IVA cobrado sin descontar el crédito. El crédito es un derecho que debe usarse en la liquidación."], "general": "La liquidación compara el IVA cobrado con el crédito tributario: la diferencia es lo que se debe entregar."}, {"tipo": "Análisis", "pregunta": "En otro período, una empresa tiene IVA cobrado de 50,00 dólares y crédito tributario de 70,00 dólares. ¿Qué conclusión es válida?", "opciones": ["La empresa debe pagar 20,00 dólares al Servicio de Rentas Internas.", "No hay IVA por pagar en ese período; el saldo a favor debe tratarse según la normativa, no como ingreso.", "La empresa registra 20,00 dólares como ingreso del período.", "La empresa registra 20,00 dólares como gasto del período."], "correcta": 1, "retro": ["Incorrecto. Si el crédito supera al IVA cobrado, la diferencia no es una deuda en ese período. Pagar 20,00 dólares invertiría el sentido de la liquidación.", "CORRECTO. El crédito supera al IVA cobrado en 20,00 dólares, así que no hay IVA por pagar. El destino del saldo lo determina la normativa, que este material no analiza.", "Incorrecto. Un saldo a favor de IVA no es un ingreso de la actividad. Registrarlo así confunde el impuesto con la venta de bienes.", "Incorrecto. Un saldo a favor no es un gasto. No se origina en una erogación para la actividad, sino en un derecho a descontar."], "general": "Cuando el crédito supera al IVA cobrado, la conclusión es que no hay IVA por pagar; el tratamiento del saldo requiere verificar la norma."}, {"tipo": "Teórica", "pregunta": "¿En qué lado del asiento se registra el crédito tributario de IVA, y por qué?", "opciones": ["En el haber, porque es una obligación.", "En el haber, porque es un ingreso de la empresa.", "En el debe, porque es un derecho a descontar, y su naturaleza es deudora.", "No se registra, porque es un valor que pertenece al Estado."], "correcta": 2, "retro": ["Incorrecto. El crédito tributario no es una obligación. Es un derecho de la empresa, y las obligaciones se registran en el haber.", "Incorrecto. El crédito tributario no es un ingreso. Es un derecho frente a la liquidación del IVA.", "CORRECTO. El crédito tributario aumenta en el debe porque representa un derecho a descontar, una cuenta de naturaleza deudora.", "Incorrecto. El IVA pagado sí se registra. Es un derecho de la empresa que se usa para descontar en la liquidación."], "general": "La naturaleza de una cuenta determina su lado: los derechos son deudores y las obligaciones son acreedoras."}, {"tipo": "Análisis", "pregunta": "Una empresa registra la venta al contado de su mercadería así: Debe Caja 1.104,00 y Haber Ventas 1.104,00. El asiento cuadra. ¿Qué conclusión es correcta?", "opciones": ["El asiento está bien, porque el total cobrado es el ingreso.", "El asiento debe registrarse con IVA en el debe.", "El asiento no cuadra, porque Caja debería ser 960,00 dólares.", "El asiento cuadra, pero Ventas debería recibir solo la base de 960,00 dólares, y el IVA cobrado de 144,00 dólares debe registrarse aparte."], "correcta": 3, "retro": ["Incorrecto. El total cobrado incluye el IVA. Registrarlo en Ventas infla el ingreso en 144,00 dólares, aunque el asiento cuadre.", "Incorrecto. El IVA cobrado es una obligación de naturaleza acreedora; va en el haber, no en el debe.", "Incorrecto. Caja sí recibió 1.104,00 dólares. El error está en Ventas, no en Caja. El asiento cuadra.", "CORRECTO. La igualdad del debe y el haber no prueba la clasificación. Ventas registra la base de 960,00 dólares y el IVA cobrado, de 144,00, va en el haber aparte."], "general": "Un asiento puede cuadrar y estar mal clasificado: la igualdad no demuestra que cada cuenta sea la correcta."}, {"tipo": "Análisis", "pregunta": "Una empresa compra 80 camisetas a 10,00 dólares cada una y vende 40. El costo de cada camiseta es 10,00 dólares. ¿Cuál es el saldo del inventario después de las dos operaciones, sin considerar el IVA?", "opciones": ["400,00 dólares.", "800,00 dólares.", "1.200,00 dólares.", "920,00 dólares."], "correcta": 0, "retro": ["CORRECTO. Entran 800,00 dólares por la compra y salen 400,00 dólares por las 40 unidades vendidas. El saldo es 400,00 dólares, es decir, 40 unidades a 10,00.", "Incorrecto. 800,00 dólares es solo la compra. El saldo debe descontar el costo de las 40 unidades que salieron.", "Incorrecto. 1.200,00 dólares suma la compra y el costo de la venta. Las salidas disminuyen el inventario y no lo aumentan.", "Incorrecto. El IVA no entra en el inventario. El valor de la mercadería es el de la compra sin IVA, por lo que 920,00 dólares es incorrecto."], "general": "El inventario aumenta con las compras y disminuye con las salidas; el IVA no forma parte de su valor."}, {"tipo": "Análisis", "pregunta": "En un período, las ventas generaron IVA cobrado de 90,00 dólares y las compras generaron crédito tributario de 90,00 dólares. ¿Cuál es la liquidación del período?", "opciones": ["Se deben 90,00 dólares al Estado.", "No hay saldo: el IVA por pagar es cero.", "Se deben 180,00 dólares al Estado.", "Hay 90,00 dólares a favor, que se registran como ingreso."], "correcta": 1, "retro": ["Incorrecto. Esa cifra ignora el crédito tributario. La liquidación compara el IVA cobrado con el crédito y solo queda la diferencia.", "CORRECTO. La diferencia es 90,00 − 90,00 = 0,00. Cuando el crédito iguala al IVA cobrado, no queda IVA por pagar en el período.", "Incorrecto. Sumar ambos valores no es liquidar. La diferencia entre el IVA cobrado y el crédito es cero.", "Incorrecto. Si el crédito iguala al IVA cobrado, no hay saldo a favor. Un saldo a favor nunca se registra como ingreso."], "general": "La liquidación se obtiene por diferencia: si los dos valores son iguales, el saldo es cero."}, {"tipo": "Teórica", "pregunta": "¿Qué clase de cuenta es Cuentas por cobrar a clientes, que aparece cuando la venta es a crédito?", "opciones": ["Pasivo, porque la empresa debe dinero al cliente.", "Ingreso, porque la venta ya está registrada.", "Activo de naturaleza deudora, porque es el derecho a recibir dinero de un cliente.", "Gasto, porque el cliente no pagó de inmediato."], "correcta": 2, "retro": ["Incorrecto. La empresa no debe dinero al cliente. Es el cliente quien debe a la empresa, por eso la cuenta es un derecho.", "Incorrecto. La venta se registra en Ventas, que es el ingreso. Cuentas por cobrar representa el derecho a cobrar el valor de esa venta.", "CORRECTO. Cuentas por cobrar es un activo deudor: representa el derecho de la empresa a recibir dinero por una venta ya realizada.", "Incorrecto. Que el cliente pague después no genera un gasto. La empresa tiene un derecho a cobrar, no una erogación."], "general": "La venta a crédito genera un ingreso y un derecho a cobrar, y no un gasto."}, {"tipo": "Análisis", "pregunta": "Una empresa registró como inventario el total de una factura de compra de 920,00 dólares, sin crédito tributario. Si luego liquida el IVA del período con 144,00 dólares de IVA cobrado, ¿qué ocurre con el IVA por pagar?", "opciones": ["No cambia: el inventario no afecta la liquidación.", "El crédito aparecería como gasto y reduciría el resultado.", "Sería menor, porque el inventario compensa el IVA cobrado.", "Sería mayor, porque falta el crédito tributario de 120,00 dólares que debía descontarse."], "correcta": 3, "retro": ["Incorrecto. La liquidación depende del crédito tributario. Si el crédito no está registrado, el IVA por pagar se calcula sin esa diferencia.", "Incorrecto. El IVA pagado no debe registrarse como gasto cuando es un derecho. Además, la liquidación no lo convierte en gasto.", "Incorrecto. El inventario no compensa el IVA. Solo el crédito tributario se resta del IVA cobrado al liquidar.", "CORRECTO. Sin el crédito de 120,00 dólares, el IVA por pagar sería 144,00 dólares en lugar de 24,00 dólares. La liquidación queda sobrestimada."], "general": "Un error de clasificación en la compra se traslada a la liquidación del IVA del período."}, {"tipo": "Teórica", "pregunta": "En la venta a crédito de un fabricante a una comercializadora, ¿qué cuentas registra el fabricante como vendedor?", "opciones": ["Cuentas por cobrar a clientes, Ventas e IVA cobrado.", "Crédito tributario de IVA y Proveedores por pagar.", "Caja, Proveedores por pagar y Gasto de ventas.", "Inventarios de mercaderías y Crédito tributario de IVA."], "correcta": 0, "retro": ["CORRECTO. El vendedor registra el derecho a cobrar (Cuentas por cobrar), el ingreso (Ventas) y la obligación frente al Estado (IVA cobrado).", "Incorrecto. Esas cuentas corresponden a una compra, no a una venta. El vendedor tiene un derecho a cobrar y una obligación con el Estado.", "Incorrecto. Caja no se afecta en una venta a crédito. Proveedores por pagar es una deuda de quien compra, no de quien vende.", "Incorrecto. Inventarios y Crédito tributario se usan en la compra. El vendedor no registra crédito tributario por una venta propia."], "general": "El vendedor registra el cobro pendiente, el ingreso y el IVA que debe entregar; el comprador registra la mercadería, el crédito y la deuda."}]}, {"sesion": 3, "titulo": "Evaluación de la sesión 03 · Retenciones de IVA", "items": [{"tipo": "Teórica", "pregunta": "¿Qué es una retención de IVA?", "opciones": ["Un pago anticipado de la deuda con el proveedor.", "El impuesto a la renta que se paga al final del año.", "Un descuento comercial que el vendedor concede al comprador.", "Una parte del IVA que el agente de retención entrega directamente al SRI al momento del pago."], "correcta": 3, "retro": ["Incorrecto. Una retención no paga la deuda con el proveedor. Es una parte del impuesto que se entrega al SRI en nombre del vendedor.", "Incorrecto. El impuesto a la renta es un tributo distinto. La retención de IVA se refiere al impuesto al valor agregado.", "Incorrecto. Un descuento comercial reduce el precio. La retención es un mecanismo de cobro del impuesto y no reduce el precio de la venta.", "CORRECTO. La retención es una parte del IVA que el agente de retención entrega al SRI en el momento del pago, y que el vendedor recibe como comprobante."], "general": "La retención de IVA adelanta una parte del impuesto que el vendedor declarará; no cambia la base ni el total de la factura."}, {"tipo": "Teórica", "pregunta": "¿Quién es el agente de retención en una operación de IVA?", "opciones": ["El comprador que la normativa designa para retener el IVA al pagar.", "El vendedor que emite la factura.", "El Servicio de Rentas Internas.", "Cualquier banco que procese el pago."], "correcta": 0, "retro": ["CORRECTO. El agente de retención es el comprador designado por la normativa. Tiene la obligación de retener, entregar al SRI y emitir el comprobante.", "Incorrecto. El vendedor es quien tiene el IVA retenido. El agente de retención es quien retiene, es decir, quien paga.", "Incorrecto. El SRI administra el impuesto y recibe lo retenido. No es quien retiene en la operación.", "Incorrecto. Un banco no es agente de retención por el solo hecho de procesar un pago. La condición depende de la normativa y de la designación."], "general": "Ser agente de retención depende de la normativa y de la designación; no se supone por el tamaño ni por el nombre de la empresa."}, {"tipo": "Teórica", "pregunta": "Un agente de retención compra bienes gravados con tarifa 15 % a un proveedor que no es contribuyente especial. Según la tabla 3, ¿qué porcentaje del IVA se retiene?", "opciones": ["70 %.", "30 %.", "100 %.", "10 %."], "correcta": 1, "retro": ["Incorrecto. El 70 % corresponde a servicios, derechos y contratos de consultoría gravados, no a la transferencia de bienes.", "CORRECTO. Para la transferencia de bienes gravados con tarifa diferente de 0 %, el artículo 4, literal a), establece una retención del 30 % del IVA.", "Incorrecto. El 100 % se aplica a casos específicos que la resolución enumera y que este material no desarrolla. No es el porcentaje de bienes.", "Incorrecto. El 10 % aplica a operaciones entre contribuyentes especiales. Este proveedor no es contribuyente especial."], "general": "El porcentaje de retención depende del objeto de la operación y de la condición del proveedor."}, {"tipo": "Análisis", "pregunta": "Un agente de retención compra un servicio de consultoría gravado con 15 % a una sociedad que no es contribuyente especial. La base es 1.000,00 dólares sin IVA. ¿Cuál es la retención?", "opciones": ["45,00 dólares.", "150,00 dólares.", "105,00 dólares.", "30,00 dólares."], "correcta": 2, "retro": ["Incorrecto. 45,00 dólares es el 30 % de 150,00. Ese porcentaje corresponde a bienes gravados, no a un contrato de consultoría.", "Incorrecto. 150,00 dólares es el IVA completo de la operación. La retención es un porcentaje del IVA, y el porcentaje es menor que 100 %.", "CORRECTO. El IVA es 1.000 × 0,15 = 150,00 dólares. El 70 % de consultoría da una retención de 150 × 0,70 = 105,00 dólares.", "Incorrecto. 30,00 dólares corresponde a un 20 % del IVA, que aplica a servicios entre contribuyentes especiales. Este proveedor no lo es."], "general": "Primero se calcula el IVA y después se aplica el porcentaje de retención que corresponde al tipo de operación."}, {"tipo": "Análisis", "pregunta": "Una compra de bienes gravados tiene base de 400,00 dólares, IVA de 60,00 dólares y tarifa 15 %. El comprador retiene el 30 % del IVA. ¿Cuánto paga al vendedor?", "opciones": ["400,00 dólares.", "460,00 dólares.", "418,00 dólares.", "442,00 dólares."], "correcta": 3, "retro": ["Incorrecto. 400,00 dólares es la base. El pago neto se calcula desde el total de la factura, que incluye el IVA.", "Incorrecto. 460,00 dólares es el total sin restar la retención. El comprador retiene una parte del IVA, por lo que paga menos.", "Incorrecto. 418,00 dólares resulta de retener el 70 % del IVA. Ese porcentaje es para servicios, no para bienes.", "CORRECTO. La retención es 60 × 0,30 = 18,00 dólares. El pago neto es el total de 460,00 menos 18,00, es decir, 442,00 dólares."], "general": "El pago neto es el total de la factura menos la retención; el porcentaje se aplica al IVA."}, {"tipo": "Análisis", "pregunta": "Una factura de 1.000,00 dólares sin IVA combina camisetas y un servicio de estampado en un solo concepto, sin que pueda separarse el valor de cada uno. La tarifa es 15 %. ¿Qué porcentaje de retención corresponde?", "opciones": ["70 %, porque se aplica el porcentaje mayor cuando no pueden diferenciarse.", "30 %, porque los bienes son mayoría.", "50 %, porque corresponde promediar ambos porcentajes.", "10 %, porque es una operación entre contribuyentes especiales."], "correcta": 0, "retro": ["CORRECTO. Cuando una operación combina bienes y servicios sin poder diferenciarlos, el artículo 15 indica aplicar el porcentaje mayor, que es 70 %.", "Incorrecto. La regla no depende de cuál concepto sea mayoritario. Cuando no se pueden diferenciar los porcentajes, se aplica el mayor.", "Incorrecto. Promediar porcentajes no está previsto en la norma. El criterio es el porcentaje mayor.", "Incorrecto. El 10 % aplica a operaciones entre contribuyentes especiales. El caso no lo menciona, y la regla aplicable es la del porcentaje mayor."], "general": "Cuando los porcentajes no pueden separarse en una misma operación, se aplica el mayor."}, {"tipo": "Teórica", "pregunta": "¿Por qué el porcentaje de retención se aplica al IVA de la operación y no a la base?", "opciones": ["Porque la base siempre es mayor que el impuesto.", "Porque la retención es una parte del impuesto que se adelanta al Estado.", "Porque es más fácil de calcular en una calculadora.", "Por una convención sin fundamento en la norma."], "correcta": 1, "retro": ["Incorrecto. El tamaño relativo de la base no es el motivo. Lo que importa es que la retención es una parte del impuesto.", "CORRECTO. La retención es una parte del IVA que se adelanta al Estado. Por eso el porcentaje se aplica al impuesto, no al valor del bien.", "Incorrecto. La facilidad de cálculo no fundamenta el procedimiento. La retención se aplica al IVA porque es parte del impuesto.", "Incorrecto. La aplicación sobre el IVA tiene fundamento en la naturaleza de la retención, que es un mecanismo de cobro del impuesto."], "general": "La retención es un mecanismo de cobro anticipado del impuesto, por eso se calcula sobre el IVA."}, {"tipo": "Análisis", "pregunta": "Un agente de retención calcula la retención de una compra de bienes gravados aplicando el 15 % a la base. ¿Qué error se comete?", "opciones": ["Aplica el porcentaje de servicios a una compra de bienes.", "No comete ningún error porque el 15 % es la tarifa correcta.", "Confunde la tarifa del IVA con el porcentaje de retención y aplica el resultado a la base en lugar de al IVA.", "Olvida restar el IVA del total de la factura."], "correcta": 2, "retro": ["Incorrecto. El error no es el porcentaje de servicios, sino la confusión entre tarifa y porcentaje y la base usada como referencia.", "Incorrecto. El 15 % es la tarifa para determinar el IVA. Usarlo para retener aplica un porcentaje que no corresponde a la retención.", "CORRECTO. El 15 % es la tarifa del IVA, no el porcentaje de retención. La retención se calcula sobre el IVA, con el 30 % para bienes.", "Incorrecto. El IVA no se resta del total en este cálculo. El error está en la referencia del porcentaje de retención."], "general": "Tarifa y porcentaje de retención son cifras distintas: la tarifa genera el IVA y el porcentaje de retención determina qué parte se retiene."}, {"tipo": "Análisis", "pregunta": "Una empresa vende bienes gravados con IVA del 15 % y retención del 30 % del IVA. La base es 500,00 dólares. ¿Cuánto paga el comprador al vendedor?", "opciones": ["575,00 dólares.", "522,50 dólares.", "500,00 dólares.", "552,50 dólares."], "correcta": 3, "retro": ["Incorrecto. 575,00 dólares es el total de la factura. El comprador retiene una parte del IVA y paga menos.", "Incorrecto. 522,50 dólares resulta de retener el 70 % del IVA. Ese porcentaje corresponde a servicios, no a bienes.", "Incorrecto. 500,00 dólares es la base. El pago neto incluye la parte del IVA que no se retiene.", "CORRECTO. El IVA es 75,00 dólares y la retención es 75 × 0,30 = 22,50 dólares. El pago neto es 575,00 − 22,50 = 552,50 dólares."], "general": "Con retención del 30 % del IVA, el vendedor recibe el total menos 30 % del IVA."}, {"tipo": "Teórica", "pregunta": "¿Qué documento acredita la retención de IVA realizada?", "opciones": ["El comprobante de retención emitido por el agente de retención.", "El recibo de caja del vendedor.", "La factura de compra del comprador.", "La declaración mensual de impuesto a la renta."], "correcta": 0, "retro": ["CORRECTO. El comprobante de retención es el documento que acredita lo retenido, y el vendedor debe conservarlo para respaldar su cuenta de retención.", "Incorrecto. El recibo de caja documenta un cobro del vendedor. No acredita la parte del IVA que el agente retuvo.", "Incorrecto. La factura documenta la venta y el total. La retención se acredita con su propio comprobante.", "Incorrecto. La declaración de impuesto a la renta es un documento de otro tributo. No acredita la retención de IVA."], "general": "Sin el comprobante, la cuenta de retención queda sin respaldo, aunque el asiento cuadre."}, {"tipo": "Análisis", "pregunta": "En la compra de uniformes de la sesión, el comprador registra las camisetas en una cuenta provisional de uniformes. ¿Qué conclusión es correcta?", "opciones": ["La compra debe registrarse siempre como gasto del período, sin excepciones.", "Su tratamiento definitivo depende del uso del bien y de las condiciones de su entrega; por eso este material la deja como provisional.", "Debe registrarse como mercadería para vender, porque se compró a un proveedor.", "No corresponde ningún registro, porque se trata de uniformes."], "correcta": 1, "retro": ["Incorrecto. No todas las compras de bienes para la empresa son gastos del período. El tratamiento depende del uso y de las condiciones.", "CORRECTO. Las camisetas de uniforme no son mercadería para vender. Su clasificación definitiva depende del uso y de las condiciones de entrega, que se estudiarán más adelante.", "Incorrecto. Las camisetas son mercadería solo si se compran para vender. Aquí el destino es el uniforme del personal.", "Incorrecto. Toda operación con efecto económico debe registrarse. Lo que cambia es la cuenta, según el uso del bien."], "general": "La clasificación de un bien depende de su uso y de las condiciones de la operación, no solo de su nombre."}, {"tipo": "Análisis", "pregunta": "¿Cuál afirmación sobre el asiento de compra de uniformes de la sesión es correcta?", "opciones": ["La retención debe registrarse en el debe, porque es un gasto.", "Caja debería registrar 690,00 dólares, el total de la factura, para que cuadre.", "Cuadra, y refleja que Caja registra el pago neto y que la retención queda como obligación por entregar.", "No cuadra, porque el crédito tributario no puede registrarse en el debe."], "correcta": 2, "retro": ["Incorrecto. La retención es una obligación que el comprador debe entregar al SRI, por eso va en el haber, no en el debe.", "Incorrecto. Caja registra solo el pago neto de 663,00 dólares. Registrar el total sobreestimaría la salida de efectivo en 27,00 dólares.", "CORRECTO. Caja registra los 663,00 dólares que se pagan; las retenciones por pagar registran los 27,00 dólares que el comprador debe entregar. El asiento cuadra con 690,00 en ambos lados.", "Incorrecto. El crédito tributario es un derecho de naturaleza deudora y puede registrarse en el debe. El asiento sí cuadra."], "general": "En la compra con retención, el comprador registra el pago neto y una obligación por la parte retenida."}, {"tipo": "Análisis", "pregunta": "Un agente de retención compra bienes gravados a otro contribuyente especial. Según la tabla 3, ¿qué porcentaje del IVA corresponde retener?", "opciones": ["100 %, porque el comprador es agente de retención.", "30 %, porque es una transferencia de bienes.", "70 %, porque es una operación comercial.", "10 %, porque la operación es entre contribuyentes especiales con bienes."], "correcta": 3, "retro": ["Incorrecto. Ser agente de retención no determina el porcentaje. El porcentaje depende del objeto de la operación y de la condición del proveedor.", "Incorrecto. El 30 % aplica a bienes comprados a sujetos que no son contribuyentes especiales. Aquí el proveedor sí lo es.", "Incorrecto. El 70 % corresponde a servicios, derechos y contratos de consultoría, no a la compra de bienes.", "CORRECTO. El artículo 5 establece 10 % para bienes gravados entre contribuyentes especiales, y 20 % para servicios en la misma condición."], "general": "El porcentaje depende de tres datos: si se compra un bien o un servicio, si el proveedor es contribuyente especial y cómo se combinan los conceptos."}, {"tipo": "Teórica", "pregunta": "En una operación con retención, ¿quién es el sujeto retenido?", "opciones": ["Quien vende o presta el servicio y a quien se retiene el IVA.", "El comprador que retiene el IVA.", "El Servicio de Rentas Internas, que recibe el valor retenido.", "El banco que procesa el pago."], "correcta": 0, "retro": ["CORRECTO. El sujeto retenido es quien vende o presta el servicio, y el IVA retenido corresponde a su operación.", "Incorrecto. El comprador es el agente de retención. El sujeto retenido es quien vende o presta el servicio.", "Incorrecto. El SRI recibe lo retenido, pero no es el sujeto de la retención. El sujeto retenido es el vendedor.", "Incorrecto. El banco no es el sujeto retenido en esta operación. Ese papel corresponde a quien vende o presta el servicio."], "general": "El agente de retención retiene; el sujeto retenido es quien vende o presta el servicio."}, {"tipo": "Análisis", "pregunta": "Una compra de bienes gravados tiene una base de 800,00 dólares sin IVA, con tarifa de 15 %. El comprador es agente de retención y retiene el 30 % del IVA. ¿Cuál es la retención?", "opciones": ["120,00 dólares.", "36,00 dólares.", "240,00 dólares.", "84,00 dólares."], "correcta": 1, "retro": ["Incorrecto. 120,00 dólares es el IVA completo. El porcentaje de retención para bienes es 30 %, así que solo se retiene una parte del impuesto.", "CORRECTO. El IVA es 800 × 0,15 = 120,00 dólares. La retención es el 30 % del IVA: 120 × 0,30 = 36,00 dólares.", "Incorrecto. 240,00 dólares resulta de aplicar el 30 % a la base. La retención se calcula sobre el IVA, no sobre el valor del bien.", "Incorrecto. 84,00 dólares resulta de aplicar el 70 % al IVA. Ese porcentaje corresponde a servicios, derechos y contratos de consultoría, no a bienes."], "general": "La retención de bienes es el 30 % del IVA de la operación, nunca de la base ni del total."}]}];
+
+/* ==========================================================
+   2. Navegación por pestañas
+   ========================================================== */
+(function () {
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('[data-panel]'));
+
+  function mostrar(id, enfocar) {
+    panels.forEach(p => { p.hidden = (p.dataset.panel !== id); });
+    tabs.forEach(t => {
+      const activa = t.dataset.target === id;
+      t.setAttribute('aria-selected', activa ? 'true' : 'false');
+      t.tabIndex = activa ? 0 : -1;
+      if (activa && enfocar) t.focus();
+    });
+    const panel = document.querySelector('[data-panel="' + id + '"]');
+    if (panel) {
+      const titulo = panel.querySelector('h2');
+      if (titulo) { titulo.setAttribute('tabindex', '-1'); titulo.focus({ preventScroll: true }); }
+    }
+    try { history.replaceState(null, '', '#' + id); } catch (e) { /* vista previa sin permiso para cambiar la URL: se ignora */ }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => mostrar(t.dataset.target, false));
+    t.addEventListener('keydown', e => {
+      let j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (j !== null) { e.preventDefault(); tabs[j].focus(); mostrar(tabs[j].dataset.target, true); }
+    });
+  });
+
+  const inicial = (location.hash || '').replace('#', '');
+  mostrar(panels.some(p => p.dataset.panel === inicial) ? inicial : 'intro', false);
+})();
+
+/* ==========================================================
+   3. Evaluaciones de práctica
+   Cada evaluación se dibuja desde EVALUACIONES. Las respuestas
+   se guardan solo en memoria de la pestaña mientras esté abierta.
+   ========================================================== */
+(function () {
+  const LETRAS = ['a', 'b', 'c', 'd'];
+
+  function dibujar(ev, raiz) {
+    const n = ev.items.length;
+    let respuestas = Array(n).fill(null);
+    const nombre = 'ev' + ev.sesion + '-';
+
+    raiz.innerHTML = '';
+
+    // 3.1 Cabecera
+    const cab = document.createElement('div');
+    cab.className = 'cabecera-eval';
+    cab.innerHTML = '<p class="nota-practica">' + (ev.diagnostica
+      ? 'Esta prueba es diagnóstica y formativa: no tiene nota. Sirve para identificar qué conviene repasar.'
+      : 'Esta evaluación es de práctica. Sus respuestas le muestran qué comprende y qué conviene revisar; no sustituye a las evaluaciones oficiales.') + '</p>';
+    const prog = document.createElement('p');
+    prog.className = 'progreso';
+    prog.setAttribute('aria-live', 'polite');
+    cab.appendChild(prog);
+    raiz.appendChild(cab);
+
+    // 3.2 Preguntas
+    const formulario = document.createElement('form');
+    formulario.setAttribute('novalidate', 'novalidate');
+    formulario.addEventListener('submit', e => e.preventDefault());
+    raiz.appendChild(formulario);
+
+    ev.items.forEach((it, i) => {
+      const fs = document.createElement('fieldset');
+      const leyenda = document.createElement('legend');
+      leyenda.innerHTML = 'Pregunta ' + (i + 1) + ' de ' + n;
+      fs.appendChild(leyenda);
+
+      const badge = document.createElement('span');
+      badge.className = 'insignia';
+      badge.textContent = '[' + it.tipo + ']';
+      fs.appendChild(badge);
+
+      const enun = document.createElement('p');
+      enun.textContent = it.pregunta;
+      fs.appendChild(enun);
+
+      const opts = document.createElement('div');
+      opts.className = 'opts';
+      it.opciones.forEach((texto, k) => {
+        const id = nombre + 'p' + i + '-' + k;
+        const etiqueta = document.createElement('label');
+        etiqueta.setAttribute('for', id);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = nombre + 'p' + i;
+        radio.id = id;
+        radio.value = String(k);
+        const letra = document.createElement('span');
+        letra.className = 'letra';
+        letra.textContent = LETRAS[k] + ')';
+        const txt = document.createElement('span');
+        txt.textContent = texto;
+        etiqueta.appendChild(radio);
+        etiqueta.appendChild(letra);
+        etiqueta.appendChild(txt);
+        opts.appendChild(etiqueta);
+        radio.addEventListener('change', () => elegir(i, k));
+      });
+      fs.appendChild(opts);
+
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.setAttribute('aria-live', 'polite');
+      fs.appendChild(fb);
+
+      const gen = document.createElement('p');
+      gen.className = 'gen';
+      gen.textContent = 'Idea que conviene recordar: ' + it.general;
+      fs.appendChild(gen);
+
+      formulario.appendChild(fs);
+    });
+
+    // 3.3 Resultado y acciones
+    const resultado = document.createElement('div');
+    resultado.className = 'resultado';
+    resultado.setAttribute('aria-live', 'polite');
+    raiz.appendChild(resultado);
+
+    const acciones = document.createElement('div');
+    acciones.className = 'acciones';
+    const btnReintento = document.createElement('button');
+    btnReintento.type = 'button';
+    btnReintento.className = 'btn principal';
+    btnReintento.textContent = 'Intentar nuevamente';
+    btnReintento.hidden = true;
+    btnReintento.addEventListener('click', () => reiniciar(false));
+    const btnReinicio = document.createElement('button');
+    btnReinicio.type = 'button';
+    btnReinicio.className = 'btn';
+    btnReinicio.textContent = 'Reiniciar cuestionario';
+    btnReinicio.addEventListener('click', () => reiniciar(true));
+    acciones.appendChild(btnReintento);
+    acciones.appendChild(btnReinicio);
+    raiz.appendChild(acciones);
+
+    // 3.4 Lógica de respuesta
+    function elegir(i, k) {
+      if (bloqueado) return;
+      respuestas[i] = k;
+      const it = ev.items[i];
+      const fieldset = formulario.querySelectorAll('fieldset')[i];
+      const fb = fieldset.querySelector('.fb');
+      const gen = fieldset.querySelector('.gen');
+      const acierto = (k === it.correcta);
+      fb.className = 'fb ' + (acierto ? 'ok' : 'mal');
+      fb.textContent = it.retro[k];
+      gen.classList.add('visible');
+      actualizar();
+    }
+
+    // 3.5 Cálculo de progreso, aciertos y bloqueo
+    let bloqueado = false;
+    function actualizar() {
+      const contestadas = respuestas.filter(x => x !== null).length;
+      const aciertos = respuestas.reduce((s, x, i) => s + (x === ev.items[i].correcta ? 1 : 0), 0);
+      prog.textContent = 'Respondidas: ' + contestadas + ' de ' + n + '. Aciertos hasta ahora: ' + aciertos + '.';
+
+      if (contestadas < n) {
+        bloqueado = false;
+        resultado.innerHTML = '';
+        btnReintento.hidden = true;
+        return;
+      }
+
+      // Evaluación completa: se bloquea la edición hasta reiniciar.
+      bloqueado = true;
+      formulario.querySelectorAll('input').forEach(inp => inp.disabled = true);
+      const porcentaje = Math.round((aciertos / n) * 100);
+      const nota = (aciertos / n * 10).toFixed(1).replace('.', ',');
+      let texto = '<strong>Resultado: ' + aciertos + ' de ' + n + ' respuestas correctas (' + porcentaje + ' %).</strong>';
+      if (ev.diagnostica) {
+        texto += '<br>Esta prueba no tiene calificación. Revise las preguntas erradas con sus retroalimentaciones.';
+      } else {
+        texto += '<br>Puntaje de práctica: ' + nota + ' sobre 10. No es una nota oficial.';
+      }
+      if (aciertos < n) {
+        texto += '<br>Revise las preguntas erradas y, si lo desea, intente nuevamente con las mismas preguntas en el mismo orden.';
+        btnReintento.hidden = false;
+      } else {
+        texto += '<br>Respondió todas las preguntas correctamente. No es necesario repetir el cuestionario.';
+        btnReintento.hidden = true;
+      }
+      resultado.innerHTML = texto;
+    }
+
+    // 3.6 Reinicio y reintento
+    function reiniciar(completo) {
+      respuestas = Array(n).fill(null);
+      bloqueado = false;
+      formulario.querySelectorAll('input').forEach(inp => { inp.disabled = false; inp.checked = false; });
+      formulario.querySelectorAll('.fb').forEach(f => { f.className = 'fb'; f.textContent = ''; });
+      formulario.querySelectorAll('.gen').forEach(g => g.classList.remove('visible'));
+      btnReintento.hidden = true;
+      resultado.innerHTML = '';
+      actualizar();
+      if (completo) {
+        const primera = formulario.querySelector('input');
+        if (primera) primera.focus();
+      }
+    }
+
+    actualizar();
+  }
+
+  document.querySelectorAll('.quiz[data-eval]').forEach(raiz => {
+    const num = parseInt(raiz.dataset.eval, 10);
+    const ev = EVALUACIONES.find(e => e.sesion === num);
+    if (ev) dibujar(ev, raiz);
+  });
+})();
+</script>
+</body>
+</html>

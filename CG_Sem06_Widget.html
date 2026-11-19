@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contabilidad General · Semana 06</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- 1. Variables y base ---------- */
+:root{
+  --azul:#003366; --celeste:#87CEEB; --azul-claro:#E8F4FD; --texto:#1d1d1d;
+  --ok:#14532d; --ok-fondo:#e6f4ea; --mal:#7f1d1d; --mal-fondo:#fdecec; --borde:#c9d6e2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.6;color:var(--texto);background:#fff}
+h1,h2,h3,h4{font-family:Lora,Georgia,"Times New Roman",serif;color:var(--azul);line-height:1.25}
+h2{font-size:1.6rem;margin:.2rem 0 .6rem}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem}
+h4{font-size:1.05rem;margin:1.1rem 0 .4rem}
+p{margin:.6rem 0;max-width:72ch}
+ul,ol{max-width:72ch;padding-left:1.4rem}
+li{margin:.3rem 0}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:6px 10px;z-index:10}
+.meta{font-size:.92rem;color:#3b4a5a;margin:0 0 1rem}
+.tiempos{font-size:.95rem}
+
+/* ---------- 2. Encabezado y menú ---------- */
+header.cabecera{background:var(--azul);color:#fff;padding:14px 16px}
+header.cabecera h1{color:#fff;font-size:1.25rem;margin:0}
+header.cabecera p{margin:2px 0 0;font-size:.92rem;color:#e3eef8}
+nav.menu{background:var(--celeste);color:#000;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;border-bottom:1px solid #6fbcd9}
+nav.menu ul{display:flex;list-style:none;margin:0;padding:0;max-width:none}
+nav.menu li{margin:0}
+nav.menu button{font:inherit;font-size:.95rem;background:transparent;color:#000;border:0;padding:12px 14px;cursor:pointer;min-height:44px}
+nav.menu button:hover{background:rgba(255,255,255,.35)}
+nav.menu button[aria-selected="true"]{background:#fff;color:var(--azul);font-weight:700}
+
+main{padding:16px 16px 48px;max-width:860px;margin:0 auto}
+
+/* ---------- 3. Secciones y bloques ---------- */
+.pestana[hidden]{display:none}
+.concepto{border-left:5px solid var(--azul);padding:.6rem .9rem;margin:1rem 0;background:#f7fafd}
+.concepto h4{margin-top:.1rem}
+.ejemplo{background:var(--azul-claro);padding:.7rem .9rem;margin:1rem 0;border-radius:4px}
+.ejemplo h4{margin-top:.1rem}
+.nota-lateral{border:1px solid var(--borde);border-left:5px solid #2a7fb8;background:#fbfdff;padding:.7rem .9rem;margin:0 0 1.2rem;border-radius:4px}
+.nota-lateral h3{margin-top:.1rem}
+.nota-lateral p:first-of-type{margin-top:.2rem}
+.pausa{font-style:normal}
+.prompt{background:#f4f4f4;padding:.6rem .8rem;border-radius:4px}
+.ejercicio{border-top:1px solid var(--borde);margin-top:1.4rem;padding-top:.4rem}
+.ejercicio .tiempo{font-size:.92rem;color:#3b4a5a;margin:0}
+.ayuda{font-style:italic}
+.tabla-wrap{overflow-x:auto;max-width:100%}
+.asiento{border:1px solid var(--borde);border-radius:4px;padding:.4rem .9rem .6rem;margin:1rem 0;background:#fff}
+.asiento h4{margin-top:.3rem}
+table{border-collapse:collapse;margin:.8rem 0;min-width:60%}
+caption{caption-side:top;text-align:left;font-weight:700;padding:4px 0;color:var(--azul);font-family:Lora,Georgia,serif}
+th,td{border:1px solid var(--borde);padding:6px 8px;vertical-align:top;text-align:left;min-width:110px}
+th{background:var(--azul-claro)}
+.referencias li{margin-bottom:.7rem;padding-left:1.4rem;text-indent:-1.4rem;list-style:none;max-width:72ch}
+.nota{font-size:.95rem;border-top:1px solid var(--borde);padding-top:.6rem}
+.calc{font-family:Consolas,"Courier New",monospace;font-size:.95rem;background:#f7f9fb;border:1px solid var(--borde);padding:.5rem .7rem;overflow-x:auto;white-space:pre;max-width:100%}
+.tcuenta{display:flex;flex-wrap:wrap;gap:12px;margin:.8rem 0}
+.tcuenta table{min-width:0;width:100%}
+
+/* ---------- 4. Solución desplegable ---------- */
+details.solucion{margin:.7rem 0;border:1px solid var(--azul);border-radius:4px;background:#fff}
+details.solucion>summary{cursor:pointer;padding:.55rem .8rem;font-weight:700;color:var(--azul);background:#eef5fb;min-height:44px;display:flex;align-items:center}
+details.solucion>*:not(summary){padding:0 .8rem}
+details.solucion[open]>summary{border-bottom:1px solid var(--borde)}
+details.solucion>*:last-child{padding-bottom:.8rem}
+
+/* ---------- 5. Evaluación ---------- */
+.quiz{margin-top:.5rem}
+.quiz .cabecera-eval{background:var(--azul-claro);padding:.7rem .9rem;border-radius:4px;margin-bottom:1rem}
+.quiz .progreso{font-weight:600;margin:.2rem 0}
+.quiz fieldset{border:1px solid var(--borde);border-radius:4px;padding:.7rem .9rem;margin:0 0 1rem}
+.quiz legend{font-weight:700;color:var(--azul);padding:0 .3rem;font-family:Lora,Georgia,serif}
+.quiz .insignia{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:10px;background:var(--azul);color:#fff;margin-right:6px;vertical-align:middle}
+.quiz .opts{display:grid;gap:6px;margin:.5rem 0}
+.quiz .opts label{display:flex;gap:10px;align-items:flex-start;padding:10px 10px;border:1px solid var(--borde);border-radius:4px;cursor:pointer;min-height:44px}
+.quiz .opts label:hover{background:#f5faff}
+.quiz .opts input{margin-top:5px;min-width:18px;min-height:18px}
+.quiz .letra{font-weight:700;color:var(--azul)}
+.quiz .fb{margin-top:.5rem;padding:.6rem .8rem;border-radius:4px;display:none}
+.quiz .fb.ok{display:block;background:var(--ok-fondo);color:var(--ok);border-left:5px solid var(--ok)}
+.quiz .fb.mal{display:block;background:var(--mal-fondo);color:var(--mal);border-left:5px solid var(--mal)}
+.quiz .gen{font-size:.93rem;margin-top:.4rem;color:#34434f;display:none}
+.quiz .gen.visible{display:block}
+.quiz .resultado{border:2px solid var(--azul);border-radius:4px;padding:.8rem 1rem;margin:1rem 0;background:#fff}
+.quiz .acciones{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0}
+.quiz button.btn{font:inherit;font-weight:600;padding:10px 14px;min-height:44px;border-radius:4px;border:2px solid var(--azul);background:#fff;color:var(--azul);cursor:pointer}
+.quiz button.btn.principal{background:var(--azul);color:#fff}
+.quiz button.btn[hidden]{display:none}
+.quiz .nota-practica{font-size:.93rem;color:#34434f}
+
+/* ---------- 6. Pie ---------- */
+footer{background:#f2f5f8;color:#2a3440;padding:14px 16px;font-size:.9rem;border-top:1px solid var(--borde)}
+footer p{margin:.2rem 0}
+
+/* ---------- 7. Pantallas estrechas ---------- */
+@media (max-width:420px){
+  body{font-size:16px}
+  main{padding:12px 12px 40px}
+  h2{font-size:1.4rem}
+  table{font-size:.92rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#principal">Ir al contenido</a>
+<header class="cabecera">
+  <h1>Contabilidad General</h1>
+  <p>Licenciatura en Negocios Internacionales · Ciclo II de 2026 · Semana 06: Mayorización, saldos y balance de comprobación preliminar</p>
+</header>
+
+<nav class="menu" aria-label="Secciones de la semana">
+  <ul role="tablist">
+    <li><button type="button" role="tab" id="tab-intro" data-target="intro" aria-controls="intro" aria-selected="false" tabindex="-1">Repaso</button></li>
+    <li><button type="button" role="tab" id="tab-ses01" data-target="ses01" aria-controls="ses01" aria-selected="false" tabindex="-1">Sesión 01</button></li>
+    <li><button type="button" role="tab" id="tab-eval1" data-target="eval1" aria-controls="eval1" aria-selected="false" tabindex="-1">Evaluación 01</button></li>
+    <li><button type="button" role="tab" id="tab-ses02" data-target="ses02" aria-controls="ses02" aria-selected="false" tabindex="-1">Sesión 02</button></li>
+    <li><button type="button" role="tab" id="tab-eval2" data-target="eval2" aria-controls="eval2" aria-selected="false" tabindex="-1">Evaluación 02</button></li>
+    <li><button type="button" role="tab" id="tab-ses03" data-target="ses03" aria-controls="ses03" aria-selected="false" tabindex="-1">Sesión 03</button></li>
+    <li><button type="button" role="tab" id="tab-eval3" data-target="eval3" aria-controls="eval3" aria-selected="false" tabindex="-1">Evaluación 03</button></li>
+    <li><button type="button" role="tab" id="tab-reflexion" data-target="reflexion" aria-controls="reflexion" aria-selected="false" tabindex="-1">Reflexión</button></li>
+    <li><button type="button" role="tab" id="tab-ia" data-target="ia" aria-controls="ia" aria-selected="false" tabindex="-1">Actividad con IA</button></li>
+    <li><button type="button" role="tab" id="tab-biblio" data-target="biblio" aria-controls="biblio" aria-selected="false" tabindex="-1">Bibliografía</button></li>
+  </ul>
+</nav>
+
+<main id="principal">
+<section class="pestana" id="intro" data-panel="intro">
+<h2>Repaso · Del asiento a la cuenta</h2>
+<p class="meta">Semana 6 · Unidad 2 · Normas tributarias y pasos para el proceso contable, primera parte · Tiempo orientativo de lectura: 5 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>La semana pasada aprendiste a reconocer una transacción a partir de sus documentos y a escribirla en el libro diario como un asiento. Esta semana empiezas a responder una pregunta que aparece en cualquier empresa: ¿cuánto dinero tiene hoy la caja, cuánto debe la empresa a sus proveedores y cuánto le deben sus clientes? El libro diario responde qué ocurrió y en qué orden, pero no responde cuánto queda en cada cuenta. Para eso tendrás que reunir los movimientos de cada cuenta en un solo lugar.</p>
+<p>Al terminar la semana podrás trasladar los asientos a sus cuentas y calcular el saldo de cada una; preparar un balance de comprobación preliminar y comprobar sus sumas; y explicar qué errores detecta ese balance y cuáles deja pasar.</p>
+</div>
+
+<h3>Lo que debes recordar de las semanas anteriores</h3>
+<p>Tres ideas sostienen todo lo que vas a hacer esta semana. La primera es la partida doble: cada asiento tiene al menos una cuenta en el debe y otra en el haber, y la suma de ambos lados debe ser igual. La segunda es la naturaleza de cada cuenta: los activos y los gastos aumentan en el debe, mientras que los pasivos, el patrimonio y los ingresos aumentan en el haber. La tercera es la glosa «P/R», que explica el motivo de cada asiento. Si una de estas ideas no te resulta clara, vuelve a la semana 2 (la cuenta contable) antes de seguir.</p>
+<p>También recuerda el caso de la semana 5. Comercializadora Costa Verde Cía. Ltda. compró camisetas a crédito, cobró una venta al contado, pagó una parte de su deuda, compensó el IVA y pagó un arriendo con retención. Esa secuencia de asientos es la materia prima de esta semana. Lo que cambia es el paso que sigue: ya no basta con escribir cada asiento, hay que llevar cada cuenta a su propia hoja.</p>
+
+<h3>Cómo estudiar esta semana</h3>
+<p>Trabaja cada sesión con papel y lápiz. Cuando una pausa te pida que escribas algo, hazlo antes de seguir leyendo, aunque tu respuesta sea incompleta. Al mayorizar, dibuja primero la cuenta T con sus dos columnas, luego copia cada movimiento con su número de asiento y, por último, calcula el saldo. Si el saldo de una cuenta no coincide con lo que esperabas, revisa primero el lado en que pusiste cada movimiento: casi todos los errores de esta semana vienen de un movimiento que quedó en el lado contrario.</p>
+<p>En la sesión 02 verás que la suma de los saldos puede cuadrar aunque haya errores, y en la sesión 03 repasarás todo el proceso con un caso guiado. Si una explicación te parece insuficiente, vuelve a la sección que trata el mismo concepto antes de abrir una solución.</p>
+</section>
+
+
+<section class="pestana" id="ses01" data-panel="ses01">
+<h2>Sesión 01 · Del diario al mayor: sistematización y saldos</h2>
+<p class="meta">Semana 6 · Unidad 2 · Ciclo de la información contable; sistematización o mayorización; libro mayor y saldos (sesión global 16) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que en Comercializadora Costa Verde Cía. Ltda. el contador termina el período con cinco asientos en el libro diario. El gerente pregunta cuánto dinero hay en caja, cuánto debe a Confecciones Montubia S. A. y cuánto le corresponde al Estado por el IVA. El libro diario contesta qué ocurrió y en qué orden, pero para responder cada pregunta hay que buscar cada cuenta en su propio lugar. ¿Cómo se pasa de la lista cronológica de operaciones a un resumen por cuenta?</p>
+<p>Al terminar esta sesión podrás trasladar los movimientos de un asiento a las cuentas correspondientes, en el lado que les corresponde; calcular el saldo de una cuenta y decir si es deudor o acreedor; y explicar por qué un saldo puede ser imposible y qué debe hacerse antes de corregirlo. Antes de empezar, recuerda que cada asiento tiene un debe y un haber iguales y que la naturaleza de cada cuenta determina en qué lado aumenta.</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. El ciclo de la información contable</h3>
+<p>La contabilidad no sigue un solo paso, sino una cadena. Todo comienza con un documento fuente, que prueba que una operación ocurrió. Cuando la operación cambia el patrimonio de la empresa, se registra en el libro diario como un asiento, que es la jornalización que estudiaste la semana pasada. Después viene el paso de esta sesión: la mayorización, que traslada cada movimiento del diario a la cuenta del libro mayor que le corresponde. Con los saldos del mayor se prepara el balance de comprobación, que es el tema de la sesión 02. Más adelante, en las unidades 3 y 4, esos saldos se ajustan y se presentan en los estados financieros.</p>
+<p>Esa cadena tiene una lógica. Cada paso toma como entrada el resultado del anterior y lo transforma en una forma más útil para decidir. El diario conserva el orden de los hechos; el mayor muestra la historia de cada cuenta; el balance comprueba que las cuentas se trasladaron sin errores aritméticos; y los estados financieros resumen la situación de la empresa para quien debe decidir con ella.</p>
+
+<h3>2. La mayorización: del diario al libro mayor</h3>
+<div class="concepto">
+<h4>Qué es la mayorización</h4>
+<p>La mayorización es el traslado de cada línea de cada asiento del libro diario a la cuenta correspondiente del libro mayor, en el mismo lado en que aparece en el asiento. Si una línea está en el debe del asiento, va al debe de la cuenta; si está en el haber, va al haber. El libro mayor agrupa así todos los movimientos de una misma cuenta, aunque hayan ocurrido en fechas distintas.</p>
+<p>Para entender por qué hace falta este paso, piensa en un estado de cuenta bancario. Un extracto lista los movimientos en orden de fecha, pero si quieres saber cuánto has gastado en servicios básicos durante el año, tienes que reunir solo esas líneas. El diario es el extracto cronológico de toda la empresa; el mayor es el conjunto de extractos, uno por cuenta. La analogía tiene un límite: en un extracto bancario no hay partida doble, mientras que en el mayor cada movimiento tiene su contrapartida en otra cuenta.</p>
+</div>
+
+<p>El libro diario es el origen de los datos y el libro mayor es su organización. Por eso no conviene copiar el mayor a mano desde los documentos: el mayor debe reflejar exactamente lo que el diario registró. Si un asiento tiene un error, el mayor lo arrastrará; si el mayor se corrige sin corregir el asiento, el diario ya no describe lo que ocurrió.</p>
+
+<h3>3. La cuenta T y el saldo</h3>
+<p>La forma más simple de representar una cuenta del mayor es la cuenta T, llamada así porque tiene dos columnas separadas por una línea vertical, con la forma de la letra T. La columna de la izquierda es el debe; la de la derecha, el haber. Cada movimiento se anota en la columna que le corresponde, con el número del asiento de donde proviene para poder volver a él.</p>
+<p>El saldo es la diferencia entre la suma del debe y la suma del haber de una cuenta. Si el debe es mayor, el saldo es deudor; si el haber es mayor, es acreedor. Esta diferencia es lo que la cuenta muestra en un momento dado. Por eso el saldo nunca se obtiene sumando todas las cifras sin distinguir lados: dos movimientos de lados opuestos se restan, no se suman.</p>
+
+<div class="concepto">
+<h4>La naturaleza de la cuenta indica el lado esperado del saldo</h4>
+<p>Cada cuenta tiene una naturaleza, que es el lado en el que aumenta. Los activos, como la caja, las cuentas por cobrar o las mercaderías, y los gastos, como el arriendo, son de naturaleza deudora: aumentan en el debe. Los pasivos, como las deudas con proveedores o las obligaciones con el SRI, el patrimonio y los ingresos son de naturaleza acreedora: aumentan en el haber. Un saldo que aparece en el lado de su naturaleza suele indicar la situación normal de la cuenta. Un saldo en el lado contrario no es imposible en todas las circunstancias, pero exige revisión, porque algo se registró de forma distinta a lo esperado.</p>
+</div>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 1. Cuentas que intervienen en el caso de esta sesión, su clase y su naturaleza (datos didácticos)</caption>
+<thead><tr><th>Cuenta</th><th>Clase</th><th>Naturaleza</th><th>Aumenta en</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td>Activo</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Inventarios de mercaderías (1104)</td><td>Activo</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Crédito tributario de IVA (cuenta provisional)</td><td>Activo (derecho frente al SRI)</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Gasto de arriendo (cuenta provisional)</td><td>Gasto</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Proveedores por pagar (2101)</td><td>Pasivo</td><td>Acreedora</td><td>Haber</td></tr>
+<tr><td>IVA cobrado (cuenta provisional)</td><td>Pasivo (obligación con el SRI)</td><td>Acreedora</td><td>Haber</td></tr>
+<tr><td>Retención de renta por pagar (cuenta provisional)</td><td>Pasivo (obligación con el SRI)</td><td>Acreedora</td><td>Haber</td></tr>
+<tr><td>Ventas (4101)</td><td>Ingreso</td><td>Acreedora</td><td>Haber</td></tr>
+</tbody></table></div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Una cuenta de pasivo tiene un debe de 300,00 dólares y un haber de 1.000,00 dólares. ¿Cuál es su saldo y en qué lado queda? Antes de leer la respuesta, escribe la diferencia y decide si el saldo es deudor o acreedor, según la naturaleza de la cuenta.</p>
+<p class="ayuda">Si respondiste 700,00 dólares acreedores, vas por buen camino. Si respondiste 1.300,00 dólares, revisa la resta: el saldo es la diferencia entre ambos lados, 1.000,00 − 300,00. Si lo dejaste deudor, revisa la naturaleza: un pasivo aumenta en el haber, así que un saldo acreedor es lo esperado.</p>
+</div>
+
+<h3>4. El caso de Costa Verde en esta semana</h3>
+<p>Para practicar la mayorización usaremos los asientos que Comercializadora Costa Verde Cía. Ltda. registró en la semana 5. Supongamos que esos cinco asientos son todas las operaciones de un período de práctica y que todas las cuentas comienzan en cero. Este supuesto es didáctico: sirve para mayorizar y comprobar, y no reproduce el mes anterior de la empresa. Los asientos de la semana 5 aparecen aquí numerados del 1 al 5, porque en esta semana la numeración empieza de nuevo.</p>
+<p>Observa que el supuesto de saldos iniciales en cero tiene una consecuencia que vas a comprobar. Como la caja empieza en cero y en este período sale más dinero del que entra, el mayor mostrará un resultado que no puede darse en una caja real. Ese hallazgo es parte de la lección de esta sesión, y lo trataremos en la sección 6.</p>
+
+<div class="asiento">
+<h4>Asiento 1. Compra a crédito de 200 camisetas (equivale al asiento 5 de la semana 5)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día de la factura de compra.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Inventarios de mercaderías (1104)</td><td>2.000,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA (cuenta provisional)</td><td>300,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Proveedores por pagar (2101)</td><td></td><td>2.300,00</td></tr>
+<tr><td><em>Glosa: P/R compra a crédito de 200 camisetas a Confecciones Montubia S. A., con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 2.000,00 + 300,00 = 2.300,00; haber 2.300,00. La mercadería va a inventarios porque se compra para vender; el IVA pagado es un derecho frente al SRI; la deuda con el proveedor es un pasivo por el total de la factura.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 2. Venta al contado de 50 camisetas (equivale al asiento 6 de la semana 5)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día de la venta y del cobro.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td>862,50</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Ventas (4101)</td><td></td><td>750,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;IVA cobrado (cuenta provisional)</td><td></td><td>112,50</td></tr>
+<tr><td><em>Glosa: P/R venta al contado de 50 camisetas a cliente final, con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 862,50 = haber 750,00 + 112,50. La caja aumenta porque entra efectivo; el ingreso es la base de la venta; el IVA cobrado es una obligación con el SRI.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 3. Pago parcial a Confecciones Montubia S. A. (equivale al asiento 7 de la semana 5)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día del pago.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Proveedores por pagar (2101)</td><td>1.000,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja (1101)</td><td></td><td>1.000,00</td></tr>
+<tr><td><em>Glosa: P/R pago parcial de la factura de compra de 200 camisetas.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.000,00 = haber 1.000,00. El pago disminuye la deuda, por eso va en el debe de proveedores, y disminuye la caja, por eso va en el haber.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 4. Compensación del IVA del período (equivale al asiento 8 de la semana 5)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: cierre del período.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>IVA cobrado (cuenta provisional)</td><td>112,50</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Crédito tributario de IVA (cuenta provisional)</td><td></td><td>112,50</td></tr>
+<tr><td><em>Glosa: P/R compensación del IVA cobrado del período con el crédito tributario.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 112,50 = haber 112,50. El IVA cobrado se cancela con el crédito tributario hasta el monto menor.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 5. Pago del arriendo de la bodega con retención de renta (equivale al asiento 9 de la semana 5)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día del pago del arriendo.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Gasto de arriendo (cuenta provisional)</td><td>800,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja (1101)</td><td></td><td>720,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Retención de renta por pagar (cuenta provisional)</td><td></td><td>80,00</td></tr>
+<tr><td><em>Glosa: P/R arriendo de bodega a persona natural, con retención de impuesto a la renta del 10 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 800,00 = haber 720,00 + 80,00. La caja sale por el pago neto; los 80,00 retenidos son una obligación con el SRI. La base de la retención es el valor del arriendo sin IVA, convención que se explicó en la semana 5.</p>
+</div>
+
+<h3>5. Mayorizar paso a paso</h3>
+<p>Para mayorizar, toma el primer asiento y busca cada cuenta en el mayor. Anota el movimiento en el lado del asiento y escribe el número del asiento junto a la cifra. Repite el proceso con el asiento siguiente. Cuando termines con todos, calcula el saldo de cada cuenta. No necesitas un orden particular, pero conviene llevar el mismo orden de cuentas en todas las hojas para no omitir ninguna.</p>
+<p>A continuación aparecen las cuentas del caso. Observa que cada movimiento lleva el número de asiento entre paréntesis, de manera que puedas volver al diario en cualquier momento.</p>
+
+<div class="tcuenta">
+<div class="tabla-wrap"><table>
+<caption>Caja (1101)</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td>862,50 (asiento 2)</td><td>1.000,00 (asiento 3)</td></tr>
+<tr><td></td><td>720,00 (asiento 5)</td></tr>
+<tr><td><strong>Total debe: 862,50</strong></td><td><strong>Total haber: 1.720,00</strong></td></tr>
+<tr><td colspan="2"><strong>Saldo: 857,50 acreedor (ver sección 6)</strong></td></tr>
+</tbody></table></div>
+<div class="tabla-wrap"><table>
+<caption>Inventarios de mercaderías (1104)</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td>2.000,00 (asiento 1)</td><td></td></tr>
+<tr><td><strong>Total debe: 2.000,00</strong></td><td><strong>Total haber: 0,00</strong></td></tr>
+<tr><td colspan="2"><strong>Saldo: 2.000,00 deudor</strong></td></tr>
+</tbody></table></div>
+<div class="tabla-wrap"><table>
+<caption>Crédito tributario de IVA (cuenta provisional)</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td>300,00 (asiento 1)</td><td>112,50 (asiento 4)</td></tr>
+<tr><td><strong>Total debe: 300,00</strong></td><td><strong>Total haber: 112,50</strong></td></tr>
+<tr><td colspan="2"><strong>Saldo: 187,50 deudor</strong></td></tr>
+</tbody></table></div>
+<div class="tabla-wrap"><table>
+<caption>Proveedores por pagar (2101)</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td>1.000,00 (asiento 3)</td><td>2.300,00 (asiento 1)</td></tr>
+<tr><td><strong>Total debe: 1.000,00</strong></td><td><strong>Total haber: 2.300,00</strong></td></tr>
+<tr><td colspan="2"><strong>Saldo: 1.300,00 acreedor</strong></td></tr>
+</tbody></table></div>
+<div class="tabla-wrap"><table>
+<caption>IVA cobrado (cuenta provisional)</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td>112,50 (asiento 4)</td><td>112,50 (asiento 2)</td></tr>
+<tr><td><strong>Total debe: 112,50</strong></td><td><strong>Total haber: 112,50</strong></td></tr>
+<tr><td colspan="2"><strong>Saldo: 0,00</strong></td></tr>
+</tbody></table></div>
+<div class="tabla-wrap"><table>
+<caption>Ventas (4101)</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td></td><td>750,00 (asiento 2)</td></tr>
+<tr><td><strong>Total debe: 0,00</strong></td><td><strong>Total haber: 750,00</strong></td></tr>
+<tr><td colspan="2"><strong>Saldo: 750,00 acreedor</strong></td></tr>
+</tbody></table></div>
+<div class="tabla-wrap"><table>
+<caption>Gasto de arriendo (cuenta provisional)</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td>800,00 (asiento 5)</td><td></td></tr>
+<tr><td><strong>Total debe: 800,00</strong></td><td><strong>Total haber: 0,00</strong></td></tr>
+<tr><td colspan="2"><strong>Saldo: 800,00 deudor</strong></td></tr>
+</tbody></table></div>
+<div class="tabla-wrap"><table>
+<caption>Retención de renta por pagar (cuenta provisional)</caption>
+<thead><tr><th>Debe</th><th>Haber</th></tr></thead>
+<tbody>
+<tr><td></td><td>80,00 (asiento 5)</td></tr>
+<tr><td><strong>Total debe: 0,00</strong></td><td><strong>Total haber: 80,00</strong></td></tr>
+<tr><td colspan="2"><strong>Saldo: 80,00 acreedor</strong></td></tr>
+</tbody></table></div>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 1. Saldo de Proveedores por pagar</h4>
+<p><strong>Situación.</strong> Costa Verde debe a Confecciones Montubia S. A. el total de la compra a crédito y ha pagado una parte. Hace falta saber cuánto queda pendiente.</p>
+<p><strong>Supuestos y finalidad.</strong> No hay supuestos nuevos: los datos son los del caso. El cálculo muestra cómo se obtiene un saldo acreedor.</p>
+<p><strong>Qué buscamos.</strong> El saldo de la cuenta Proveedores por pagar (2101), en dólares y con su naturaleza.</p>
+<p><strong>Datos y origen.</strong> Haber de 2.300,00 (asiento 1) y debe de 1.000,00 (asiento 3).</p>
+<p><strong>Por qué esta operación.</strong> El saldo de una cuenta es la diferencia entre sus dos lados. Como el pasivo tiene naturaleza acreedora, la diferencia se presenta en el haber si es positiva.</p>
+<p><strong>Procedimiento.</strong> Saldo = haber − debe = 2.300,00 − 1.000,00 = 1.300,00.</p>
+<p><strong>Resultado.</strong> 1.300,00 dólares, saldo acreedor.</p>
+<p><strong>Comprobación.</strong> Si sumas el saldo al debe, debes obtener el haber: 1.000,00 + 1.300,00 = 2.300,00. La comprobación reconstruye el haber a partir del saldo, así que no repite la misma resta.</p>
+<p><strong>Interpretación.</strong> Costa Verde todavía debe 1.300,00 dólares a Confecciones Montubia S. A. Este saldo es el pasivo que aparecerá en el balance.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 2. Saldo de Caja</h4>
+<p><strong>Situación.</strong> El gerente quiere saber cuánto efectivo queda en caja después de los movimientos del período.</p>
+<p><strong>Supuestos y finalidad.</strong> Se supone que la caja comienza en cero, como se indicó en la sección 4. Esta suposición es la que produce el resultado que se analiza en la sección 6.</p>
+<p><strong>Qué buscamos.</strong> El saldo de la cuenta Caja (1101), en dólares y con su naturaleza.</p>
+<p><strong>Datos y origen.</strong> Debe de 862,50 (asiento 2). Haber de 1.000,00 (asiento 3) y de 720,00 (asiento 5).</p>
+<p><strong>Por qué esta operación.</strong> La caja es un activo de naturaleza deudora. Si el haber supera al debe, la diferencia queda en el lado contrario a su naturaleza.</p>
+<p><strong>Procedimiento.</strong> Haber total = 1.000,00 + 720,00 = 1.720,00. Saldo = debe − haber = 862,50 − 1.720,00 = −857,50, es decir, 857,50 en el haber.</p>
+<p><strong>Resultado.</strong> Saldo de 857,50 dólares acreedor.</p>
+<p><strong>Comprobación.</strong> Si el saldo acreedor es 857,50, el haber menos el saldo debe ser el debe: 1.720,00 − 857,50 = 862,50. Se verifica la igualdad, pero la comprobación no dice nada sobre si el resultado es posible.</p>
+<p><strong>Interpretación.</strong> Una caja no puede tener un saldo acreedor en la vida real, porque eso significaría haber pagado más efectivo del que se tenía. Ese resultado indica que el caso no incluye todo el efectivo disponible al inicio, o que falta registrar algún cobro. Ver sección 6.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 3. Saldo del Crédito tributario de IVA</h4>
+<p><strong>Situación.</strong> Costa Verde pagó IVA en sus compras y necesita saber cuánto derecho tiene frente al SRI después de compensar el IVA cobrado.</p>
+<p><strong>Supuestos y finalidad.</strong> No hay supuestos nuevos. Este cálculo sigue la misma lógica que el cálculo 1, con la naturaleza deudora de un derecho.</p>
+<p><strong>Qué buscamos.</strong> El saldo de la cuenta Crédito tributario de IVA (cuenta provisional), en dólares y con su naturaleza.</p>
+<p><strong>Datos y origen.</strong> Debe de 300,00 (asiento 1) y haber de 112,50 (asiento 4).</p>
+<p><strong>Por qué esta operación.</strong> Como el derecho tiene naturaleza deudora, su saldo se obtiene restando el haber del debe.</p>
+<p><strong>Procedimiento.</strong> Saldo = debe − haber = 300,00 − 112,50 = 187,50.</p>
+<p><strong>Resultado.</strong> 187,50 dólares, saldo deudor.</p>
+<p><strong>Comprobación.</strong> El saldo más el haber debe dar el debe: 187,50 + 112,50 = 300,00.</p>
+<p><strong>Interpretación.</strong> El saldo deudor es un derecho de Costa Verde, no una deuda ni un ingreso. Su tratamiento posterior depende de la normativa, que se estudiará en su momento.</p>
+</div>
+
+<h3>6. Un saldo que no debería existir</h3>
+<p>El saldo de la caja merece una pausa, porque muestra algo importante sobre el trabajo contable. El cálculo es correcto en su aritmética: el haber suma 1.720,00 dólares y el debe suma 862,50. Pero el resultado no describe una situación posible. Costa Verde no puede haber pagado 857,50 dólares de efectivo que no tenía.</p>
+<p>Frente a un saldo así, hay tres respuestas equivocadas. La primera es cambiarlo por cero, como si el dinero no hubiera salido. La segunda es registrar un ingreso inventado por 857,50 dólares para cuadrar la caja. La tercera es ignorarlo porque el asiento cuadra. Las tres ocultan el problema. La respuesta correcta es declarar la insuficiencia: el caso no incluye el saldo inicial de caja o falta un cobro. Lo que sí puede hacerse es señalar qué documento permitiría resolverlo, como el arqueo de caja del inicio del período o los comprobantes de cobro que faltan.</p>
+<p>Esta lección se aplica a cualquier caso. Cuando un saldo está en el lado contrario a su naturaleza, primero revisa si falta información; después revisa si un movimiento está en el lado equivocado; y solo al final pregunta si la cifra es correcta.</p>
+
+<h3>7. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Trabaja individualmente y escribe tu respuesta antes de abrir cada solución. Revisa en cada caso el lado del asiento, la naturaleza de la cuenta y la resta que produce el saldo.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Ubicar cada movimiento en su cuenta</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás la cuenta y el lado en que se traslada cada línea del asiento 3 y del asiento 4. Para cada línea, escribe el nombre de la cuenta, si el movimiento va al debe o al haber, y la razón de ese lado.</p>
+<p class="ayuda">Mira primero el lado de la línea en el asiento. Después recuerda la naturaleza de la cuenta: un movimiento que está en el mismo lado que la naturaleza aumenta la cuenta, y uno en el lado opuesto la disminuye.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento 3.</strong> Proveedores por pagar, 1.000,00 en el debe: la deuda con el proveedor disminuye, porque el pasivo se reduce cuando la empresa paga. Caja, 1.000,00 en el haber: el efectivo disminuye.</p>
+<p><strong>Asiento 4.</strong> IVA cobrado, 112,50 en el debe: la obligación con el SRI se cancela, porque el pasivo disminuye en el debe. Crédito tributario de IVA, 112,50 en el haber: el derecho disminuye, porque el activo deudor se reduce en el haber.</p>
+<p><strong>Comprobación.</strong> En cada asiento, el movimiento que disminuye una cuenta de naturaleza acreedora va en el debe, y el que disminuye una de naturaleza deudora va en el haber.</p>
+<p><strong>Error frecuente:</strong> trasladar un movimiento al lado opuesto del asiento porque la cuenta «disminuye». El lado del traslado no depende de si la cuenta sube o baja, sino de en qué lado está la línea del asiento.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El traslado copia el lado del asiento. Lo que cambia es el efecto sobre el saldo: el mismo lado puede aumentar una cuenta o disminuir otra, según su naturaleza.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Cambiar un pago y recalcular dos saldos</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad recalcularás dos saldos. Supongamos que el pago parcial del asiento 3 fuera de 1.500,00 dólares, y no de 1.000,00. El resto de los asientos no cambia. Calcula el saldo de Proveedores por pagar y el de Caja, e indica cuál de los dos resultados sigue siendo razonable.</p>
+<p class="ayuda">Recalcula cada cuenta solo con los movimientos que cambian. Después compara el saldo de caja con el resultado de la sección 6.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Proveedores.</strong> Haber 2.300,00; debe 1.500,00. Saldo = 2.300,00 − 1.500,00 = 800,00 acreedor.</p>
+<p><strong>Caja.</strong> Debe 862,50; haber 1.500,00 + 720,00 = 2.220,00. Saldo = 2.220,00 − 862,50 = 1.357,50 acreedor.</p>
+<p><strong>Comprobación.</strong> Proveedores: 1.500,00 + 800,00 = 2.300,00, el haber. Caja: 862,50 + 1.357,50 = 2.220,00, el haber.</p>
+<p><strong>Interpretación.</strong> El saldo de proveedores sigue siendo razonable. El de caja empeora: es todavía más acreedor que antes, porque el pago aumentó el haber. Sin saldo inicial de caja, la conclusión es la misma que en la sección 6: falta información.</p>
+<p><strong>Error frecuente:</strong> recalcular solo el saldo de proveedores y olvidar que el pago también sale de caja.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un movimiento siempre tiene dos efectos, uno en cada cuenta. Cambiar una cifra obliga a revisar las dos cuentas que la contienen.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Liquidar un IVA cobrado mayor que el crédito</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad liquidarás el IVA de un período en el que el IVA cobrado es mayor que el crédito. Supongamos que el IVA cobrado acumulado del período es de 320,00 dólares y el crédito tributario de 300,00 dólares. Escribe el asiento de compensación y calcula el saldo final de cada cuenta.</p>
+<p class="ayuda">Compensa solo hasta el monto menor. Lo que sobra de la cuenta mayor queda como saldo en su propio lado.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento:</strong> Debe IVA cobrado 300,00; Haber Crédito tributario de IVA 300,00. Glosa: P/R compensación del IVA cobrado con el crédito tributario.</p>
+<p><strong>Saldos.</strong> IVA cobrado: 320,00 − 300,00 = 20,00 acreedor. Crédito tributario: 300,00 − 300,00 = 0,00.</p>
+<p><strong>Comprobación.</strong> El asiento cuadra: 300,00 = 300,00. El saldo acreedor de 20,00 más el debe de 300,00 da el haber de 320,00.</p>
+<p><strong>Interpretación.</strong> Como el IVA cobrado supera el crédito, queda un saldo acreedor de 20,00 dólares, que es el IVA por pagar del período. No hay derecho pendiente, porque el crédito se agotó.</p>
+<p><strong>Error frecuente:</strong> compensar por 320,00, el monto mayor. Un crédito no puede cancelar más de lo que existe en el crédito.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La compensación siempre se hace por el monto menor. El saldo que sobra indica en qué lado queda la diferencia y qué tipo de cuenta es: aquí, una obligación.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Qué pasaría si la caja tuviera un saldo inicial</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad analizarás cómo cambia el saldo de caja si se conoce el efectivo con el que empezó el período. Supongamos que la caja tenía un saldo inicial deudor de 1.000,00 dólares, comprobado con un arqueo. Recalcula el saldo final de Caja. Después explica por qué el dato del arqueo debe venir de un documento y no de una cifra escogida para cuadrar.</p>
+<p class="ayuda">Agrega el saldo inicial como un debe más, junto con los movimientos del caso, y recalcula el saldo.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Cálculo.</strong> Debe = 1.000,00 + 862,50 = 1.862,50. Haber = 1.720,00. Saldo = 1.862,50 − 1.720,00 = 142,50 deudor.</p>
+<p><strong>Comprobación.</strong> El saldo deudor de 142,50 más el haber de 1.720,00 da el debe de 1.862,50.</p>
+<p><strong>Interpretación.</strong> Con el saldo inicial, la caja queda con 142,50 dólares, un resultado posible. Pero el saldo inicial no estaba en el caso: solo es una suposición para ver cómo cambia el resultado. Un saldo inicial inventado produce una caja que parece correcta, aunque nadie la haya comprobado.</p>
+<p><strong>Error frecuente:</strong> aceptar el saldo de 142,50 como real sin preguntar de dónde salió el dato de 1.000,00.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un saldo inicial cambia todo el resultado de la cuenta. Por eso es un dato que debe respaldarse con un documento, como un arqueo, y no con una cifra que haga cuadrar el saldo.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: un arriendo de 600,00 dólares</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad mayorizarás el gasto y la retención de un arriendo. Supongamos que el arriendo de la bodega fuera de 600,00 dólares, sin IVA, con retención del 10 % (60,00 dólares), y que el pago neto fuera de 540,00 dólares. Escribe el asiento y calcula el saldo de la cuenta Gasto de arriendo y el de Retención de renta por pagar.</p>
+<p class="ayuda">El gasto se mide por el valor total del arriendo; la retención es una obligación que se registra en el haber.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento:</strong> Debe Gasto de arriendo 600,00; Haber Caja 540,00; Haber Retención de renta por pagar 60,00. Glosa: P/R arriendo de bodega a persona natural, con retención del 10 %.</p>
+<p><strong>Saldos.</strong> Gasto de arriendo: 600,00 deudor (no 540,00). Retención de renta por pagar: 60,00 acreedor.</p>
+<p><strong>Comprobación.</strong> El asiento cuadra: 600,00 = 540,00 + 60,00. El 10 % de 600,00 es 60,00.</p>
+<p><strong>Interpretación.</strong> El gasto del período es el arriendo completo, y los 60,00 retenidos son una deuda con el SRI que se pagará después.</p>
+<p><strong>Error frecuente:</strong> mayorizar el gasto por 540,00 porque es lo que salió de caja. Así el gasto queda subestimado en 60,00 dólares.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Lo que sale de caja y lo que se gasta no siempre son el mismo valor. El mayor muestra cada cuenta por separado para que esa diferencia no se pierda.</p></div>
+</div>
+
+<h3>8. Cierre de la sesión</h3>
+<p>Volvamos a la pregunta de la apertura: el gerente quiere conocer el efectivo, la deuda con el proveedor y lo que corresponde al Estado. Ahora puedes responder con los saldos del mayor: 1.300,00 dólares de deuda con Confecciones Montubia S. A., 187,50 dólares de derecho de IVA y 20,00 dólares de IVA por pagar si el IVA cobrado superara el crédito. El efectivo, en cambio, no puede responderse todavía, porque el saldo inicial no consta.</p>
+<p>La idea central es que el mayor transforma los asientos en saldos, pero no crea información nueva. Si un asiento está mal, el mayor lo repetirá; si falta un dato inicial, el saldo lo mostrará como una imposibilidad. Por eso el mayor debe revisarse junto con el diario.</p>
+<p>Para revisar por dificultad: si no sabes en qué lado trasladar un movimiento, relee la sección 2 y el ejercicio 1; si un saldo te parece incorrecto, revisa la sección 3 y el cálculo que corresponda; si un saldo imposible te preocupa, relee la sección 6.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Mayorización:</strong> traslado de los movimientos de cada asiento a la cuenta correspondiente del libro mayor.</li>
+<li><strong>Libro mayor:</strong> conjunto de cuentas, cada una con sus movimientos y su saldo.</li>
+<li><strong>Cuenta T:</strong> representación de una cuenta con el debe a la izquierda y el haber a la derecha.</li>
+<li><strong>Saldo deudor o acreedor:</strong> diferencia entre el debe y el haber de una cuenta, en el lado en que queda.</li>
+<li><strong>Naturaleza de la cuenta:</strong> lado en el que aumenta la cuenta: debe en los activos y gastos; haber en pasivos, patrimonio e ingresos.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval1" data-panel="eval1" aria-labelledby="t-eval1">
+<h2 id="t-eval1">Evaluación de la sesión 01 · Del diario al mayor</h2>
+<p class="meta">Semana 6 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="1"></div>
+</section>
+
+<section class="pestana" id="ses02" data-panel="ses02">
+<h2>Sesión 02 · El balance de comprobación preliminar</h2>
+<p class="meta">Semana 6 · Unidad 2 · Balance de comprobación preliminar de sumas y saldos; elaboración; errores que puede detectar y limitaciones (sesión global 17) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que la contadora de Costa Verde termina la mayorización de los cinco asientos de la sesión anterior. Antes de preparar cualquier informe, quiere comprobar que no cometió un error al trasladar las cifras. Sabe que las cuentas tienen saldos deudores y acreedores, y se pregunta si hay una manera rápida de verificar que todo cuadra. Esa verificación existe, y se llama balance de comprobación.</p>
+<p>Al terminar esta sesión podrás elaborar un balance de comprobación preliminar a partir de los saldos de un mayor; comprobar que las sumas de las columnas coinciden y explicar qué significa una diferencia; identificar los errores que el balance puede detectar; y explicar los errores que el balance no puede detectar, aunque el balance cuadre. Antes de empezar, recuerda que el saldo de cada cuenta se obtiene por la diferencia entre su debe y su haber, como viste en la sesión anterior.</p>
+</div>
+
+<h3>1. Qué es el balance de comprobación</h3>
+<div class="concepto">
+<h4>Definición y función</h4>
+<p>El balance de comprobación, también llamado balance de sumas y saldos, es una lista de todas las cuentas del libro mayor con su saldo deudor o acreedor, presentadas en dos columnas. Su función es comprobar que los traslados del libro diario al libro mayor se hicieron sin errores aritméticos. El balance se puede elaborar al cierre de un período o en cualquier momento en que quieras comprobar que los traslados del diario al mayor se hicieron correctamente.</p>
+<p>La idea que sostiene el balance es sencilla. Cada asiento tiene el mismo importe en el debe y en el haber. Si todos los asientos se trasladaron con sus dos lados, la suma de todos los saldos deudores debe ser igual a la suma de todos los saldos acreedores. Si las columnas no coinciden, algo se trasladó mal, se omitió o se calculó con un error.</p>
+</div>
+
+<p>El balance se llama <strong>preliminar</strong> porque se prepara antes de los asientos de ajuste y de cierre. Esos ajustes, como la depreciación o los gastos pagados por anticipado, se estudian en las unidades 3 y 4. Un balance preliminar muestra los saldos tal como están en el mayor en ese momento, sin ajustes. Por eso es una herramienta de control de la aritmética de los registros y no una presentación de la situación final de la empresa.</p>
+
+<h3>2. Cómo se elabora, paso a paso</h3>
+<p>El procedimiento es el mismo para cualquier período. Sigue estos pasos en orden, y no saltes el paso de comprobación al final.</p>
+<ol>
+<li><strong>Lista todas las cuentas con movimientos.</strong> Incluye las que tienen saldo cero, si tuvieron movimientos durante el período, porque su saldo cero es un resultado que conviene mostrar.</li>
+<li><strong>Calcula el saldo de cada cuenta.</strong> Resta el lado menor del lado mayor, y anota si el saldo queda en el debe o en el haber.</li>
+<li><strong>Ubica cada saldo en su columna.</strong> Un saldo deudor va en la columna deudora y uno acreedor en la columna acreedora. Un saldo cero puede anotarse en cualquiera de las dos columnas, con el importe 0,00.</li>
+<li><strong>Suma cada columna.</strong> Haz la suma de los saldos deudores y la suma de los saldos acreedores por separado.</li>
+<li><strong>Compara los totales.</strong> Si coinciden, el balance cuadra. Si no coinciden, la diferencia es la pista de la revisión.</li>
+<li><strong>Revisa lo que el balance no puede mostrar.</strong> Un balance que cuadra no dice que cada cuenta sea correcta. Repasa los asientos más importantes con sus documentos.</li>
+</ol>
+
+<h3>3. El balance del caso de Costa Verde</h3>
+<p>Ahora aplicaremos el procedimiento a los saldos de la sesión 01. Recuerda que la cuenta Caja tiene un saldo acreedor, el resultado que analizamos en esa sesión. Esta sesión no lo cambia: el balance lo muestra en la columna acreedora, y ese lugar es el que hace visible el problema. Las cuentas con saldo cero aparecen con 0,00 para que el lector sepa que tuvieron movimientos.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 2. Balance de comprobación preliminar de Comercializadora Costa Verde Cía. Ltda. con los asientos 1 a 5 de la sesión 01 (datos didácticos, sin ajustes)</caption>
+<thead><tr><th>Cuenta</th><th>Saldo deudor (dólares)</th><th>Saldo acreedor (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td></td><td>857,50</td></tr>
+<tr><td>Inventarios de mercaderías (1104)</td><td>2.000,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA (cuenta provisional)</td><td>187,50</td><td></td></tr>
+<tr><td>Proveedores por pagar (2101)</td><td></td><td>1.300,00</td></tr>
+<tr><td>IVA cobrado (cuenta provisional)</td><td>0,00</td><td></td></tr>
+<tr><td>Ventas (4101)</td><td></td><td>750,00</td></tr>
+<tr><td>Gasto de arriendo (cuenta provisional)</td><td>800,00</td><td></td></tr>
+<tr><td>Retención de renta por pagar (cuenta provisional)</td><td></td><td>80,00</td></tr>
+<tr><td><strong>Totales</strong></td><td><strong>2.987,50</strong></td><td><strong>2.987,50</strong></td></tr>
+</tbody></table></div>
+
+<div class="concepto">
+<h4>Cálculo 4. Comprobación de las columnas del balance</h4>
+<p><strong>Situación.</strong> La contadora necesita saber si el balance cuadra antes de continuar con el trabajo del período.</p>
+<p><strong>Supuestos y finalidad.</strong> No hay supuestos nuevos. El cálculo verifica la igualdad de las dos columnas del balance de la Tabla 2.</p>
+<p><strong>Qué buscamos.</strong> El total de la columna deudora, el total de la columna acreedora y la diferencia entre ambos.</p>
+<p><strong>Datos y origen.</strong> Saldos deudores: 2.000,00 (Inventarios), 187,50 (Crédito tributario), 0,00 (IVA cobrado) y 800,00 (Gasto de arriendo). Saldos acreedores: 857,50 (Caja), 1.300,00 (Proveedores), 750,00 (Ventas) y 80,00 (Retención de renta por pagar).</p>
+<p><strong>Por qué esta operación.</strong> Cada columna se suma por separado, porque la igualdad que se busca es entre el total de los saldos deudores y el total de los acreedores.</p>
+<p><strong>Procedimiento.</strong> Deudora: 2.000,00 + 187,50 + 0,00 + 800,00 = 2.987,50. Acreedora: 857,50 + 1.300,00 + 750,00 + 80,00 = 2.987,50.</p>
+<p><strong>Resultado.</strong> Ambas columnas suman 2.987,50 dólares. Diferencia: 0,00.</p>
+<p><strong>Comprobación.</strong> Se suma de nuevo cada columna en orden inverso, empezando por el último saldo. Acreedora, en orden inverso: 80,00 + 750,00 = 830,00; 830,00 + 1.300,00 = 2.130,00; 2.130,00 + 857,50 = 2.987,50. El resultado coincide, aunque esta suma no comprueba los saldos individuales.</p>
+<p><strong>Interpretación.</strong> El balance cuadra. Eso significa que la aritmética del traslado es coherente. No significa que cada saldo esté bien: el saldo de caja sigue siendo imposible, como vimos en la sesión anterior, y el balance no lo corrige.</p>
+</div>
+
+<h3>4. Qué puede detectar el balance</h3>
+<p>El balance de comprobación detecta errores que alteran la igualdad entre las dos columnas. Cuando una diferencia aparece, puedes hacer una lista de causas probables, y cada una tiene una forma de revisión distinta.</p>
+<ul>
+<li><strong>Un movimiento trasladado a un solo lado.</strong> Si un asiento se mayorizó en el debe, pero su haber quedó sin trasladar, la diferencia es exactamente el importe de ese asiento.</li>
+<li><strong>Un saldo copiado con cifra equivocada.</strong> Si el saldo de una cuenta se anotó con un dígito distinto en el balance, la columna queda desigual en la diferencia de ese error.</li>
+<li><strong>Un saldo omitido en una columna.</strong> Si una cuenta con saldo acreedor no aparece en el balance, la columna acreedora queda menor por ese importe.</li>
+<li><strong>Una trasposición de cifras.</strong> Cuando dos dígitos se cambian de orden, la diferencia es múltiplo de 9. Por ejemplo, 1.234 escrito como 1.243 produce una diferencia de 9. Esta regla no es absoluta, porque otros errores también pueden producir múltiplos de 9, pero es una pista útil.</li>
+</ul>
+<p>La revisión de una diferencia sigue una lógica. Primero calcula la diferencia exacta. Después revisa si es múltiplo de 9. Luego busca en el mayor un saldo o un movimiento de ese mismo importe. Si lo encuentras, verifica si está en la columna correcta. Si no lo encuentras, revisa si hay un asiento con un solo lado trasladado. Nunca cambies una cifra solo para que el balance cuadre: la diferencia indica dónde buscar, no qué cifra escribir.</p>
+
+<h3>5. Qué no puede detectar el balance</h3>
+<p>Un balance que cuadra puede tener errores, y ese es el punto más importante de esta sesión. La igualdad confirma la aritmética del traslado, pero no confirma que cada movimiento esté en la cuenta correcta ni que el importe sea el adecuado. Las limitaciones más frecuentes son las siguientes.</p>
+<ul>
+<li><strong>Un asiento invertido.</strong> Si una venta al contado se registra con el debe y el haber cambiados, ambas columnas siguen iguales. Solo cambia la columna donde aparece cada saldo.</li>
+<li><strong>Una cuenta equivocada.</strong> Si el arriendo de 800,00 dólares se registra en Inventarios de mercaderías en vez de en Gasto de arriendo, el balance cuadra. La clasificación solo se revisa comparando el asiento con el documento y con la naturaleza de la operación.</li>
+<li><strong>Un asiento omitido por completo.</strong> Si una operación nunca se registró, ninguna columna tiene su rastro, y el balance sigue cuadrando.</li>
+<li><strong>Un importe errado en los dos lados.</strong> Si una compra de 2.300,00 dólares se registra por 2.000,00 en ambos lados, el balance cuadra con la cifra incorrecta.</li>
+</ul>
+
+<div class="concepto">
+<h4>Una balanza que mide la igualdad, no la exactitud</h4>
+<p>Una comparación útil es la de una balanza de dos platos. Si los dos platos pesan lo mismo, sabes que la suma de lo que colocaste a cada lado coincide. Pero la balanza no te dice si pusiste en cada plato lo que debías poner. Una pieza equivocada puede equilibrar la balanza igual que la pieza correcta. El balance de comprobación funciona así: confirma la igualdad de los traslados, y la pertinencia de cada cuenta depende de la revisión de los asientos y de los documentos. La analogía tiene un límite: en el balance, las cuentas no pesan lo mismo, porque cada una tiene su propia naturaleza, y eso también debe revisarse.</p>
+</div>
+
+<h3>6. Errores previsibles y ayuda para corregirlos</h3>
+<p>Un error de clasificación casi nunca se nota en el balance. Por eso la revisión debe hacerse con la pregunta que ya conoces: ¿qué ocurrió, qué recibió o entregó la empresa y para qué lo utilizará? Si un gasto aparece en inventarios, identifica primero si la empresa recibió algo para vender o algo para consumir. Después compara la cuenta usada con la naturaleza de esa operación.</p>
+<p>Si el balance no cuadra, la ayuda correctiva debe ser concreta. Por ejemplo: «Si la diferencia es 80,00 dólares, busca en el mayor un saldo o un movimiento de 80,00 dólares. Si lo encuentras en una sola columna, verifica si debía estar en la otra. Si no lo encuentras, revisa si un asiento quedó trasladado en un solo lado». Evita decir solo «revisa el mayor»: esa frase no indica qué buscar.</p>
+<p>Un error de cálculo, como un saldo mal restado, produce una diferencia y debe corregirse en la cuenta. Un error de registro, como un asiento invertido, no produce diferencia y solo se corrige revisando el documento. Distinguir ambos tipos te ayuda a no buscar donde no está el problema.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Un balance de comprobación muestra 5.000,00 dólares en la columna deudora y 5.000,00 dólares en la columna acreedora. Un compañero concluye: «Como cuadra, todas las cuentas están bien clasificadas». ¿Qué le responderías? Antes de leer la respuesta, escribe qué puede confirmar el balance y qué no.</p>
+<p class="ayuda">Si respondiste que el balance confirma la igualdad de los traslados y no la clasificación de cada cuenta, vas bien. Si pensaste que el balance podría estar cuadrado con un arriendo registrado en inventarios, ya identificaste la limitación principal de esta sesión.</p>
+</div>
+
+<h3>7. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Trabaja individualmente y escribe tu respuesta antes de abrir cada solución.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Elaborar un balance con saldos dados</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad elaborarás un balance de comprobación preliminar. Supongamos que los saldos finales de una empresa comercial, sin ajustes, son los siguientes: Caja, saldo deudor de 300,00 dólares; Inventarios de mercaderías, deudor de 1.200,00; Gasto de servicios básicos, deudor de 600,00; Proveedores por pagar, acreedor de 450,00; Ventas, acreedor de 900,00; Capital, acreedor de 750,00. Ubica cada saldo en su columna, suma ambas columnas y comprueba si el balance cuadra.</p>
+<p class="ayuda">Antes de sumar, ubica cada saldo por su lado, sin cambiar la cifra. Luego suma cada columna por separado.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Columna deudora:</strong> Caja 300,00; Inventarios 1.200,00; Servicios básicos 600,00. Total: 2.100,00.</p>
+<p><strong>Columna acreedora:</strong> Proveedores 450,00; Ventas 900,00; Capital 750,00. Total: 2.100,00.</p>
+<p><strong>Comprobación.</strong> Las dos columnas suman lo mismo. La suma en orden inverso de la columna acreedora confirma el resultado: 750,00 + 900,00 = 1.650,00; 1.650,00 + 450,00 = 2.100,00.</p>
+<p><strong>Interpretación.</strong> El balance cuadra. Como el ejercicio solo usa los saldos dados, la igualdad confirma la aritmética de esos saldos, pero no permite verificar cómo se obtuvieron.</p>
+<p><strong>Error frecuente:</strong> ubicar un saldo acreedor en la columna deudora por su tamaño. La columna depende del lado del saldo, no de su importe.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El balance organiza los saldos por lado. La igualdad de las columnas es el resultado de haber ubicado cada saldo en el lugar que le corresponde.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Interpretar una diferencia de 80,00 dólares</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad analizarás un balance que no cuadra. Supongamos que el balance de una empresa muestra un total deudor de 3.000,00 dólares y un total acreedor de 2.920,00 dólares. Calcula la diferencia, indica si es múltiplo de 9 y propón qué revisar primero en el mayor, sin cambiar ninguna cifra para igualar las columnas.</p>
+<p class="ayuda">Divide la diferencia entre 9 para saber si es múltiplo. Después busca en el mayor un importe igual a la diferencia, en la columna donde falta.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Diferencia.</strong> 3.000,00 − 2.920,00 = 80,00. La columna acreedora es menor, así que falta un importe de 80,00 en ese lado.</p>
+<p><strong>Múltiplo de 9.</strong> 80 ÷ 9 no da un número entero exacto, así que la diferencia no es múltiplo de 9. Esto hace menos probable una trasposición de cifras.</p>
+<p><strong>Revisión.</strong> Busca en el mayor un saldo de 80,00 dólares en el lado acreedor. En el caso de la sesión 01 existe una retención de renta por pagar de 80,00 dólares, asociada al arriendo. Si esa cifra no aparece en la columna acreedora del balance, habrá que verificar el traslado del asiento de arriendo.</p>
+<p><strong>Interpretación.</strong> La revisión es una hipótesis que debe comprobarse en el mayor, no una conclusión. Si el importe de 80,00 está en el mayor pero no en el balance, el error está en la preparación del balance. Si no está en el mayor, el error puede estar en el traslado.</p>
+<p><strong>Error frecuente:</strong> aumentar la columna acreedora en 80,00 para que cuadre. El balance quedaría cuadrado sin que el error se hubiera encontrado.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La diferencia indica dónde buscar, pero no es un dato para completar. Una cifra añadida para cuadrar oculta el error y no lo corrige.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Un asiento invertido en el balance</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad analizarás qué detecta y qué no detecta el balance ante un error de lado. Supongamos que una venta al contado de 600,00 dólares se registró como Debe Ventas 600,00 y Haber Caja 600,00, en vez de Debe Caja 600,00 y Haber Ventas 600,00. Ninguna otra operación afecta a estas cuentas. Indica en qué columna queda cada cuenta y explica si el balance detecta el error.</p>
+<p class="ayuda">Piensa en el saldo de cada cuenta con el lado invertido. Después compara las sumas de las dos columnas.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Saldos invertidos.</strong> Caja queda con haber de 600,00, es decir, saldo acreedor de 600,00. Ventas queda con debe de 600,00, es decir, saldo deudor de 600,00. Lo correcto habría sido Caja deudora y Ventas acreedora, ambas por 600,00.</p>
+<p><strong>Columnas.</strong> La columna deudora tiene Ventas por 600,00 y la columna acreedora tiene Caja por 600,00. Ambas columnas suman 600,00.</p>
+<p><strong>Detección.</strong> El balance no detecta el error, porque las sumas siguen siendo iguales. El error solo se hace visible al revisar el signo de los saldos de Caja y Ventas, que es contrario a su naturaleza.</p>
+<p><strong>Interpretación.</strong> Un saldo de Caja acreedor debe despertar la misma sospecha que en la sesión 01. Un saldo deudor en Ventas, un ingreso, también exige revisión. Esa revisión se hace con el documento de la venta, no con la igualdad del balance.</p>
+<p><strong>Error frecuente:</strong> pensar que el balance corregirá el error porque cuadra. La igualdad no prueba el lado de cada movimiento.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El lado de un movimiento puede estar mal y aun así producir un balance cuadrado. Por eso la naturaleza de cada cuenta es una herramienta de revisión que el balance no ejecuta por sí solo.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Calcular el saldo de una cuenta con varios movimientos</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás el saldo de una cuenta con varios movimientos en cada lado. Supongamos que la cuenta Caja de una empresa comercial registra en el debe 300,00 y 250,00 dólares, y en el haber 180,00 y 90,00 dólares. Calcula el saldo, indica en qué columna del balance debe aparecer y explica por qué.</p>
+<p class="ayuda">Suma cada lado por separado antes de restar. El resultado de la resta indica la columna.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Totales.</strong> Debe: 300,00 + 250,00 = 550,00. Haber: 180,00 + 90,00 = 270,00.</p>
+<p><strong>Saldo.</strong> 550,00 − 270,00 = 280,00, deudor.</p>
+<p><strong>Columna del balance.</strong> Caja es un activo de naturaleza deudora, y el saldo es deudor. Por eso aparece en la columna deudora por 280,00 dólares.</p>
+<p><strong>Comprobación.</strong> El saldo más el haber debe dar el debe: 280,00 + 270,00 = 550,00.</p>
+<p><strong>Error frecuente:</strong> sumar todos los movimientos sin distinguir lados (550,00 + 270,00 = 820,00). Esa suma no tiene un significado contable.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un saldo nace de la comparación entre los dos lados de una cuenta, y no de la suma de todas sus cifras. Ese es el único camino para ubicarlo en la columna correcta.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Qué confirma el balance y qué no</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad escribirás una respuesta breve sobre las limitaciones del balance. Redacta un párrafo que explique tres cosas que el balance confirma y tres que no puede confirmar. Para cada una de las tres que no confirma, da un ejemplo de un error que dejaría pasar.</p>
+<p class="ayuda">Piensa en lo que se traslada, en la igualdad de las columnas y en la clasificación de cada cuenta. La respuesta debe ser coherente con la sección 5.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Confirma.</strong> Primero, que las sumas de los saldos deudores y acreedores son iguales. Segundo, que cada saldo se calculó y ubicó en una columna, siempre que la diferencia sea cero. Tercero, que no hay una diferencia de traslado aritmético en el conjunto de cuentas.</p>
+<p><strong>No confirma.</strong> Primero, que cada movimiento esté en la cuenta correcta: un arriendo registrado en inventarios cuadra. Segundo, que el lado de cada movimiento sea el adecuado: una venta invertida cuadra. Tercero, que las operaciones estén completas: un asiento omitido no deja diferencia.</p>
+<p><strong>Comprobación.</strong> Cada punto que no confirma tiene un ejemplo concreto y un documento que permitiría revisarlo: el contrato de arriendo, el comprobante de venta y la lista de operaciones del período.</p>
+<p><strong>Interpretación.</strong> Un balance cuadrado es una buena señal de coherencia aritmética. Antes de presentarlo como información confiable, debe acompañarse de la revisión de los documentos y de la clasificación de las cuentas.</p>
+<p><strong>Error frecuente:</strong> afirmar que el balance «demuestra» que la contabilidad está bien. Lo que demuestra es la igualdad de los traslados.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Saber qué no confirma un instrumento es tan importante como saber qué confirma. Esa distinción evita presentar una igualdad como prueba de exactitud.</p></div>
+</div>
+
+<h3>8. Cierre de la sesión</h3>
+<p>Volvamos a la contadora de Costa Verde. Ya no necesita preguntarse si las cifras se trasladaron con errores aritméticos, porque el balance lo comprobó: las dos columnas suman 2.987,50 dólares. Lo que todavía necesita es revisar las cuentas cuyo saldo parece extraño, como la caja, y los asientos que podrían tener un lado invertido o una clasificación equivocada.</p>
+<p>La lección de la sesión tiene tres partes. El balance preliminar se elabora a partir de los saldos del mayor y se compara sin cambiar cifras. Una diferencia indica dónde buscar, pero no es un dato para completar. Y una columna igual no demuestra que cada cuenta esté bien. Por eso el balance es una herramienta necesaria, pero nunca suficiente, para decidir si la información es confiable.</p>
+<p>Como tarea de transferencia, toma los saldos de una empresa comercial imaginaria de tu elección, con cinco cuentas, y arma el balance preliminar. Después escribe, en tres líneas, qué revisarías si las columnas no cuadraran. Si alguna respuesta no te queda clara, relee la sección 4 o la sección 5.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Balance de comprobación:</strong> lista de las cuentas con sus saldos deudores y acreedores, para verificar la igualdad de los traslados.</li>
+<li><strong>Preliminar:</strong> elaborado antes de los asientos de ajuste y de cierre.</li>
+<li><strong>Diferencia:</strong> resultado de restar el total de una columna del total de la otra.</li>
+<li><strong>Trasposición:</strong> error que consiste en cambiar el orden de dos o más dígitos de una cifra.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval2" data-panel="eval2" aria-labelledby="t-eval2">
+<h2 id="t-eval2">Evaluación de la sesión 02 · El balance de comprobación preliminar</h2>
+<p class="meta">Semana 6 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="2"></div>
+</section>
+
+<section class="pestana" id="ses03" data-panel="ses03">
+<h2>Sesión 03 · Repaso guiado: de la jornalización al balance</h2>
+<p class="meta">Semana 6 · Unidad 2 · Clase de refuerzo: repaso de jornalización, mayorización y balance de comprobación; guía resuelta; práctica individual y revisión de soluciones (sin número global asignado en el plan) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Esta es una clase de refuerzo. No introduce un tema nuevo: junta en un solo recorrido lo que estudiaste en las semanas 5 y 6, y te da la oportunidad de hacerlo por tu cuenta antes de la evaluación. Imagina que una estudiante de Costa Verde recibe los documentos de un nuevo mes y debe llegar, paso a paso, del papel al balance. Si puedes hacer ese recorrido sin ayuda, el tema está bien asentado.</p>
+<p>Al terminar esta sesión podrás recorrer el ciclo completo de un período con un caso nuevo, escribir cada asiento con su glosa y su comprobación, mayorizar las cuentas y preparar el balance, y revisar un caso ajeno para encontrar errores de clasificación que el balance no muestra. Trabaja en orden: escribe tu respuesta de cada pausa antes de avanzar.</p>
+<p><strong>Distribución orientativa:</strong> repaso 10 minutos; guía resuelta con pausas 35; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. Repaso integrado del ciclo</h3>
+<p>Cada etapa responde una pregunta distinta y produce una salida que alimenta a la siguiente. Si una etapa falla, las que siguen también fallan, aunque sus cifras parezcan correctas. Por eso conviene verificar cada salida antes de pasar a la siguiente.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 3. Etapas del ciclo de un período, la pregunta que responde cada una y su salida</caption>
+<thead><tr><th>Etapa</th><th>Pregunta que responde</th><th>Salida</th></tr></thead>
+<tbody>
+<tr><td>Documento fuente</td><td>¿Ocurrió una operación que cambia el patrimonio?</td><td>Prueba de la operación, o una decisión sin efecto contable.</td></tr>
+<tr><td>Jornalización</td><td>¿Qué cuentas se afectan, en qué lado y por cuánto?</td><td>Asiento con su glosa y su comprobación de igualdad.</td></tr>
+<tr><td>Mayorización</td><td>¿Cuál es el movimiento acumulado de cada cuenta?</td><td>Cuentas con sus movimientos y su saldo deudor o acreedor.</td></tr>
+<tr><td>Balance de comprobación</td><td>¿Cuadran las sumas de los traslados?</td><td>Lista de saldos con columnas que deben coincidir. No prueba la clasificación.</td></tr>
+</tbody></table></div>
+
+<h3>2. Guía resuelta: un mes de Comercializadora Costa Verde</h3>
+<p>Supongamos que Comercializadora Costa Verde Cía. Ltda. registra, en un mes de práctica distinto del caso de la sesión 01, cinco operaciones con los documentos ya conocidos. Como en la sesión 01, todas las cuentas comienzan en cero. Los datos son nuevos, así que este caso no es la continuación de los anteriores. Los asientos se numeran a partir del 6, porque los asientos 1 a 5 ya se usaron en la sesión 01.</p>
+<p>Antes de mirar la solución de cada asiento, trata de escribirlo por tu cuenta. Empieza por el documento, después decide el tipo de operación y, por último, escribe las cuentas y los importes.</p>
+
+<div class="asiento">
+<h4>Asiento 6. Compra a crédito de 100 camisetas a 10,00 dólares sin IVA</h4>
+<p>Base: 100 × 10,00 = 1.000,00. IVA de 15 %: 150,00. Total: 1.150,00, que se debe al proveedor.</p>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día de la factura de compra.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Inventarios de mercaderías (1104)</td><td>1.000,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA (cuenta provisional)</td><td>150,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Proveedores por pagar (2101)</td><td></td><td>1.150,00</td></tr>
+<tr><td><em>Glosa: P/R compra a crédito de 100 camisetas a un proveedor, con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.000,00 + 150,00 = 1.150,00 = haber 1.150,00. La mercadería entra por la base; el IVA es un derecho; la deuda incluye el total.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 7. Venta al contado de 40 camisetas a 15,00 dólares sin IVA</h4>
+<p>Base: 40 × 15,00 = 600,00. IVA de 15 %: 90,00. Total cobrado: 690,00.</p>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día de la venta y del cobro.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td>690,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Ventas (4101)</td><td></td><td>600,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;IVA cobrado (cuenta provisional)</td><td></td><td>90,00</td></tr>
+<tr><td><em>Glosa: P/R venta al contado de 40 camisetas a cliente final, con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 690,00 = haber 600,00 + 90,00. El ingreso es la base; el IVA cobrado es una obligación.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 8. Pago parcial de 100,00 dólares al proveedor</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día del pago.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Proveedores por pagar (2101)</td><td>100,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja (1101)</td><td></td><td>100,00</td></tr>
+<tr><td><em>Glosa: P/R pago parcial de la factura de compra de 100 camisetas.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 100,00 = haber 100,00. La deuda disminuye y la caja también.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 9. Arriendo de 500,00 dólares con retención del 10 %</h4>
+<p>Retención: 500,00 × 0,10 = 50,00. Pago neto: 500,00 − 50,00 = 450,00. El arriendo no tiene IVA en este caso.</p>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día del pago del arriendo.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Gasto de arriendo (cuenta provisional)</td><td>500,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja (1101)</td><td></td><td>450,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Retención de renta por pagar (cuenta provisional)</td><td></td><td>50,00</td></tr>
+<tr><td><em>Glosa: P/R arriendo de bodega a persona natural, con retención de renta del 10 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 500,00 = haber 450,00 + 50,00. El gasto mide el arriendo completo; la caja sale por el pago neto.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 10. Compensación del IVA cobrado con el crédito tributario</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: cierre del período.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>IVA cobrado (cuenta provisional)</td><td>90,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Crédito tributario de IVA (cuenta provisional)</td><td></td><td>90,00</td></tr>
+<tr><td><em>Glosa: P/R compensación del IVA cobrado del período con el crédito tributario.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 90,00 = haber 90,00. Como el IVA cobrado (90,00) y el crédito (150,00) se compensan por el monto menor, el crédito queda con 60,00.</p>
+</div>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Antes de mayorizar, responde: ¿en qué cuenta aparecerá el saldo de la mercadería comprada en el asiento 6, y por qué no aparece como gasto? Luego explica por qué el asiento 10 no cambia la cuenta Ventas.</p>
+<p class="ayuda">Si respondiste que la mercadería va a inventarios porque se compró para vender, y que su costo no se reconoce como gasto en este momento, vas bien. Si pensaste que la compensación del IVA afecta a Ventas, revisa la sección 2 de la sesión 01: la compensación solo toca cuentas de IVA.</p>
+</div>
+
+<h3>3. Mayorización y saldos del caso</h3>
+<p>Ahora traslada cada movimiento a su cuenta, con el número de asiento, y calcula el saldo. Observa que la tabla mantiene el mismo orden de cuentas que usamos en la sesión 01.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 4. Movimientos y saldos de cada cuenta del caso de la guía resuelta (datos didácticos)</caption>
+<thead><tr><th>Cuenta</th><th>Debe (dólares)</th><th>Haber (dólares)</th><th>Saldo (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td>690,00 (asiento 7)</td><td>100,00 (asiento 8); 450,00 (asiento 9)</td><td>140,00 deudor</td></tr>
+<tr><td>Inventarios de mercaderías (1104)</td><td>1.000,00 (asiento 6)</td><td></td><td>1.000,00 deudor</td></tr>
+<tr><td>Crédito tributario de IVA (cuenta provisional)</td><td>150,00 (asiento 6)</td><td>90,00 (asiento 10)</td><td>60,00 deudor</td></tr>
+<tr><td>Proveedores por pagar (2101)</td><td>100,00 (asiento 8)</td><td>1.150,00 (asiento 6)</td><td>1.050,00 acreedor</td></tr>
+<tr><td>IVA cobrado (cuenta provisional)</td><td>90,00 (asiento 10)</td><td>90,00 (asiento 7)</td><td>0,00</td></tr>
+<tr><td>Ventas (4101)</td><td></td><td>600,00 (asiento 7)</td><td>600,00 acreedor</td></tr>
+<tr><td>Gasto de arriendo (cuenta provisional)</td><td>500,00 (asiento 9)</td><td></td><td>500,00 deudor</td></tr>
+<tr><td>Retención de renta por pagar (cuenta provisional)</td><td></td><td>50,00 (asiento 9)</td><td>50,00 acreedor</td></tr>
+</tbody></table></div>
+
+<div class="concepto">
+<h4>Cálculo 5. Saldo de Caja del caso</h4>
+<p><strong>Situación.</strong> El gerente quiere saber cuánto efectivo queda al final del mes.</p>
+<p><strong>Supuestos y finalidad.</strong> Se supone que la caja comienza en cero, como en la sesión 01. Con ese supuesto, el saldo final coincide con el efectivo que resulta de los movimientos del mes.</p>
+<p><strong>Qué buscamos.</strong> El saldo de Caja (1101), en dólares y con su lado.</p>
+<p><strong>Datos y origen.</strong> Debe de 690,00 (asiento 7). Haber de 100,00 (asiento 8) y de 450,00 (asiento 9).</p>
+<p><strong>Por qué esta operación.</strong> La caja es deudora, y su saldo se obtiene restando el haber del debe.</p>
+<p><strong>Procedimiento.</strong> Haber total = 100,00 + 450,00 = 550,00. Saldo = 690,00 − 550,00 = 140,00.</p>
+<p><strong>Resultado.</strong> 140,00 dólares, deudor.</p>
+<p><strong>Comprobación.</strong> El saldo más el haber debe dar el debe: 140,00 + 550,00 = 690,00.</p>
+<p><strong>Interpretación.</strong> Este saldo es posible porque coincide con su naturaleza. Si el saldo inicial de caja fuera distinto de cero, el saldo final cambiaría en la misma cantidad; por eso el supuesto debe declararse.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 6. Comprobación de las sumas de los movimientos</h4>
+<p><strong>Situación.</strong> Antes de preparar el balance, conviene comprobar que el total de los movimientos del debe y del haber coincide.</p>
+<p><strong>Supuestos y finalidad.</strong> No hay supuestos nuevos. El cálculo es una verificación previa al balance.</p>
+<p><strong>Qué buscamos.</strong> El total del debe y el total del haber de todos los movimientos.</p>
+<p><strong>Datos y origen.</strong> Debe: 1.000,00 (asiento 6), 150,00 (asiento 6), 690,00 (asiento 7), 100,00 (asiento 8), 500,00 (asiento 9) y 90,00 (asiento 10). Haber: 1.150,00 (asiento 6), 600,00 (asiento 7), 90,00 (asiento 7), 100,00 (asiento 8), 450,00 (asiento 9), 50,00 (asiento 9) y 90,00 (asiento 10).</p>
+<p><strong>Por qué esta operación.</strong> Cada asiento tiene el mismo total en ambos lados. Al sumar todos los movimientos, los dos totales deben coincidir.</p>
+<p><strong>Procedimiento.</strong> Debe: 1.000,00 + 150,00 + 690,00 + 100,00 + 500,00 + 90,00 = 2.530,00. Haber: 1.150,00 + 600,00 + 90,00 + 100,00 + 450,00 + 50,00 + 90,00 = 2.530,00.</p>
+<p><strong>Resultado.</strong> Ambos totales son 2.530,00 dólares.</p>
+<p><strong>Comprobación.</strong> Cada asiento se comprueba por separado: asiento 6 (1.150,00 = 1.150,00), asiento 7 (690,00 = 690,00), asiento 8 (100,00 = 100,00), asiento 9 (500,00 = 500,00) y asiento 10 (90,00 = 90,00).</p>
+<p><strong>Interpretación.</strong> La igualdad confirma que los asientos están completos en ambos lados. No confirma que las cuentas sean las adecuadas, como veremos al revisar un caso.</p>
+</div>
+
+<h3>4. El balance de comprobación del caso</h3>
+<p>Con los saldos de la tabla 4 se prepara el balance preliminar. Los saldos deudores van a la columna izquierda y los acreedores a la derecha, cada uno con su importe.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 5. Balance de comprobación preliminar de la guía resuelta (datos didácticos, sin ajustes)</caption>
+<thead><tr><th>Cuenta</th><th>Saldo deudor (dólares)</th><th>Saldo acreedor (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td>140,00</td><td></td></tr>
+<tr><td>Inventarios de mercaderías (1104)</td><td>1.000,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA (cuenta provisional)</td><td>60,00</td><td></td></tr>
+<tr><td>Gasto de arriendo (cuenta provisional)</td><td>500,00</td><td></td></tr>
+<tr><td>IVA cobrado (cuenta provisional)</td><td>0,00</td><td></td></tr>
+<tr><td>Proveedores por pagar (2101)</td><td></td><td>1.050,00</td></tr>
+<tr><td>Ventas (4101)</td><td></td><td>600,00</td></tr>
+<tr><td>Retención de renta por pagar (cuenta provisional)</td><td></td><td>50,00</td></tr>
+<tr><td><strong>Totales</strong></td><td><strong>1.700,00</strong></td><td><strong>1.700,00</strong></td></tr>
+</tbody></table></div>
+<p>Las dos columnas suman 1.700,00 dólares. El balance cuadra, y, como vimos en la sesión 02, esa igualdad confirma solo la aritmética del traslado. La revisión de la clasificación sigue pendiente.</p>
+
+<h3>5. Cómo leer un balance y qué revisar antes de darlo por bueno</h3>
+<p>Un balance preliminar se lee en un orden fijo. Primero compara los totales. Después revisa el signo de cada saldo frente a la naturaleza de su cuenta. Luego busca cuentas que deberían tener saldo y no lo tienen, o que tienen un saldo que no corresponde a la operación. Por último, vuelve a los documentos de las cuentas más grandes. Esa lectura en cuatro pasos te permite distinguir un balance que cuadra de uno que además está bien preparado.</p>
+<p>En el caso de la guía, el saldo de Caja es deudor y coincide con su naturaleza, lo que resulta coherente con el supuesto. La cuenta Ventas es acreedora y su importe corresponde solo a la base de la venta, no al total cobrado. Esa revisión es la que hace visible una clasificación incorrecta, como veremos en el ejercicio 5.</p>
+
+<h3>6. Errores habituales y revisión</h3>
+<ul>
+<li><strong>El balance no cuadra por una diferencia pequeña.</strong> Revisa si un saldo se copió con una cifra equivocada o si un movimiento quedó en un solo lado. Busca el importe exacto de la diferencia en el mayor.</li>
+<li><strong>El balance cuadra, pero la caja tiene saldo acreedor.</strong> Revisa si falta el saldo inicial o un cobro. No cambies la cifra para que el saldo sea deudor.</li>
+<li><strong>Una venta aparece con el total en ingresos.</strong> El ingreso es la base. Separa el IVA cobrado como obligación en el haber.</li>
+<li><strong>Un gasto aparece por el pago neto.</strong> El gasto se mide por el valor total recibido. La retención es una obligación.</li>
+<li><strong>Un derecho de IVA aparece como gasto.</strong> El IVA pagado en una compra para vender es un derecho frente al SRI; la mercadería entra por la base.</li>
+</ul>
+
+<h3>7. Práctica individual y revisión de soluciones</h3>
+<p>A continuación encontrarás cinco ejercicios independientes. Trabaja sin mirar las soluciones y revisa cada resultado con las comprobaciones que indica la solución. Los ejercicios no repiten el caso de la guía: cambian los datos y, en algunos casos, el tipo de error que debes encontrar.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Jornalizar una compra al contado con IVA</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás una compra pagada en efectivo. Supongamos que Costa Verde compra al contado 60 camisetas a 10,00 dólares cada una, sin IVA, y paga el total de la factura, con IVA de 15 %. Calcula la base, el IVA y el total, y escribe el asiento con su glosa.</p>
+<p class="ayuda">Decide primero qué cuenta recibe la mercadería y cuál recibe el IVA. Caja registra el total pagado.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 60 × 10,00 = 600,00. IVA = 600,00 × 0,15 = 90,00. Total = 690,00.</p>
+<p><strong>Asiento 11:</strong> Debe Inventarios de mercaderías (1104) 600,00; Debe Crédito tributario de IVA (provisional) 90,00; Haber Caja (1101) 690,00. Glosa: P/R compra al contado de 60 camisetas, con IVA de 15 %.</p>
+<p><strong>Comprobación.</strong> Debe 600,00 + 90,00 = 690,00 = haber 690,00. Además, 690 ÷ 1,15 = 600, que es la base.</p>
+<p><strong>Error frecuente:</strong> registrar el inventario por 690,00. Así se incluye en la mercadería un IVA que se recupera.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Pagar al contado no cambia la clasificación de la compra: cambia solo la cuenta del pago. La mercadería y el derecho al IVA siguen siendo los mismos.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Mayorizar Caja con tres movimientos</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás el saldo de la cuenta Caja con tres movimientos. Supongamos que la cuenta Caja registra en el debe un cobro de 500,00 dólares y otro de 100,00 dólares, y en el haber un pago de 320,00 dólares. Calcula el saldo e indica su lado y su columna en el balance.</p>
+<p class="ayuda">Suma cada lado por separado antes de restar.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Debe: 500,00 + 100,00 = 600,00. Haber: 320,00. Saldo = 600,00 − 320,00 = 280,00, deudor.</p>
+<p><strong>Columna.</strong> Caja es deudora, así que el saldo va a la columna deudora, por 280,00 dólares.</p>
+<p><strong>Comprobación.</strong> El saldo más el haber debe dar el debe: 280,00 + 320,00 = 600,00.</p>
+<p><strong>Error frecuente:</strong> sumar los cobros y los pagos sin distinguir lados (500,00 + 100,00 + 320,00 = 920,00).</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un saldo nace de la comparación de los dos lados de la cuenta. Cuantos más movimientos tenga la cuenta, más importante es sumar cada lado por separado.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Liquidar un IVA cobrado mayor que el crédito</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad liquidarás el IVA de un período. En el período, Costa Verde tiene un IVA cobrado de 150,00 dólares y un crédito tributario de 90,00 dólares. Escribe el asiento de compensación y determina el saldo que queda, indicando si es deuda o derecho.</p>
+<p class="ayuda">Compensa solo el monto menor. Lo que queda en la cuenta mayor es el saldo que debes explicar.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento de compensación:</strong> Debe IVA cobrado 90,00; Haber Crédito tributario de IVA 90,00. Glosa: P/R compensación del IVA cobrado con el crédito tributario.</p>
+<p><strong>Saldo que queda.</strong> IVA cobrado: 150,00 − 90,00 = 60,00 acreedor. Crédito tributario: 90,00 − 90,00 = 0,00.</p>
+<p><strong>Comprobación.</strong> El asiento cuadra: 90,00 = 90,00. El saldo acreedor de 60,00 más el debe de 90,00 da el haber de 150,00.</p>
+<p><strong>Interpretación.</strong> El IVA cobrado supera el crédito, así que queda una obligación de 60,00 dólares. Es el IVA por pagar del período.</p>
+<p><strong>Error frecuente:</strong> registrar la compensación por 150,00 o registrar 240,00 como IVA por pagar, al sumar los dos saldos. Compensar no es sumar.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La liquidación compara lo que se debe con lo que se puede descontar. El saldo que sobra indica si la empresa tiene una obligación o un derecho.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Un arriendo de 700,00 dólares con retención</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás el pago de un arriendo con retención de renta. Supongamos que Costa Verde paga 700,00 dólares, sin IVA, por el arriendo de una bodega a una persona natural. Aplica el 10 % del arriendo de inmuebles, calcula la retención y el pago neto, y escribe el asiento.</p>
+<p class="ayuda">El gasto es el valor total del arriendo. La caja recibe el pago neto y la retención es una obligación.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Retención = 700,00 × 0,10 = 70,00. Pago neto = 700,00 − 70,00 = 630,00.</p>
+<p><strong>Asiento 12:</strong> Debe Gasto de arriendo (provisional) 700,00; Haber Caja (1101) 630,00; Haber Retención de renta por pagar (provisional) 70,00. Glosa: P/R arriendo de bodega a persona natural, con retención del 10 %.</p>
+<p><strong>Comprobación.</strong> Debe 700,00 = haber 630,00 + 70,00. Además, 630 + 70 = 700.</p>
+<p><strong>Error frecuente:</strong> registrar el gasto por 630,00. La retención no reduce el gasto; es una deuda con el SRI.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un gasto se mide por el valor recibido, y la caja por lo que efectivamente sale. La diferencia entre ambos es una obligación que el asiento debe mostrar.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Revisar un asiento que cuadra y está mal</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad revisarás un asiento ajeno. Una estudiante de Costa Verde registró la venta al contado de 40 camisetas a 15,00 dólares sin IVA, con IVA de 15 %, de la siguiente forma: Debe Caja 690,00; Haber Ventas 690,00. Indica si el asiento cuadra, qué error contiene y cómo debe corregirse. El asiento corregido será el asiento 13.</p>
+<p class="ayuda">Calcula la base y el IVA de la venta. Después pregúntate qué parte del total es ingreso y qué parte es obligación con el SRI.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>¿Cuadra?</strong> Sí: debe 690,00 = haber 690,00. Por eso la igualdad no basta para aceptar el asiento.</p>
+<p><strong>Error.</strong> La base de la venta es 40 × 15,00 = 600,00, que es el ingreso. El IVA de 15 % es 90,00, que es una obligación con el SRI. Al registrar 690,00 en Ventas, el ingreso queda sobrestimado en 90,00 dólares y el IVA cobrado no aparece.</p>
+<p><strong>Asiento corregido 13:</strong> Debe Caja (1101) 690,00; Haber Ventas (4101) 600,00; Haber IVA cobrado (provisional) 90,00. Glosa: P/R venta al contado de 40 camisetas, con IVA de 15 %.</p>
+<p><strong>Comprobación.</strong> Debe 690,00 = haber 600,00 + 90,00. Además, 690 ÷ 1,15 = 600, que es la base.</p>
+<p><strong>Interpretación.</strong> El error no aparece en el balance, porque el asiento cuadra. Se detecta revisando el documento de la venta y la naturaleza de cada cuenta. Si el balance se hubiera preparado con el asiento equivocado, la columna acreedora habría cuadrado igual.</p>
+<p><strong>Error frecuente:</strong> corregir solo el ingreso y dejar el IVA sin registrar, o viceversa. Ambas partes deben corregirse en el mismo asiento.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El asiento que cuadra puede tener un error de clasificación. Por eso la revisión de un asiento combina la aritmética con la pregunta sobre qué ocurrió y qué cuenta corresponde.</p></div>
+</div>
+
+<h3>8. Cierre de la sesión</h3>
+<p>Volvamos a la estudiante que recibió los documentos del mes. Ahora puede recorrer el ciclo completo: decidió qué operaciones se registran, escribió cinco asientos con sus glosas, mayorizó las cuentas y preparó un balance que cuadra. Pero también sabe que el balance no confirma todo. Debe volver a los documentos para revisar que el IVA y el ingreso están separados, que los gastos se miden por su valor total y que las retenciones aparecen como obligaciones.</p>
+<p>La tarea de transferencia es la siguiente. Toma tres documentos de un mes imaginario de una empresa comercial: una compra al contado, una venta a crédito y un pago de servicio con retención. Escribe los asientos, mayoriza las cuentas que intervengan y prepara un balance. Después escribe en dos líneas qué revisarías antes de presentarlo.</p>
+<p>Para revisar por dificultad: si no sabes qué asiento escribir, relee la sección 2 y el ejercicio 1; si un saldo no coincide, revisa la tabla 4 y el cálculo 5 o 6 que corresponda; si el balance cuadra y te preocupa, relee la sección 5 y el ejercicio 5.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Jornalización:</strong> registro de las transacciones en el libro diario, en orden cronológico.</li>
+<li><strong>Mayorización:</strong> traslado de los movimientos de cada asiento a las cuentas del libro mayor.</li>
+<li><strong>Balance de comprobación preliminar:</strong> lista de saldos deudores y acreedores, elaborada antes de los ajustes.</li>
+<li><strong>Compensación:</strong> cancelación de dos cuentas de IVA hasta el monto menor.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval3" data-panel="eval3" aria-labelledby="t-eval3">
+<h2 id="t-eval3">Evaluación de la sesión 03 · Repaso guiado: de la jornalización al balance</h2>
+<p class="meta">Semana 6 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="3"></div>
+</section>
+
+<section class="pestana" id="reflexion" data-panel="reflexion">
+<h2>Reflexión</h2>
+<p class="meta">Semana 6 · Cuatro reflexiones sin respuesta correcta ni calificación.</p>
+
+<h3>Un libro que cuadra no siempre dice la verdad</h3>
+<p>Cuando la suma del debe iguala la suma del haber, es tentador concluir que todo está en orden. Pero la igualdad solo confirma que el traslado de los movimientos se hizo con la misma cifra en ambos lados. No dice si la cuenta correcta recibió el movimiento ni si el documento que lo respalda existe. Una persona responsable sabe que el cuadre es el inicio de la revisión, no su final.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué revisarías, además de la igualdad de las columnas, antes de presentar un balance de comprobación a tu gerente? Describe tres comprobaciones y explica qué error detecta cada una.</p>
+
+<h3>El saldo que no debería existir</h3>
+<p>Cuando la caja aparece con un saldo acreedor, la tentación más cómoda es registrar un ingreso que cuadre la cifra o dejar la diferencia en otra cuenta. Ambas salidas ocultan el problema. El saldo imposible es una señal de que falta información, y reconocerla es más honesto que disimularla con una cifra inventada.</p>
+<p><strong>Pregunta de reflexión:</strong> si el gerente te pide que cuadres la caja antes de la reunión con el banco, ¿qué le responderías? Escribe una respuesta de cinco o seis líneas que explique qué harías y qué documentos pedirías.</p>
+
+<h3>Registrar lo que pasó, no lo que conviene</h3>
+<p>Un balance puede verse mejor si se omite una compra a crédito o se adelanta una venta. Esos ajustes informales no cambian lo que ocurrió, pero cambian lo que otros creerán. Las personas que usan la información contable, como los proveedores o los bancos, toman decisiones con esas cifras.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿quién se perjudica si el balance omite una deuda con un proveedor? Responde con un argumento y su contraargumento: por ejemplo, la presión de cerrar bien el mes frente a la obligación de presentar lo que la empresa debe.</p>
+
+<h3>Revisar el trabajo de otra persona</h3>
+<p>Cuando otra persona prepara el mayor y tú revisas el balance, no puedes verificar cada asiento del diario. Esa limitación es real y debe declararse. Pedir los documentos fuente de las cuentas más grandes o más extrañas es una forma de revisión proporcionada, sin desconfianza gratuita.</p>
+<p><strong>Pregunta de reflexión:</strong> si un balance muestra una cuenta con un saldo que no parece razonable, ¿cómo decidirías qué documentos pedir primero? Explica el criterio que usarías para ordenar la revisión.</p>
+</section>
+
+<section class="pestana" id="ia" data-panel="ia">
+<h2>Actividad con IA</h2>
+<p class="meta">Semana 6 · Actividad individual · Tiempo orientativo: 20 minutos, incluidos en la sesión 03</p>
+
+<h3>1. Trabajo inicial propio</h3>
+<p>Antes de consultar cualquier herramienta, toma estos tres asientos de una empresa comercial, sin IVA y sin retenciones: (a) compra a crédito de mercadería por 500,00 dólares; (b) venta al contado por 300,00 dólares; (c) pago de 200,00 dólares a proveedores. Mayoriza las cuentas Caja, Inventarios de mercaderías, Proveedores por pagar y Ventas. Anota el saldo de cada una y la suma de la columna deudora y de la acreedora del balance. Escribe tu resultado antes de seguir.</p>
+
+<h3>2. Prompt exacto</h3>
+<div class="prompt">
+<p>«Tengo tres asientos de una empresa comercial, sin IVA ni retenciones: (a) compra a crédito de mercadería por 500 dólares, con Debe Inventarios de mercaderías y Haber Proveedores por pagar; (b) venta al contado por 300 dólares, con Debe Caja y Haber Ventas; (c) pago de 200 dólares a proveedores, con Debe Proveedores por pagar y Haber Caja. Mayoriza cada cuenta, indica el saldo y su naturaleza, y arma un balance de comprobación preliminar con las columnas deudora y acreedora. Explica cada paso y revisa si las sumas coinciden.»</p>
+</div>
+
+<h3>3. Contraste con el material</h3>
+<p>Compara la respuesta de la herramienta con tu trabajo inicial y con la sesión 01. Revisa si la herramienta puso cada movimiento en el lado correcto, si calculó los saldos por diferencia y si ubicó cada saldo en la columna que corresponde a su naturaleza. Cuando la respuesta no explique un paso, reconstrúyelo tú antes de aceptarlo.</p>
+
+<h3>4. Verificación de al menos una afirmación</h3>
+<p>Elige un saldo que la herramienta haya calculado y verifícalo con tu propia mayorización. Si la herramienta afirma que el balance «prueba» que las cuentas son correctas, verifica con el material de la sesión 02 si esa afirmación se sostiene. La respuesta de la herramienta no es una fuente verificada por sí sola.</p>
+
+<h3>5. Justificación</h3>
+<p>Escribe en media página qué aceptaste de la respuesta, qué corregiste y qué rechazaste, y por qué. Cita el ejercicio o la sección del material que sustenta cada decisión.</p>
+
+<h3>6. Lista de autoevaluación</h3>
+<ul>
+<li>¿Trasladé cada movimiento al lado del mayor que corresponde al lado del asiento?</li>
+<li>¿Calculé cada saldo por diferencia entre debe y haber, y no por la suma de todos los movimientos?</li>
+<li>¿Ubiqué cada saldo en la columna que coincide con su naturaleza?</li>
+<li>¿Expliqué qué prueba el balance y qué no prueba?</li>
+<li>¿Justifiqué cada corrección con el material o con un cálculo propio?</li>
+</ul>
+</section>
+
+<section class="pestana" id="biblio" data-panel="biblio">
+<h2>Bibliografía</h2>
+<p class="meta">Referencias en APA 7, en orden alfabético.</p>
+<ul class="referencias">
+<li>Servicio de Rentas Internas. (2025, 26 de diciembre). <em>Circular NAC-DGECCGC25-00000006</em> (vigencia de la tarifa general del impuesto al valor agregado).</li>
+<li>Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009: porcentajes de retención en la fuente del impuesto a la renta</em>. Vigente desde el 1 de marzo de 2026. https://www.sri.gob.ec/o/sri-portlet-biblioteca-alfresco-internet/descargar/272ca6a9-d679-4b4e-8da0-fb4671cf5f8f/NAC-DGERCGC26-00000009_Ret_IR.pdf</li>
+<li>Universidad de Guanajuato. (s. f.). <em>Balance de comprobación</em> [Material educativo en PDF]. https://oa.ugto.mx/recurso/wp-content/uploads/2017/10/oa-rg-0001311.pdf</li>
+</ul>
+<p class="nota">Se recomienda verificar cada referencia en Google Scholar (scholar.google.com) o en el repositorio institucional antes de citar en trabajos académicos. La vigencia normativa se verifica en fuentes oficiales; Google Scholar no la sustituye.</p>
+</section>
+</main>
+
+<footer>
+  <p>Universidad de Guayaquil · Facultad de Ciencias Administrativas · Paralelo NIN-SVE-1-19 · Docente: Gabriel Francisco García Gutiérrez.</p>
+  <p>Las empresas Confecciones Montubia S. A., Comercializadora Costa Verde Cía. Ltda., Servicios Logísticos Andes Global S. A. y Asesores Litoral Cía. Ltda. son ficticias. Sus cifras y hechos son supuestos didácticos.</p>
+  <p>Las puntuaciones de las evaluaciones de práctica no son notas oficiales del examen parcial.</p>
+</footer>
+
+<script>
+/* ==========================================================
+   1. Datos de evaluación (generados desde ej_semana.json)
+   ========================================================== */
+const EVALUACIONES = [{"sesion": 1, "titulo": "Evaluación de la sesión 01 · Del diario al mayor", "items": [{"tipo": "Teórica", "pregunta": "¿Qué hace la mayorización?", "opciones": ["Reemplaza el asiento del libro diario por la factura del proveedor.", "Calcula el estado de resultados al cierre del período.", "Elimina los asientos que no cuadran con el balance.", "Traslada los movimientos de cada asiento a la cuenta correspondiente del libro mayor."], "correcta": 3, "retro": ["Incorrecto. La factura es el documento fuente que respalda la operación. El asiento se escribe en el diario a partir de ese documento, y la mayorización ocurre después.", "Incorrecto. El estado de resultados es un estado financiero que se elabora con saldos ya obtenidos. La mayorización es el paso previo.", "Incorrecto. Un asiento que no cuadra debe revisarse y corregirse, no eliminarse. Eliminarlo oculta el error.", "CORRECTO. La mayorización reúne en cada cuenta sus movimientos, para obtener su saldo."], "general": "La mayorización ordena los movimientos por cuenta para obtener saldos; el diario conserva el orden cronológico."}, {"tipo": "Teórica", "pregunta": "¿Qué expresa el saldo de una cuenta?", "opciones": ["El importe del documento fuente más reciente.", "La suma de todos los importes escritos en la cuenta, sin distinguir lados.", "La diferencia entre el total del debe y el total del haber, con el lado en que queda.", "El importe que la empresa planea cobrar en el próximo período."], "correcta": 2, "retro": ["Incorrecto. El documento fuente respalda una operación; no es el resultado acumulado de la cuenta.", "Incorrecto. Sumar sin distinguir lados mezcla aumentos y disminuciones. El saldo compara los dos lados.", "CORRECTO. El saldo se obtiene restando el lado menor del mayor; el lado indica si es deudor o acreedor.", "Incorrecto. El saldo registra lo ya registrado, no un cobro planeado."], "general": "El saldo es el resultado de comparar los dos lados de una cuenta."}, {"tipo": "Análisis", "pregunta": "Una cuenta Caja registra en el debe 300,00 dólares y en el haber 120,00 dólares. ¿Cuál es su saldo?", "opciones": ["180,00 dólares deudor.", "420,00 dólares deudor.", "180,00 dólares acreedor.", "420,00 dólares acreedor."], "correcta": 0, "retro": ["CORRECTO. 300,00 − 120,00 = 180,00. Como el debe supera al haber, el saldo es deudor, coherente con la naturaleza de Caja.", "Incorrecto. 420,00 es la suma de ambos lados. Un saldo compara los lados, no los suma.", "Incorrecto. El lado del saldo lo indica el mayor de los dos lados. Aquí el debe es mayor, así que el saldo es deudor.", "Incorrecto. Suma los lados y da el lado equivocado. El saldo es la diferencia y su lado es el del mayor."], "general": "El saldo se calcula por diferencia y su lado sigue al lado mayor."}, {"tipo": "Teórica", "pregunta": "¿Cuál es la naturaleza de la cuenta Proveedores por pagar?", "opciones": ["Deudora, porque es una cuenta de activo.", "Deudora, porque registra las compras.", "Acreedora, porque es una cuenta de ingreso.", "Acreedora, porque representa una obligación con el proveedor."], "correcta": 3, "retro": ["Incorrecto. Proveedores por pagar es un pasivo, no un activo. Su naturaleza no es deudora.", "Incorrecto. La compra genera la deuda en el haber. Que la compra sea un movimiento deudor no define la naturaleza de Proveedores.", "Incorrecto. Proveedores por pagar no es un ingreso. Los ingresos aumentan en el haber, pero por una razón distinta: la venta del bien o servicio.", "CORRECTO. Es una deuda con el proveedor. Los pasivos tienen naturaleza acreedora y aumentan en el haber."], "general": "Las deudas con proveedores son pasivos de naturaleza acreedora."}, {"tipo": "Análisis", "pregunta": "¿Por qué Caja se registra en el debe cuando la empresa cobra una venta al contado?", "opciones": ["Porque Caja es un activo de naturaleza deudora que aumenta con el cobro.", "Porque el cobro es un gasto del período.", "Porque Caja es un pasivo que la empresa debe al cliente.", "Porque toda cuenta que recibe dinero va en el haber."], "correcta": 0, "retro": ["CORRECTO. Caja es un activo de naturaleza deudora. Su aumento se registra en el debe, y el cobro es la entrada de efectivo.", "Incorrecto. El cobro no es un gasto. Un gasto disminuye el patrimonio y no aumenta el efectivo.", "Incorrecto. Caja no es un pasivo. Es un activo, y el cliente no es acreedor de la empresa en esta operación.", "Incorrecto. Esa regla es falsa: el lado depende de la naturaleza de la cuenta y de si aumenta o disminuye."], "general": "El lado de una cuenta depende de su naturaleza y de si aumenta o disminuye, no del hecho de recibir dinero."}, {"tipo": "Análisis", "pregunta": "Una cuenta Caja muestra un saldo acreedor de 500,00 dólares. ¿Cuál es la conclusión más prudente?", "opciones": ["La empresa tiene 500,00 dólares de efectivo disponible.", "Hay un error en los registros o falta información, porque Caja no puede tener un saldo acreedor en condiciones normales.", "El saldo está bien, porque el efectivo siempre se resta.", "El saldo es un ingreso del período."], "correcta": 1, "retro": ["Incorrecto. Un saldo acreedor en Caja significa que salió más efectivo del que entró. No indica efectivo disponible.", "CORRECTO. Caja es de naturaleza deudora. Un saldo acreedor exige revisar asientos y el arqueo, porque no puede representar efectivo que se tiene.", "Incorrecto. El efectivo no se resta por defecto: el saldo de Caja depende de sus movimientos y de su naturaleza.", "Incorrecto. Un saldo de caja no es un ingreso. Es el resultado de comparar cobros y pagos."], "general": "Un saldo contrario a la naturaleza de la cuenta es una señal para revisar, no una cifra que aceptar."}, {"tipo": "Teórica", "pregunta": "En una cuenta T, ¿dónde se anotan los aumentos de una cuenta de activo?", "opciones": ["En el debe, del lado izquierdo.", "En el haber, del lado derecho.", "En ambos lados por partes iguales.", "Fuera de la cuenta, en el libro diario."], "correcta": 0, "retro": ["CORRECTO. En una cuenta de activo, los aumentos se registran en el debe, que es el lado izquierdo de la T.", "Incorrecto. El haber disminuye un activo. Anotar aquí el aumento invierte su naturaleza.", "Incorrecto. Un mismo movimiento no aparece en ambos lados. Cada movimiento tiene su lado.", "Incorrecto. La cuenta T se usa en el libro mayor. El diario recoge asientos completos, con su glosa."], "general": "En la cuenta T, el lado izquierdo es el debe y el derecho es el haber; el lado de un aumento depende de la naturaleza."}, {"tipo": "Análisis", "pregunta": "La cuenta IVA cobrado aumenta al registrar una venta gravada con IVA de 15 %. ¿En qué lado se anota ese aumento?", "opciones": ["En el debe, porque es un gasto de la venta.", "En el haber, porque es una obligación con el SRI que aumenta.", "En el debe, porque es un derecho de la empresa.", "No se anota, porque el IVA es un ingreso."], "correcta": 1, "retro": ["Incorrecto. El IVA cobrado no es un gasto: la empresa lo recibe y debe entregarlo al SRI.", "CORRECTO. El IVA cobrado es una obligación de naturaleza acreedora, y su aumento se registra en el haber.", "Incorrecto. Un derecho de IVA es el crédito tributario, que va en el debe. El IVA cobrado es lo contrario.", "Incorrecto. El IVA no es ingreso de la empresa. Se registra aparte porque debe entregarse al Estado."], "general": "El IVA cobrado es una obligación; el crédito tributario es un derecho. Sus lados son opuestos."}, {"tipo": "Análisis", "pregunta": "Una empresa paga IVA en una compra de mercadería, que se registra como crédito tributario. ¿Cómo aumenta esa cuenta?", "opciones": ["En el debe, porque es un derecho que la empresa puede descontar.", "En el haber, porque es una deuda con el proveedor.", "En el debe, porque es un ingreso.", "En el haber, porque disminuye el inventario."], "correcta": 0, "retro": ["CORRECTO. El crédito tributario es un derecho, de naturaleza deudora. Aumenta en el debe cuando se paga el IVA en una compra.", "Incorrecto. La deuda con el proveedor es Proveedores por pagar. El IVA pagado es un derecho, no una deuda.", "Incorrecto. El crédito tributario no es ingreso. Registrarlo como ingreso del período sería un error.", "Incorrecto. El inventario aumenta en una compra, no disminuye. Y el IVA no se resta de la mercadería."], "general": "El crédito tributario es un derecho: aumenta en el debe y disminuye en el haber."}, {"tipo": "Teórica", "pregunta": "¿Qué significa que un asiento cumple la partida doble?", "opciones": ["Que tiene exactamente dos palabras en la glosa.", "Que cada movimiento tiene un lado y la suma del debe es igual a la suma del haber.", "Que se registra por duplicado en el diario y en el mayor.", "Que el importe es el doble de la base de la venta."], "correcta": 1, "retro": ["Incorrecto. La glosa puede tener cualquier extensión. La partida doble es una regla de los importes.", "CORRECTO. Cada operación se registra en dos lados, y por eso el debe y el haber deben coincidir.", "Incorrecto. El registro no se duplica. Se traslada una vez del diario al mayor.", "Incorrecto. La partida doble no depende de multiplicar importes. Exige igualdad entre el debe y el haber."], "general": "La partida doble exige que cada operación se registre en dos lados con igual total."}, {"tipo": "Análisis", "pregunta": "¿Cuál de estas cuentas tiene naturaleza acreedora?", "opciones": ["Caja.", "Crédito tributario de IVA.", "Retención de renta por pagar.", "Inventarios de mercaderías."], "correcta": 2, "retro": ["Incorrecto. Caja es un activo de naturaleza deudora.", "Incorrecto. El crédito tributario es un derecho, de naturaleza deudora.", "CORRECTO. La retención por pagar es una obligación con el SRI, de naturaleza acreedora.", "Incorrecto. Inventarios es un activo, de naturaleza deudora."], "general": "Las obligaciones tienen naturaleza acreedora; los derechos y los activos, deudora."}, {"tipo": "Análisis", "pregunta": "Una cuenta registra en el debe 250,00 dólares y en el haber 250,00 dólares. ¿Qué saldo tiene?", "opciones": ["250,00 dólares deudor.", "500,00 dólares acreedor.", "Cero, pero la cuenta tuvo movimientos.", "250,00 dólares acreedor."], "correcta": 2, "retro": ["Incorrecto. Los dos lados son iguales: no hay diferencia que deje un saldo deudor.", "Incorrecto. Sumar los lados no da el saldo. Un saldo es una diferencia.", "CORRECTO. El saldo es cero, pero conviene mostrarlo con 0,00, porque la cuenta tuvo movimientos.", "Incorrecto. Un saldo acreedor requiere que el haber supere al debe, y aquí los dos lados son iguales."], "general": "Un saldo cero puede tener movimientos; mostrarlo indica que la cuenta fue usada."}, {"tipo": "Teórica", "pregunta": "¿Cuándo se reconoce un ingreso por una venta a crédito?", "opciones": ["Cuando el cliente paga la factura.", "Cuando la empresa entrega el bien o presta el servicio y tiene derecho a cobrar.", "Cuando el proveedor entrega la mercadería a la empresa vendedora.", "Cuando el SRI recibe el IVA."], "correcta": 1, "retro": ["Incorrecto. El cobro es posterior. El ingreso no depende del momento en que llega el dinero.", "CORRECTO. El ingreso se reconoce con la entrega y el derecho a cobrar. El cobro es un hecho distinto que ocurre después.", "Incorrecto. La entrega de mercadería de un proveedor es una compra, no un ingreso de la empresa vendedora.", "Incorrecto. El IVA es una obligación con el SRI y no define cuándo se reconoce el ingreso."], "general": "El ingreso y el cobro son hechos distintos: pueden ocurrir en momentos diferentes."}, {"tipo": "Análisis", "pregunta": "Un arriendo de 800,00 dólares, sin IVA, se paga a una persona natural. Se retiene el 10 % (80,00 dólares). ¿Por cuánto se registra el gasto?", "opciones": ["720,00 dólares.", "80,00 dólares.", "800,00 dólares.", "880,00 dólares."], "correcta": 2, "retro": ["Incorrecto. 720,00 es el pago neto. El gasto es el valor del arriendo recibido.", "Incorrecto. 80,00 es la retención, una obligación, no el gasto.", "CORRECTO. El gasto es el valor del arriendo, 800,00. La retención de 80,00 es una obligación con el SRI.", "Incorrecto. 880,00 suma la retención al arriendo. La retención no aumenta el gasto."], "general": "El gasto se mide por el valor recibido; la retención se registra como obligación."}, {"tipo": "Teórica", "pregunta": "¿Por qué la igualdad entre debe y haber no garantiza que los registros estén bien?", "opciones": ["Porque la igualdad solo se cumple con cuentas de activo.", "Porque un movimiento puede estar en la cuenta equivocada, o con un importe errado en ambos lados, y el asiento seguiría cuadrando.", "Porque el debe siempre debe ser mayor al haber.", "Porque la igualdad se calcula solo al cierre del año."], "correcta": 1, "retro": ["Incorrecto. La igualdad se exige en todos los asientos, sin importar el tipo de cuenta.", "CORRECTO. Un asiento puede cuadrar y tener una clasificación o un importe equivocados. La igualdad prueba la coherencia aritmética, no la exactitud.", "Incorrecto. El debe y el haber deben ser iguales, no uno mayor que otro.", "Incorrecto. La igualdad se verifica en cada asiento y en el balance, no solo al cierre."], "general": "La igualdad es necesaria, pero no suficiente, para asegurar que los registros son correctos."}]}, {"sesion": 2, "titulo": "Evaluación de la sesión 02 · El balance de comprobación preliminar", "items": [{"tipo": "Teórica", "pregunta": "¿Qué es un balance de comprobación?", "opciones": ["Un estado financiero que muestra la utilidad del período.", "Un documento que prueba la compra de mercadería.", "El libro diario con las glosas ordenadas por cuenta.", "Una lista de las cuentas con sus saldos deudores y acreedores, para verificar la igualdad de los traslados."], "correcta": 3, "retro": ["Incorrecto. La utilidad se obtiene en el estado de resultados. El balance preliminar no es un estado financiero de resultados.", "Incorrecto. El documento que prueba la compra es la factura. El balance se elabora a partir del mayor.", "Incorrecto. El libro diario guarda los asientos en orden cronológico. El balance se prepara con los saldos del mayor.", "CORRECTO. El balance es la lista de saldos en dos columnas, y su igualdad comprueba la aritmética de los traslados."], "general": "El balance resume los saldos del mayor en dos columnas para comprobar su igualdad."}, {"tipo": "Teórica", "pregunta": "¿Por qué el balance se llama preliminar?", "opciones": ["Porque se prepara antes de los asientos de ajuste y de cierre, con los saldos sin ajustes.", "Porque se elabora solo al cierre del año.", "Porque reemplaza a los estados financieros.", "Porque se presenta a los clientes."], "correcta": 0, "retro": ["CORRECTO. Es preliminar porque muestra los saldos antes de los ajustes y del cierre.", "Incorrecto. Puede elaborarse en cualquier período; lo que lo hace preliminar es el momento en que se prepara frente a los ajustes.", "Incorrecto. El balance no reemplaza a los estados financieros. Es una herramienta de control de los traslados.", "Incorrecto. El balance es un documento de control interno y no un informe dirigido a los clientes."], "general": "Preliminar significa anterior a los ajustes; el balance no presenta la situación final."}, {"tipo": "Análisis", "pregunta": "Un balance muestra 4.000,00 dólares en la columna deudora y 3.950,00 dólares en la acreedora. ¿Qué conviene revisar primero?", "opciones": ["Aumentar 50,00 dólares en la columna acreedora para que cuadre.", "Eliminar la cuenta de mayor saldo.", "Buscar en el mayor un saldo o movimiento de 50,00 dólares y revisar si falta en la columna acreedora o si un asiento quedó en un solo lado.", "Dar por bueno el balance, porque la diferencia es pequeña."], "correcta": 2, "retro": ["Incorrecto. Sumar una cifra para cuadrar oculta el error. La diferencia indica dónde buscar, no qué cifra escribir.", "Incorrecto. Eliminar una cuenta cambia el balance sin explicar la diferencia. No corrige el error.", "CORRECTO. La diferencia de 50,00 dólares es la pista. Se busca ese importe en el mayor y se revisa su lado.", "Incorrecto. Una diferencia pequeña también indica un error. El balance no cuadra y debe revisarse."], "general": "Una diferencia es una pista para buscar el error en el mayor; nunca se corrige con una cifra artificial."}, {"tipo": "Análisis", "pregunta": "Un balance tiene una diferencia de 36,00 dólares. ¿Qué pista es la más útil?", "opciones": ["36,00 no es múltiplo de ningún número, así que no hay pista.", "36,00 es la cuenta de inventario.", "36,00 indica que el balance está perfecto.", "36,00 es múltiplo de 9, lo que sugiere revisar una trasposición de dígitos en algún saldo."], "correcta": 3, "retro": ["Incorrecto. 36 es múltiplo de 9 (9 × 4 = 36), así que sí hay una pista útil.", "Incorrecto. Una diferencia no es una cuenta. Es el resultado de restar los totales de las columnas.", "Incorrecto. Una diferencia distinta de cero indica que el balance no cuadra. No puede significar que está perfecto.", "CORRECTO. 36 ÷ 9 = 4. Una trasposición de dígitos produce diferencias múltiplos de 9; es una pista que conviene revisar, sin ser una certeza."], "general": "Las diferencias múltiplos de 9 sugieren una trasposición; es una pista que se confirma en el mayor."}, {"tipo": "Teórica", "pregunta": "¿Qué tipo de error sí puede detectar el balance?", "opciones": ["Una venta registrada con el lado invertido.", "Una cuenta equivocada con importe correcto.", "Un movimiento trasladado a un solo lado o un saldo copiado con una cifra equivocada.", "Un asiento omitido por completo."], "correcta": 2, "retro": ["Incorrecto. Invertir el lado de una venta mantiene las columnas iguales. El balance no lo detecta.", "Incorrecto. Una cuenta equivocada no altera la igualdad de las columnas. Solo se revisa con el documento.", "CORRECTO. Estos errores rompen la igualdad de las columnas, y la diferencia permite localizarlos.", "Incorrecto. Un asiento omitido no deja diferencia, porque no tiene ningún lado registrado."], "general": "El balance detecta errores que rompen la igualdad de las columnas, no errores de clasificación."}, {"tipo": "Análisis", "pregunta": "Una venta al contado de 600,00 dólares se registró con el lado invertido. ¿Detecta el balance el error?", "opciones": ["Sí, porque las columnas dejan de coincidir.", "Sí, porque el saldo de Caja queda como acreedor en la columna deudora.", "No, porque ambas columnas siguen iguales; el error se ve revisando el signo de los saldos y el documento.", "No, porque el balance siempre detecta todos los errores."], "correcta": 2, "retro": ["Incorrecto. El importe está en ambos lados, por lo que las columnas siguen coincidiendo.", "Incorrecto. Aunque el saldo quede en el lado contrario a su naturaleza, el balance solo compara sumas; no marca ese error por sí solo.", "CORRECTO. La igualdad se mantiene. El error se revela revisando el signo frente a la naturaleza y comparando con el documento.", "Incorrecto. Esa afirmación es falsa: el balance confirma la igualdad de los traslados, no la clasificación de cada movimiento."], "general": "El balance confirma la igualdad de los traslados; el signo de cada saldo y el documento revelan los errores de lado."}, {"tipo": "Análisis", "pregunta": "Un arriendo de 800,00 dólares se registró en Inventarios de mercaderías. El asiento cuadra. ¿Qué se necesita para detectar el error?", "opciones": ["Solo volver a sumar las columnas del balance.", "Revisar el documento de la operación y la naturaleza del gasto, y comparar con la cuenta usada.", "Restar 800,00 dólares de la columna deudora.", "No se puede detectar nunca."], "correcta": 1, "retro": ["Incorrecto. Volver a sumar confirma la igualdad, pero el balance ya cuadra y no revela la cuenta equivocada.", "CORRECTO. La cuenta se verifica con el documento y con el uso del bien o servicio: un arriendo no entra al inventario.", "Incorrecto. Restar una cifra para cuadrar oculta el error y no lo corrige.", "Incorrecto. Sí se puede detectar revisando el documento y la naturaleza de la operación. La igualdad no lo muestra."], "general": "La cuenta se verifica con el documento y con el uso del bien o servicio, no con la igualdad."}, {"tipo": "Teórica", "pregunta": "¿Qué confirma un balance que cuadra?", "opciones": ["Que cada cuenta está clasificada correctamente.", "Que la suma de los saldos deudores es igual a la suma de los acreedores, es decir, que la aritmética del traslado es coherente.", "Que los ajustes ya están registrados.", "Que la empresa tiene utilidad."], "correcta": 1, "retro": ["Incorrecto. La igualdad no prueba la clasificación de cada cuenta. Eso se revisa con los documentos.", "CORRECTO. El balance confirma la coherencia aritmética: los traslados están equilibrados.", "Incorrecto. Los ajustes son otra etapa del ciclo. El balance preliminar se prepara antes de ellos.", "Incorrecto. La utilidad se obtiene en el estado de resultados, a partir de ingresos y gastos."], "general": "Un balance cuadrado confirma la aritmética de los traslados, no la exactitud de cada registro."}, {"tipo": "Análisis", "pregunta": "La cuenta Caja tiene debe de 400,00 dólares y 200,00 dólares, y haber de 150,00 dólares. ¿Cuál es su saldo?", "opciones": ["450,00 dólares deudor.", "750,00 dólares deudor.", "450,00 dólares acreedor.", "600,00 dólares deudor."], "correcta": 0, "retro": ["CORRECTO. Debe: 400,00 + 200,00 = 600,00. Saldo: 600,00 − 150,00 = 450,00, deudor, de acuerdo con la naturaleza de Caja.", "Incorrecto. 750,00 suma todos los movimientos sin distinguir lados. El saldo compara el debe con el haber.", "Incorrecto. El debe supera al haber, por lo que el saldo es deudor, no acreedor.", "Incorrecto. 600,00 es el total del debe. No se resta el haber."], "general": "Primero se suma cada lado; después se resta el haber del debe y el lado sigue al mayor."}, {"tipo": "Análisis", "pregunta": "En un balance, la columna deudora suma 1.500,00 dólares. La columna acreedora tiene dos saldos: 1.100,00 dólares y 400,00 dólares. ¿Cuánto suma la columna acreedora y qué indica?", "opciones": ["1.500,00 dólares; las columnas cuadran.", "1.100,00 dólares; el balance no cuadra.", "2.600,00 dólares; el balance está mal.", "1.400,00 dólares; falta 100,00 dólares en la columna deudora."], "correcta": 0, "retro": ["CORRECTO. 1.100,00 + 400,00 = 1.500,00, igual que la columna deudora. Las columnas cuadran.", "Incorrecto. 1.100,00 es solo uno de los saldos acreedores. Hay que sumar todos los saldos de la columna.", "Incorrecto. 2.600,00 suma la columna deudora y la acreedora. Las columnas se suman por separado.", "Incorrecto. 1.400,00 no resulta de sumar esos saldos. La columna deudora no tiene ningún importe pendiente."], "general": "Cada columna se suma por separado y luego se comparan los totales."}, {"tipo": "Teórica", "pregunta": "¿Qué debe mostrarse en el balance para una cuenta que tuvo movimientos pero cuyo saldo es cero?", "opciones": ["Nada: las cuentas en cero se eliminan siempre.", "La cuenta con 0,00 dólares, para mostrar que tuvo movimientos y que su saldo final es cero.", "La cuenta con el importe del debe.", "Solo en el libro diario."], "correcta": 1, "retro": ["Incorrecto. Eliminarla oculta que hubo movimientos. Conviene mostrarla para que el lector vea el saldo cero.", "CORRECTO. El cero es un resultado y se muestra con 0,00 en la columna correspondiente.", "Incorrecto. El debe no es el saldo: el saldo compara debe y haber.", "Incorrecto. El balance se prepara con los saldos del libro mayor, no con el diario."], "general": "Un saldo cero es un resultado válido; mostrarlo evita ocultar movimientos."}, {"tipo": "Análisis", "pregunta": "Un saldo se copió al balance con una cifra distinta: 1.230,00 dólares en lugar de 1.203,00 dólares. ¿Qué tipo de error es y qué produce?", "opciones": ["Un error de clasificación, que no produce diferencia.", "Un error de copia o trasposición, que produce una diferencia de 27,00 dólares, múltiplo de 9.", "Un asiento omitido, que deja la columna igual.", "Un error de naturaleza, que cambia el lado del saldo."], "correcta": 1, "retro": ["Incorrecto. Es un error en la cifra copiada, y sí produce diferencia en la columna donde está.", "CORRECTO. La diferencia es 1.230,00 − 1.203,00 = 27,00, múltiplo de 9. Por eso sugiere una trasposición de dígitos.", "Incorrecto. Un asiento omitido no está en el balance. Aquí el saldo sí aparece, aunque con una cifra distinta.", "Incorrecto. La naturaleza no cambia por copiar mal una cifra. El lado del saldo se mantiene."], "general": "Una cifra copiada con error produce una diferencia que se revisa con el mayor."}, {"tipo": "Análisis", "pregunta": "Un compañero corrige una diferencia subiendo 80,00 dólares a la columna acreedora, sin buscar el origen. ¿Qué error comete?", "opciones": ["Usa el porcentaje equivocado.", "Oculta el error sin encontrarlo, y el balance puede cuadrar con una cifra incorrecta.", "Omite la etapa de ajustes.", "No comete ningún error, porque el balance cuadra."], "correcta": 1, "retro": ["Incorrecto. No hay porcentaje en esta corrección. El problema es que la cifra se añadió sin justificación.", "CORRECTO. El balance cuadra, pero la cifra agregada no tiene origen. El error real sigue en la contabilidad.", "Incorrecto. Los ajustes son otra etapa y no tienen relación con esta corrección. El error está en la igualdad de los traslados.", "Incorrecto. Que el balance cuadre no prueba que la corrección sea válida. Cuadrar y estar bien son cosas distintas."], "general": "Una cifra añadida solo para igualar las columnas oculta el error; el balance debe reflejar movimientos reales."}, {"tipo": "Teórica", "pregunta": "¿Qué no puede confirmar un balance?", "opciones": ["Que las sumas de las columnas coinciden.", "Que cada movimiento esté en la cuenta correcta y que el importe sea el adecuado.", "Que los saldos fueron copiados sin diferencia aritmética.", "Que los traslados se hicieron con los dos lados."], "correcta": 1, "retro": ["Incorrecto. Eso sí lo confirma: la igualdad de las sumas de las columnas.", "CORRECTO. La clasificación y el importe de cada movimiento se revisan con los documentos y la naturaleza de la operación.", "Incorrecto. Esa comprobación sí forma parte de lo que el balance confirma.", "Incorrecto. Que los traslados tengan ambos lados sí queda reflejado en la igualdad de las columnas."], "general": "El balance confirma la igualdad aritmética; la exactitud de cada registro requiere revisión adicional."}, {"tipo": "Análisis", "pregunta": "Después de que un balance cuadra, ¿qué paso sigue para dar mayor confianza a la información?", "opciones": ["Presentar el balance como estado financiero definitivo.", "Revisar las cuentas con saldos extraños contra sus documentos y su naturaleza.", "Eliminar las cuentas con saldo cero.", "Sumar de nuevo las columnas y dar el trabajo por terminado."], "correcta": 1, "retro": ["Incorrecto. El balance preliminar no es un estado financiero definitivo. Falta revisar la clasificación y los ajustes.", "CORRECTO. Un saldo extraño, como una caja acreedora, se contrasta con los documentos y con la naturaleza de la cuenta.", "Incorrecto. Las cuentas en cero pueden contener información útil. Eliminarlas oculta movimientos.", "Incorrecto. Volver a sumar confirma la aritmética, pero no revisa la clasificación ni los documentos."], "general": "Un balance cuadrado es el inicio de la revisión, no su final."}]}, {"sesion": 3, "titulo": "Evaluación de la sesión 03 · Repaso guiado: de la jornalización al balance", "items": [{"tipo": "Teórica", "pregunta": "¿Qué es la jornalización?", "opciones": ["La lectura de los saldos finales de cada cuenta.", "La preparación del estado de resultados.", "El cálculo del IVA por pagar del período.", "El registro cronológico de las transacciones en el libro diario, con sus cuentas, importes y glosa."], "correcta": 3, "retro": ["Incorrecto. Leer saldos corresponde a la mayorización y al balance, no a la jornalización.", "Incorrecto. El estado de resultados se elabora después de tener saldos. La jornalización es el registro inicial.", "Incorrecto. El IVA por pagar es el resultado de la liquidación del período, una etapa posterior.", "CORRECTO. La jornalización registra cada operación en el diario, en orden de fechas, con su glosa."], "general": "La jornalización es el primer registro de cada transacción, en orden cronológico."}, {"tipo": "Análisis", "pregunta": "Una empresa compra a crédito 100 camisetas a 10,00 dólares cada una, sin IVA, para vender. ¿Qué valor entra a inventario?", "opciones": ["1.150,00 dólares, con el IVA incluido.", "900,00 dólares, descontando el IVA.", "1.000,00 dólares, la base sin IVA.", "150,00 dólares, el IVA."], "correcta": 2, "retro": ["Incorrecto. El IVA es un derecho de la empresa, no parte de la mercadería. Va en crédito tributario.", "Incorrecto. El IVA no se descuenta de la base. La base es el valor de la mercadería, 1.000,00 dólares.", "CORRECTO. La mercadería entra por su base de 1.000,00 dólares; el IVA de 150,00 dólares es crédito tributario.", "Incorrecto. 150,00 dólares es el IVA, un derecho, no el valor de la mercadería."], "general": "La mercadería entra por la base; el IVA pagado es un derecho aparte."}, {"tipo": "Análisis", "pregunta": "Una empresa vende al contado 40 camisetas a 15,00 dólares cada una, sin IVA, con IVA de 15 %. ¿Cuánto recibe Caja?", "opciones": ["690,00 dólares.", "600,00 dólares.", "90,00 dólares.", "750,00 dólares."], "correcta": 0, "retro": ["CORRECTO. 40 × 15,00 = 600,00; IVA de 90,00; total 690,00, que entra a Caja.", "Incorrecto. 600,00 es la base de la venta. Caja recibe el total, con el IVA incluido.", "Incorrecto. 90,00 es el IVA cobrado, una obligación. No es el efectivo recibido.", "Incorrecto. 750,00 resulta de calcular el 25 % sobre la base, lo que no corresponde al IVA de 15 %."], "general": "En una venta al contado, Caja recibe el total con IVA; el ingreso es la base."}, {"tipo": "Análisis", "pregunta": "Una empresa paga 100,00 dólares a un proveedor. ¿Qué asiento corresponde?", "opciones": ["Debe Caja; Haber Proveedores por pagar.", "Debe Ventas; Haber Caja.", "Debe Proveedores por pagar; Haber Caja.", "Debe Inventarios; Haber Proveedores por pagar."], "correcta": 2, "retro": ["Incorrecto. Ese asiento aumentaría la caja y la deuda; sería un cobro o una nueva obligación.", "Incorrecto. Ventas no se afecta por un pago a un proveedor.", "CORRECTO. El pago disminuye la deuda en el debe y la caja en el haber.", "Incorrecto. Un pago no cambia el inventario, que se reconoció al recibir la mercadería."], "general": "Un pago a proveedor disminuye la deuda en el debe y la caja en el haber."}, {"tipo": "Análisis", "pregunta": "Una empresa paga un arriendo de 500,00 dólares a una persona natural, con retención de 10 %. ¿Cuánto sale de Caja?", "opciones": ["500,00 dólares.", "50,00 dólares.", "400,00 dólares.", "450,00 dólares."], "correcta": 3, "retro": ["Incorrecto. La caja no paga el valor total: 50,00 dólares se retienen y quedan como obligación con el SRI.", "Incorrecto. 50,00 dólares es la retención, no el efectivo que sale.", "Incorrecto. 400,00 resulta de restar el 20 %, porcentaje que no corresponde a este arriendo.", "CORRECTO. 500,00 − 50,00 = 450,00. Caja registra el pago neto."], "general": "Caja registra el pago neto; la retención es una obligación con el SRI."}, {"tipo": "Análisis", "pregunta": "Al liquidar, el IVA cobrado es 90,00 dólares y el crédito tributario es 150,00 dólares. ¿Cuál es el saldo del crédito que queda después de la compensación?", "opciones": ["240,00 dólares, sumando los dos valores.", "90,00 dólares, el IVA cobrado.", "0,00 dólares, porque se cancela todo.", "60,00 dólares, como derecho."], "correcta": 3, "retro": ["Incorrecto. Sumar los valores no es liquidar. La compensación resta el monto menor.", "Incorrecto. El IVA cobrado se cancela en la compensación; no es el saldo del crédito.", "Incorrecto. Solo se compensan 90,00 dólares. El crédito de 150,00 dólares deja 60,00 dólares pendientes.", "CORRECTO. 150,00 − 90,00 = 60,00 dólares de derecho que queda en crédito tributario."], "general": "La compensación cancela el monto menor; el excedente del crédito queda como derecho."}, {"tipo": "Análisis", "pregunta": "Una cuenta Caja registra debe de 690,00 dólares y haber de 550,00 dólares. ¿Cuál es su saldo?", "opciones": ["1.240,00 dólares deudor.", "1.240,00 dólares acreedor.", "140,00 dólares acreedor.", "140,00 dólares deudor."], "correcta": 3, "retro": ["Incorrecto. 1.240,00 es la suma de los dos lados. El saldo compara el debe con el haber.", "Incorrecto. El lado no puede ser acreedor: el debe supera al haber. El importe 1.240,00 tampoco es un saldo, sino una suma.", "Incorrecto. El debe supera al haber, así que el saldo es deudor, no acreedor.", "CORRECTO. 690,00 − 550,00 = 140,00, deudor, coherente con la naturaleza de Caja."], "general": "El saldo es la diferencia entre los dos lados y su lado sigue al mayor."}, {"tipo": "Teórica", "pregunta": "¿Qué debe ser igual en un balance de comprobación?", "opciones": ["El número de cuentas y el número de asientos.", "Los saldos deudores totales y los saldos acreedores totales.", "El saldo de Caja y el saldo de Ventas.", "El IVA cobrado y el crédito tributario."], "correcta": 1, "retro": ["Incorrecto. El número de cuentas y de asientos no tiene por qué coincidir. Lo que debe igualar es la suma de las columnas.", "CORRECTO. Las columnas deudora y acreedora deben sumar lo mismo, lo que comprueba los traslados.", "Incorrecto. Dos saldos concretos no tienen por qué ser iguales. Lo que se iguala son los totales de las columnas.", "Incorrecto. El IVA cobrado y el crédito son cuentas distintas. Su igualdad no es una condición del balance."], "general": "En el balance se igualan los totales de las dos columnas, no cuentas o saldos individuales."}, {"tipo": "Análisis", "pregunta": "Los movimientos del debe de todos los asientos de un período suman 2.530,00 dólares. ¿Qué total debe tener el haber?", "opciones": ["2.530,00 dólares.", "2.350,00 dólares.", "2.680,00 dólares.", "1.265,00 dólares."], "correcta": 0, "retro": ["CORRECTO. Como cada asiento cuadra, la suma del haber también es 2.530,00 dólares.", "Incorrecto. 2.350,00 no corresponde: cada asiento tiene igual debe y haber, así que el total del haber debe igualar al del debe.", "Incorrecto. 2.680,00 no surge de ningún asiento cuadrado. Si el haber fuera mayor, habría un error de traslado.", "Incorrecto. 1.265,00 es la mitad del total. No hay una razón para dividir el total entre dos."], "general": "Si cada asiento cuadra, la suma del debe y la del haber coinciden."}, {"tipo": "Análisis", "pregunta": "Un asiento de venta al contado registra Caja por 690,00 dólares y Ventas por 690,00 dólares, sin IVA cobrado. ¿Qué error existe?", "opciones": ["El ingreso está sobrestimado en 90,00 dólares, y el IVA cobrado no aparece.", "Ninguno: el asiento cuadra.", "Falta registrar la caja.", "El asiento debió ser de compra."], "correcta": 0, "retro": ["CORRECTO. Ventas registra 690,00 dólares cuando la base es 600,00. Los 90,00 dólares de IVA son una obligación que falta.", "Incorrecto. El asiento cuadra, pero cuadrar no prueba la clasificación.", "Incorrecto. Caja sí está registrada por 690,00 dólares. El error está en el lado de Ventas.", "Incorrecto. Una venta no es una compra. El asiento describe ingreso y cobro, no compra."], "general": "Un asiento puede cuadrar y estar mal; el ingreso debe ser la base y el IVA una obligación."}, {"tipo": "Teórica", "pregunta": "¿Dónde se registra el IVA pagado en una compra de mercadería para vender?", "opciones": ["En Ventas, como ingreso.", "En crédito tributario de IVA, como derecho que se descontará.", "En Inventarios, junto con la base.", "En Gasto, porque es un costo de la compra."], "correcta": 1, "retro": ["Incorrecto. Ventas registra ingresos de la venta. El IVA pagado no es un ingreso.", "CORRECTO. El IVA pagado es un derecho que la empresa puede descontar, por eso va en crédito tributario.", "Incorrecto. Si el IVA se suma a Inventarios, la mercadería queda sobrestimada.", "Incorrecto. El IVA pagado en una compra para vender no es un gasto: es un derecho frente al SRI."], "general": "El IVA pagado en una compra para vender es un derecho, separado de la mercadería."}, {"tipo": "Análisis", "pregunta": "Un documento muestra una cotización de 500,00 dólares. No se confirma la compra ni se recibe nada. ¿Cómo se trata?", "opciones": ["Debe Inventarios; Haber Proveedores por pagar.", "Debe Gasto; Haber Caja.", "Debe Caja; Haber Ventas.", "No se registra, porque todavía no hay transferencia ni obligación."], "correcta": 3, "retro": ["Incorrecto. Registrar inventario sin recibir la mercadería crea un activo que no existe.", "Incorrecto. No hubo pago ni gasto. Registrarlo inventaría un hecho que no ocurrió.", "Incorrecto. No hubo venta ni entrada de dinero. Ventas representa ingresos reales, no propuestas.", "CORRECTO. La cotización es una propuesta; sin transferencia ni obligación no hay asiento."], "general": "Un documento no es una transacción: se registra cuando la operación transfiere bienes, servicios o dinero, o genera derechos u obligaciones."}, {"tipo": "Análisis", "pregunta": "Un servicio de arriendo de 700,00 dólares, sin IVA, se paga con retención del 10 %. ¿Cuánto se registra como gasto?", "opciones": ["630,00 dólares.", "70,00 dólares.", "700,00 dólares.", "770,00 dólares."], "correcta": 2, "retro": ["Incorrecto. 630,00 dólares es el pago neto. El gasto es el valor del arriendo recibido.", "Incorrecto. 70,00 dólares es la retención, una obligación con el SRI.", "CORRECTO. El gasto es el valor recibido, 700,00 dólares. La retención se registra como obligación.", "Incorrecto. 770,00 dólares suma un IVA que el enunciado no incluye."], "general": "El gasto se mide por el valor recibido; lo retenido aparece como obligación."}, {"tipo": "Teórica", "pregunta": "¿Qué contiene la glosa de un asiento?", "opciones": ["El saldo final de la cuenta.", "Una explicación breve del motivo de la operación, como «P/R compra a crédito de camisetas».", "Solo el número de la factura.", "La firma de quien revisa el libro."], "correcta": 1, "retro": ["Incorrecto. El saldo se obtiene en el mayor, no en la glosa del asiento.", "CORRECTO. La glosa explica por qué se hizo el asiento y permite entender la operación sin volver al documento.", "Incorrecto. El número de factura ayuda a localizar el documento, pero la glosa debe explicar la operación.", "Incorrecto. La firma no es parte de la glosa. La glosa describe el motivo de la operación."], "general": "La glosa explica el motivo del asiento y permite reconstruir la operación sin volver al documento."}, {"tipo": "Análisis", "pregunta": "Un asiento cuadra y contiene un error de clasificación. ¿Cuál es el método adecuado para detectarlo?", "opciones": ["Confiar en que el asiento cuadró.", "Comparar el asiento con el documento y con la naturaleza de cada cuenta usada.", "Eliminar el asiento y volver a registrarlo sin revisar.", "Esperar al estado de resultados."], "correcta": 1, "retro": ["Incorrecto. La igualdad no prueba la clasificación. Un asiento puede cuadrar y tener la cuenta equivocada.", "CORRECTO. El documento muestra qué ocurrió, y la naturaleza de cada cuenta muestra si el lado y el importe corresponden.", "Incorrecto. Volver a registrar sin revisar repite el error. Hay que identificar primero qué falló.", "Incorrecto. El estado de resultados se elabora con saldos ya revisados; no sirve para detectar un error de asiento."], "general": "La revisión de un asiento combina el documento con la naturaleza de las cuentas, no solo la igualdad."}]}];
+
+/* ==========================================================
+   2. Navegación por pestañas
+   ========================================================== */
+(function () {
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('[data-panel]'));
+
+  function mostrar(id, enfocar) {
+    panels.forEach(p => { p.hidden = (p.dataset.panel !== id); });
+    tabs.forEach(t => {
+      const activa = t.dataset.target === id;
+      t.setAttribute('aria-selected', activa ? 'true' : 'false');
+      t.tabIndex = activa ? 0 : -1;
+      if (activa && enfocar) t.focus();
+    });
+    const panel = document.querySelector('[data-panel="' + id + '"]');
+    if (panel) {
+      const titulo = panel.querySelector('h2');
+      if (titulo) { titulo.setAttribute('tabindex', '-1'); titulo.focus({ preventScroll: true }); }
+    }
+    try { history.replaceState(null, '', '#' + id); } catch (e) { /* vista previa sin permiso para cambiar la URL: se ignora */ }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => mostrar(t.dataset.target, false));
+    t.addEventListener('keydown', e => {
+      let j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (j !== null) { e.preventDefault(); tabs[j].focus(); mostrar(tabs[j].dataset.target, true); }
+    });
+  });
+
+  const inicial = (location.hash || '').replace('#', '');
+  mostrar(panels.some(p => p.dataset.panel === inicial) ? inicial : 'intro', false);
+})();
+
+/* ==========================================================
+   3. Evaluaciones de práctica
+   Cada evaluación se dibuja desde EVALUACIONES. Las respuestas
+   se guardan solo en memoria de la pestaña mientras esté abierta.
+   ========================================================== */
+(function () {
+  const LETRAS = ['a', 'b', 'c', 'd'];
+
+  function dibujar(ev, raiz) {
+    const n = ev.items.length;
+    let respuestas = Array(n).fill(null);
+    const nombre = 'ev' + ev.sesion + '-';
+
+    raiz.innerHTML = '';
+
+    // 3.1 Cabecera
+    const cab = document.createElement('div');
+    cab.className = 'cabecera-eval';
+    cab.innerHTML = '<p class="nota-practica">' + (ev.diagnostica
+      ? 'Esta prueba es diagnóstica y formativa: no tiene nota. Sirve para identificar qué conviene repasar.'
+      : 'Esta evaluación es de práctica. Sus respuestas le muestran qué comprende y qué conviene revisar; no sustituye a las evaluaciones oficiales.') + '</p>';
+    const prog = document.createElement('p');
+    prog.className = 'progreso';
+    prog.setAttribute('aria-live', 'polite');
+    cab.appendChild(prog);
+    raiz.appendChild(cab);
+
+    // 3.2 Preguntas
+    const formulario = document.createElement('form');
+    formulario.setAttribute('novalidate', 'novalidate');
+    formulario.addEventListener('submit', e => e.preventDefault());
+    raiz.appendChild(formulario);
+
+    ev.items.forEach((it, i) => {
+      const fs = document.createElement('fieldset');
+      const leyenda = document.createElement('legend');
+      leyenda.innerHTML = 'Pregunta ' + (i + 1) + ' de ' + n;
+      fs.appendChild(leyenda);
+
+      const badge = document.createElement('span');
+      badge.className = 'insignia';
+      badge.textContent = '[' + it.tipo + ']';
+      fs.appendChild(badge);
+
+      const enun = document.createElement('p');
+      enun.textContent = it.pregunta;
+      fs.appendChild(enun);
+
+      const opts = document.createElement('div');
+      opts.className = 'opts';
+      it.opciones.forEach((texto, k) => {
+        const id = nombre + 'p' + i + '-' + k;
+        const etiqueta = document.createElement('label');
+        etiqueta.setAttribute('for', id);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = nombre + 'p' + i;
+        radio.id = id;
+        radio.value = String(k);
+        const letra = document.createElement('span');
+        letra.className = 'letra';
+        letra.textContent = LETRAS[k] + ')';
+        const txt = document.createElement('span');
+        txt.textContent = texto;
+        etiqueta.appendChild(radio);
+        etiqueta.appendChild(letra);
+        etiqueta.appendChild(txt);
+        opts.appendChild(etiqueta);
+        radio.addEventListener('change', () => elegir(i, k));
+      });
+      fs.appendChild(opts);
+
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.setAttribute('aria-live', 'polite');
+      fs.appendChild(fb);
+
+      const gen = document.createElement('p');
+      gen.className = 'gen';
+      gen.textContent = 'Idea que conviene recordar: ' + it.general;
+      fs.appendChild(gen);
+
+      formulario.appendChild(fs);
+    });
+
+    // 3.3 Resultado y acciones
+    const resultado = document.createElement('div');
+    resultado.className = 'resultado';
+    resultado.setAttribute('aria-live', 'polite');
+    raiz.appendChild(resultado);
+
+    const acciones = document.createElement('div');
+    acciones.className = 'acciones';
+    const btnReintento = document.createElement('button');
+    btnReintento.type = 'button';
+    btnReintento.className = 'btn principal';
+    btnReintento.textContent = 'Intentar nuevamente';
+    btnReintento.hidden = true;
+    btnReintento.addEventListener('click', () => reiniciar(false));
+    const btnReinicio = document.createElement('button');
+    btnReinicio.type = 'button';
+    btnReinicio.className = 'btn';
+    btnReinicio.textContent = 'Reiniciar cuestionario';
+    btnReinicio.addEventListener('click', () => reiniciar(true));
+    acciones.appendChild(btnReintento);
+    acciones.appendChild(btnReinicio);
+    raiz.appendChild(acciones);
+
+    // 3.4 Lógica de respuesta
+    function elegir(i, k) {
+      if (bloqueado) return;
+      respuestas[i] = k;
+      const it = ev.items[i];
+      const fieldset = formulario.querySelectorAll('fieldset')[i];
+      const fb = fieldset.querySelector('.fb');
+      const gen = fieldset.querySelector('.gen');
+      const acierto = (k === it.correcta);
+      fb.className = 'fb ' + (acierto ? 'ok' : 'mal');
+      fb.textContent = it.retro[k];
+      gen.classList.add('visible');
+      actualizar();
+    }
+
+    // 3.5 Cálculo de progreso, aciertos y bloqueo
+    let bloqueado = false;
+    function actualizar() {
+      const contestadas = respuestas.filter(x => x !== null).length;
+      const aciertos = respuestas.reduce((s, x, i) => s + (x === ev.items[i].correcta ? 1 : 0), 0);
+      prog.textContent = 'Respondidas: ' + contestadas + ' de ' + n + '. Aciertos hasta ahora: ' + aciertos + '.';
+
+      if (contestadas < n) {
+        bloqueado = false;
+        resultado.innerHTML = '';
+        btnReintento.hidden = true;
+        return;
+      }
+
+      // Evaluación completa: se bloquea la edición hasta reiniciar.
+      bloqueado = true;
+      formulario.querySelectorAll('input').forEach(inp => inp.disabled = true);
+      const porcentaje = Math.round((aciertos / n) * 100);
+      const nota = (aciertos / n * 10).toFixed(1).replace('.', ',');
+      let texto = '<strong>Resultado: ' + aciertos + ' de ' + n + ' respuestas correctas (' + porcentaje + ' %).</strong>';
+      if (ev.diagnostica) {
+        texto += '<br>Esta prueba no tiene calificación. Revise las preguntas erradas con sus retroalimentaciones.';
+      } else {
+        texto += '<br>Puntaje de práctica: ' + nota + ' sobre 10. No es una nota oficial.';
+      }
+      if (aciertos < n) {
+        texto += '<br>Revise las preguntas erradas y, si lo desea, intente nuevamente con las mismas preguntas en el mismo orden.';
+        btnReintento.hidden = false;
+      } else {
+        texto += '<br>Respondió todas las preguntas correctamente. No es necesario repetir el cuestionario.';
+        btnReintento.hidden = true;
+      }
+      resultado.innerHTML = texto;
+    }
+
+    // 3.6 Reinicio y reintento
+    function reiniciar(completo) {
+      respuestas = Array(n).fill(null);
+      bloqueado = false;
+      formulario.querySelectorAll('input').forEach(inp => { inp.disabled = false; inp.checked = false; });
+      formulario.querySelectorAll('.fb').forEach(f => { f.className = 'fb'; f.textContent = ''; });
+      formulario.querySelectorAll('.gen').forEach(g => g.classList.remove('visible'));
+      btnReintento.hidden = true;
+      resultado.innerHTML = '';
+      actualizar();
+      if (completo) {
+        const primera = formulario.querySelector('input');
+        if (primera) primera.focus();
+      }
+    }
+
+    actualizar();
+  }
+
+  document.querySelectorAll('.quiz[data-eval]').forEach(raiz => {
+    const num = parseInt(raiz.dataset.eval, 10);
+    const ev = EVALUACIONES.find(e => e.sesion === num);
+    if (ev) dibujar(ev, raiz);
+  });
+})();
+</script>
+</body>
+</html>

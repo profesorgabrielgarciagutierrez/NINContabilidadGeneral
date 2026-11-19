@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contabilidad General · Semana 05</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- 1. Variables y base ---------- */
+:root{
+  --azul:#003366; --celeste:#87CEEB; --azul-claro:#E8F4FD; --texto:#1d1d1d;
+  --ok:#14532d; --ok-fondo:#e6f4ea; --mal:#7f1d1d; --mal-fondo:#fdecec; --borde:#c9d6e2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.6;color:var(--texto);background:#fff}
+h1,h2,h3,h4{font-family:Lora,Georgia,"Times New Roman",serif;color:var(--azul);line-height:1.25}
+h2{font-size:1.6rem;margin:.2rem 0 .6rem}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem}
+h4{font-size:1.05rem;margin:1.1rem 0 .4rem}
+p{margin:.6rem 0;max-width:72ch}
+ul,ol{max-width:72ch;padding-left:1.4rem}
+li{margin:.3rem 0}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:6px 10px;z-index:10}
+.meta{font-size:.92rem;color:#3b4a5a;margin:0 0 1rem}
+.tiempos{font-size:.95rem}
+
+/* ---------- 2. Encabezado y menú ---------- */
+header.cabecera{background:var(--azul);color:#fff;padding:14px 16px}
+header.cabecera h1{color:#fff;font-size:1.25rem;margin:0}
+header.cabecera p{margin:2px 0 0;font-size:.92rem;color:#e3eef8}
+nav.menu{background:var(--celeste);color:#000;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;border-bottom:1px solid #6fbcd9}
+nav.menu ul{display:flex;list-style:none;margin:0;padding:0;max-width:none}
+nav.menu li{margin:0}
+nav.menu button{font:inherit;font-size:.95rem;background:transparent;color:#000;border:0;padding:12px 14px;cursor:pointer;min-height:44px}
+nav.menu button:hover{background:rgba(255,255,255,.35)}
+nav.menu button[aria-selected="true"]{background:#fff;color:var(--azul);font-weight:700}
+
+main{padding:16px 16px 48px;max-width:860px;margin:0 auto}
+
+/* ---------- 3. Secciones y bloques ---------- */
+.pestana[hidden]{display:none}
+.concepto{border-left:5px solid var(--azul);padding:.6rem .9rem;margin:1rem 0;background:#f7fafd}
+.concepto h4{margin-top:.1rem}
+.ejemplo{background:var(--azul-claro);padding:.7rem .9rem;margin:1rem 0;border-radius:4px}
+.ejemplo h4{margin-top:.1rem}
+.nota-lateral{border:1px solid var(--borde);border-left:5px solid #2a7fb8;background:#fbfdff;padding:.7rem .9rem;margin:0 0 1.2rem;border-radius:4px}
+.nota-lateral h3{margin-top:.1rem}
+.nota-lateral p:first-of-type{margin-top:.2rem}
+.pausa{font-style:normal}
+.prompt{background:#f4f4f4;padding:.6rem .8rem;border-radius:4px}
+.ejercicio{border-top:1px solid var(--borde);margin-top:1.4rem;padding-top:.4rem}
+.ejercicio .tiempo{font-size:.92rem;color:#3b4a5a;margin:0}
+.ayuda{font-style:italic}
+.tabla-wrap{overflow-x:auto;max-width:100%}
+.asiento{border:1px solid var(--borde);border-radius:4px;padding:.4rem .9rem .6rem;margin:1rem 0;background:#fff}
+.asiento h4{margin-top:.3rem}
+table{border-collapse:collapse;margin:.8rem 0;min-width:60%}
+caption{caption-side:top;text-align:left;font-weight:700;padding:4px 0;color:var(--azul);font-family:Lora,Georgia,serif}
+th,td{border:1px solid var(--borde);padding:6px 8px;vertical-align:top;text-align:left;min-width:110px}
+th{background:var(--azul-claro)}
+.referencias li{margin-bottom:.7rem;padding-left:1.4rem;text-indent:-1.4rem;list-style:none;max-width:72ch}
+.nota{font-size:.95rem;border-top:1px solid var(--borde);padding-top:.6rem}
+.calc{font-family:Consolas,"Courier New",monospace;font-size:.95rem;background:#f7f9fb;border:1px solid var(--borde);padding:.5rem .7rem;overflow-x:auto;white-space:pre;max-width:100%}
+.tcuenta{display:flex;flex-wrap:wrap;gap:12px;margin:.8rem 0}
+.tcuenta table{min-width:0;width:100%}
+
+/* ---------- 4. Solución desplegable ---------- */
+details.solucion{margin:.7rem 0;border:1px solid var(--azul);border-radius:4px;background:#fff}
+details.solucion>summary{cursor:pointer;padding:.55rem .8rem;font-weight:700;color:var(--azul);background:#eef5fb;min-height:44px;display:flex;align-items:center}
+details.solucion>*:not(summary){padding:0 .8rem}
+details.solucion[open]>summary{border-bottom:1px solid var(--borde)}
+details.solucion>*:last-child{padding-bottom:.8rem}
+
+/* ---------- 5. Evaluación ---------- */
+.quiz{margin-top:.5rem}
+.quiz .cabecera-eval{background:var(--azul-claro);padding:.7rem .9rem;border-radius:4px;margin-bottom:1rem}
+.quiz .progreso{font-weight:600;margin:.2rem 0}
+.quiz fieldset{border:1px solid var(--borde);border-radius:4px;padding:.7rem .9rem;margin:0 0 1rem}
+.quiz legend{font-weight:700;color:var(--azul);padding:0 .3rem;font-family:Lora,Georgia,serif}
+.quiz .insignia{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:10px;background:var(--azul);color:#fff;margin-right:6px;vertical-align:middle}
+.quiz .opts{display:grid;gap:6px;margin:.5rem 0}
+.quiz .opts label{display:flex;gap:10px;align-items:flex-start;padding:10px 10px;border:1px solid var(--borde);border-radius:4px;cursor:pointer;min-height:44px}
+.quiz .opts label:hover{background:#f5faff}
+.quiz .opts input{margin-top:5px;min-width:18px;min-height:18px}
+.quiz .letra{font-weight:700;color:var(--azul)}
+.quiz .fb{margin-top:.5rem;padding:.6rem .8rem;border-radius:4px;display:none}
+.quiz .fb.ok{display:block;background:var(--ok-fondo);color:var(--ok);border-left:5px solid var(--ok)}
+.quiz .fb.mal{display:block;background:var(--mal-fondo);color:var(--mal);border-left:5px solid var(--mal)}
+.quiz .gen{font-size:.93rem;margin-top:.4rem;color:#34434f;display:none}
+.quiz .gen.visible{display:block}
+.quiz .resultado{border:2px solid var(--azul);border-radius:4px;padding:.8rem 1rem;margin:1rem 0;background:#fff}
+.quiz .acciones{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0}
+.quiz button.btn{font:inherit;font-weight:600;padding:10px 14px;min-height:44px;border-radius:4px;border:2px solid var(--azul);background:#fff;color:var(--azul);cursor:pointer}
+.quiz button.btn.principal{background:var(--azul);color:#fff}
+.quiz button.btn[hidden]{display:none}
+.quiz .nota-practica{font-size:.93rem;color:#34434f}
+
+/* ---------- 6. Pie ---------- */
+footer{background:#f2f5f8;color:#2a3440;padding:14px 16px;font-size:.9rem;border-top:1px solid var(--borde)}
+footer p{margin:.2rem 0}
+
+/* ---------- 7. Pantallas estrechas ---------- */
+@media (max-width:420px){
+  body{font-size:16px}
+  main{padding:12px 12px 40px}
+  h2{font-size:1.4rem}
+  table{font-size:.92rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#principal">Ir al contenido</a>
+<header class="cabecera">
+  <h1>Contabilidad General</h1>
+  <p>Licenciatura en Negocios Internacionales · Ciclo II de 2026 · Semana 05: Retenciones de renta y registro de documentos fuente</p>
+</header>
+
+<nav class="menu" aria-label="Secciones de la semana">
+  <ul role="tablist">
+    <li><button type="button" role="tab" id="tab-intro" data-target="intro" aria-controls="intro" aria-selected="false" tabindex="-1">Repaso</button></li>
+    <li><button type="button" role="tab" id="tab-ses01" data-target="ses01" aria-controls="ses01" aria-selected="false" tabindex="-1">Sesión 01</button></li>
+    <li><button type="button" role="tab" id="tab-eval1" data-target="eval1" aria-controls="eval1" aria-selected="false" tabindex="-1">Evaluación 01</button></li>
+    <li><button type="button" role="tab" id="tab-ses02" data-target="ses02" aria-controls="ses02" aria-selected="false" tabindex="-1">Sesión 02</button></li>
+    <li><button type="button" role="tab" id="tab-eval2" data-target="eval2" aria-controls="eval2" aria-selected="false" tabindex="-1">Evaluación 02</button></li>
+    <li><button type="button" role="tab" id="tab-ses03" data-target="ses03" aria-controls="ses03" aria-selected="false" tabindex="-1">Sesión 03</button></li>
+    <li><button type="button" role="tab" id="tab-eval3" data-target="eval3" aria-controls="eval3" aria-selected="false" tabindex="-1">Evaluación 03</button></li>
+    <li><button type="button" role="tab" id="tab-reflexion" data-target="reflexion" aria-controls="reflexion" aria-selected="false" tabindex="-1">Reflexión</button></li>
+    <li><button type="button" role="tab" id="tab-ia" data-target="ia" aria-controls="ia" aria-selected="false" tabindex="-1">Actividad con IA</button></li>
+    <li><button type="button" role="tab" id="tab-biblio" data-target="biblio" aria-controls="biblio" aria-selected="false" tabindex="-1">Bibliografía</button></li>
+  </ul>
+</nav>
+
+<main id="principal">
+<section class="pestana" id="intro" data-panel="intro">
+<h2>Repaso · Del IVA al impuesto a la renta retenido</h2>
+<p class="meta">Semana 5 · Unidad 2 · Normas tributarias y pasos para el proceso contable, primera parte · Tiempo orientativo de lectura: 5 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>En la semana anterior aprendiste a calcular el IVA de una factura, a separar la base cuando solo conoces el total, a registrar el crédito tributario y el IVA cobrado, y a practicar la retención de IVA. Esta semana das un paso más. Cuando Servicios Logísticos Andes Global S. A. paga una compra o un servicio, puede retener, además del IVA, una parte del valor del pago para entregarla al Servicio de Rentas Internas (SRI). Esa retención no es un descuento comercial ni un gasto de la empresa compradora: es un valor que se adelanta al Estado y que el vendedor o el prestador recupera después.</p>
+<p>Al terminar la semana podrás calcular la retención del impuesto a la renta según el concepto del pago; hacer una factura con IVA y dos retenciones, y calcular su pago neto; registrar cada operación desde la perspectiva de quien paga y de quien recibe; y transformar un documento fuente en un asiento del libro diario.</p>
+</div>
+
+<h3>Lo que debes recordar de las semanas anteriores</h3>
+<p>Tres ideas de las semanas anteriores siguen vigentes. La primera es la ecuación contable: el activo es igual al pasivo más el patrimonio. La segunda es la naturaleza de las cuentas: los activos, los gastos y las cuentas de derechos aumentan en el debe, mientras que los pasivos, el patrimonio y los ingresos aumentan en el haber. La tercera es la glosa «P/R», abreviatura de «por», que explica el motivo de cada asiento.</p>
+<p>Con esas ideas puedes leer cualquier operación con impuestos. El precio de una venta es un ingreso. Si la venta es a crédito, el derecho a cobrar es un activo. El IVA que se cobró es una obligación frente al Estado. Y si el comprador retiene una parte del pago, la retención es una obligación para él y un derecho para quien vendió. Cada parte del pago tiene su cuenta y su lado del asiento.</p>
+
+<h3>Cómo estudiar esta unidad</h3>
+<p>Trabaja cada sesión en el orden en que aparece, con papel y lápiz a tu lado. Antes de abrir cada solución desplegable, escribe tu respuesta, aunque sea incompleta. El aprendizaje ocurre en el intento y en la comparación posterior, no en la lectura de la solución. Cuando un cálculo no te cuadre, revisa primero sobre qué valor aplicaste cada porcentaje: casi todos los errores de esta unidad vienen de aplicar una tarifa o un porcentaje a la cantidad equivocada.</p>
+<p>Si una explicación te parece insuficiente, vuelve a la sección que trata el mismo concepto. Cada sesión retoma las ideas clave con otra situación, para que compruebes si las entendiste o si necesitas releer una parte concreta.</p>
+</section>
+
+
+<section class="pestana" id="ses01" data-panel="ses01">
+<h2>Sesión 01 · Retenciones en la fuente del impuesto a la renta</h2>
+<p class="meta">Semana 5 · Unidad 2 · Retenciones en la fuente del impuesto a la renta: porcentaje según el concepto, base de cálculo y contabilización (sesión global 13) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que Servicios Logísticos Andes Global S. A., una empresa de servicios vinculada con Negocios Internacionales, contrata una consultoría con Asesores Litoral Cía. Ltda., una sociedad ficticia que presta servicios profesionales. El contrato es de 1.000,00 dólares. Cuando Andes Global paga, ¿todo el dinero llega a la sociedad que presta el servicio? Y si una parte no llega, ¿a dónde va y por qué?</p>
+<p>Esta sesión responde a esas preguntas. Al terminar podrás explicar qué es una retención en la fuente del impuesto a la renta y quién la practica; identificar el porcentaje que corresponde a un concepto de pago usando la tabla de la resolución vigente; calcular la retención y el pago neto; decidir qué porcentaje aplicar cuando un mismo comprobante combina conceptos; y registrar la operación desde la perspectiva de quien paga y de quien recibe.</p>
+<p>Para estudiar, decide primero el porcentaje y calcula después. Si tu resultado es demasiado grande o demasiado pequeño, pregúntate cuál es el concepto del pago y cuál es el valor sobre el que se aplicó el porcentaje. Esas dos preguntas resuelven casi todos los errores de esta sesión.</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. Qué es una retención en la fuente del impuesto a la renta</h3>
+<p>El impuesto a la renta grava los ingresos de las personas y de las sociedades. Su pago normal se hace al final del período, cuando el contribuyente declara lo que ganó. La retención en la fuente adelanta una parte de ese impuesto: en el momento en que una empresa paga un valor a otra persona, o lo acredita en su cuenta, ella misma retiene un porcentaje y lo entrega al Servicio de Rentas Internas (SRI). Quien retiene se llama <strong>agente de retención</strong>; quien recibe el pago con descuento se llama <strong>sujeto retenido</strong>, es decir, quien vende el bien o presta el servicio.</p>
+<p>Conviene distinguir esta retención de la retención de IVA que estudiaste en la semana 4. La retención de IVA se calcula sobre el impuesto al valor agregado de la operación. La retención del impuesto a la renta se calcula sobre el <strong>valor del pago</strong>, y el porcentaje depende del concepto del pago, no de la tarifa del IVA. Son dos mecanismos distintos que pueden aparecer en la misma factura, como verás en la sesión 02.</p>
+<p>La resolución vigente usa la expresión «pagos o acreditaciones en cuenta». Eso significa que la retención nace cuando la empresa paga o cuando registra la deuda en la cuenta del proveedor, lo que ocurra primero. No hace falta esperar a que el dinero salga de la caja para que la obligación exista.</p>
+
+<h3>2. Quién retiene y con qué porcentaje</h3>
+<p>El porcentaje no lo decide quien paga ni quien cobra. Lo fija la resolución del SRI para cada concepto. La resolución vigente es la <strong>NAC-DGERCGC26-00000009</strong>, expedida el 27 de febrero de 2026 y aplicable desde el 1 de marzo de 2026. Antes de usarla, verifica que sea la vigente: si encuentras una tabla de 2024 o de 2025, es otra norma y no debe usarse para esta semana.</p>
+<p>La tabla 1 reúne los conceptos que usaremos en la sesión. No es la lista completa de la resolución: si necesitas un concepto que no aparece aquí, consulta el texto oficial. Observa que los porcentajes se agrupan y que cada grupo tiene un nombre de concepto, no un nombre de persona.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 1. Porcentajes de retención del impuesto a la renta usados en esta sesión (Resolución NAC-DGERCGC26-00000009, vigente desde el 1 de marzo de 2026)</caption>
+<thead><tr><th>Porcentaje</th><th>Concepto de pago</th><th>Dónde está en la resolución</th></tr></thead>
+<tbody>
+<tr><td>2 %</td><td>Compra de bienes muebles de naturaleza corporal, como camisetas o equipos.</td><td>Artículo 2, grupo del 2 %.</td></tr>
+<tr><td>3 %</td><td>Servicios de personas naturales en los que prevalece la mano de obra sobre el intelecto.</td><td>Artículo 2, grupo del 3 %.</td></tr>
+<tr><td>3 % (residual)</td><td>Cualquier pago que no tenga un porcentaje específico en la resolución.</td><td>Artículo 3.</td></tr>
+<tr><td>5 %</td><td>Servicios profesionales prestados por sociedades residentes que requieren profesionales titulados.</td><td>Artículo 2, grupo del 5 %.</td></tr>
+<tr><td>10 %</td><td>Honorarios de personas naturales por servicios en los que prevalece el intelecto.</td><td>Artículo 2, grupo del 10 %.</td></tr>
+<tr><td>10 %</td><td>Arrendamiento de bienes inmuebles.</td><td>Artículo 2, grupo del 10 %.</td></tr>
+</tbody></table></div>
+
+<p>Para elegir el porcentaje, haz tres preguntas en orden. ¿Qué se compra o qué se paga: un bien, un servicio, un arriendo, un interés? ¿Quién lo presta: una sociedad o una persona natural? Y si es un servicio, ¿predomina la mano de obra o el conocimiento profesional? Con esas tres respuestas casi siempre encuentras la fila de la tabla. Si ninguna fila corresponde, aplica el residual del 3 % previsto en el artículo 3, que se usa para todo pago sin porcentaje específico.</p>
+
+<h3>3. La base de cálculo en esta sesión</h3>
+<p>La retención se calcula multiplicando la base por el porcentaje del concepto: <strong>retención = base × porcentaje</strong>. En esta sesión usamos como base el valor del bien o del servicio <strong>sin IVA</strong>. Esa es una convención didáctica para que puedas practicar el porcentaje sin mezclarlo con el impuesto de la semana 4. Debes saber, sin embargo, que la regla exacta de la base para la retención de renta no está verificada en el texto oficial desde esta revisión. Por eso, en un caso real, debes confirmar la base en el reglamento vigente antes de calcular. Aquí la tratamos como un supuesto de estudio, y la sesión lo indica en cada cálculo.</p>
+<p>Una vez fijada la base, el cálculo es directo. Supongamos que Andes Global paga a Asesores Litoral una consultoría de 1.000,00 dólares, sin IVA, prestada por una sociedad con profesionales titulados. El concepto corresponde al grupo del 5 %.</p>
+
+<div class="concepto">
+<h4>Cálculo 1. Retención y pago neto de una consultoría</h4>
+<p><strong>Situación.</strong> Andes Global paga una consultoría a Asesores Litoral Cía. Ltda., una sociedad residente.</p>
+<p><strong>Supuesto didáctico.</strong> La base es el valor sin IVA del servicio: 1.000,00 dólares. El concepto corresponde al grupo del 5 % porque es un servicio profesional de una sociedad que requiere título.</p>
+<p><strong>Qué buscamos.</strong> La retención de impuesto a la renta y el pago neto, en dólares.</p>
+<p><strong>Datos.</strong> Base: 1.000,00 dólares. Porcentaje: 5 %, que en un cálculo equivale a 0,05, porque 5 de cada 100 es 0,05.</p>
+<p><strong>Por qué esta operación.</strong> La retención es una parte del pago que se entrega al SRI. Como el porcentaje corresponde al concepto, se aplica sobre la base del servicio y no sobre otro valor.</p>
+<p><strong>Procedimiento.</strong> Retención = 1.000,00 × 0,05 = 50,00 dólares. Pago neto = 1.000,00 − 50,00 = 950,00 dólares.</p>
+<p><strong>Resultado.</strong> Retención 50,00 dólares; pago neto 950,00 dólares.</p>
+<p><strong>Comprobación.</strong> Dos controles. El pago neto más la retención debe volver a dar el valor del servicio: 950,00 + 50,00 = 1.000,00. Además, el 5 % de 1.000 es la mitad del 10 %, es decir, 50. Ambas vías coinciden.</p>
+<p><strong>Interpretación.</strong> Asesores Litoral recibe 950,00 dólares en efectivo y tiene un derecho de 50,00 dólares cuyo uso se estudiará más adelante. El error que se evita es pagar o registrar el total de 1.000,00 dólares como si el comprador no hubiera retenido nada.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 2. Retención en el arriendo de una bodega</h4>
+<p><strong>Situación.</strong> Andes Global paga el arriendo mensual de una bodega a una persona natural. El valor del arriendo, sin IVA, es de 800,00 dólares.</p>
+<p><strong>Supuesto didáctico.</strong> El arriendo no incluye IVA para este ejercicio. El concepto es el arrendamiento de bienes inmuebles, que está en el grupo del 10 %.</p>
+<p><strong>Qué buscamos.</strong> La retención y el pago neto del arriendo, en dólares.</p>
+<p><strong>Datos.</strong> Base: 800,00 dólares. Porcentaje: 10 %, es decir, 0,10.</p>
+<p><strong>Por qué esta operación.</strong> El concepto de pago determina el porcentaje. Un arriendo no se trata como un servicio profesional: aunque también es un pago, pertenece a otro grupo de la tabla 1.</p>
+<p><strong>Procedimiento.</strong> Retención = 800,00 × 0,10 = 80,00 dólares. Pago neto = 800,00 − 80,00 = 720,00 dólares.</p>
+<p><strong>Resultado.</strong> Retención 80,00 dólares; pago neto 720,00 dólares.</p>
+<p><strong>Comprobación.</strong> 720,00 + 80,00 = 800,00. Por otra vía, el 10 % es la décima parte de la base, y 800 ÷ 10 = 80, que coincide.</p>
+<p><strong>Interpretación.</strong> El arriendo cuesta 800,00 dólares a la empresa, aunque sale de su caja 720,00. Los 80,00 dólares restantes son una obligación de entregarlos al SRI. El error que se evita es aplicar el 3 % de los servicios a un arriendo, lo que daría 24,00 dólares y dejaría sin retener la diferencia.</p>
+</div>
+
+<h3>4. Cuando un pago combina conceptos</h3>
+<p>En la práctica, un mismo comprobante puede incluir bienes y servicios con porcentajes distintos. La resolución da una regla para ese caso: si cada valor está separado en el comprobante, cada parte se retiene con su porcentaje; si los valores no están separados, se aplica el porcentaje más alto de los que intervienen. La regla protege al Estado de una retención menor cuando el comprobante no permite identificar cuánto corresponde a cada concepto.</p>
+<p>La diferencia entre las dos formas de calcular es importante, porque determina cuánto se retiene. Observa el ejemplo siguiente con los mismos conceptos y el mismo total.</p>
+
+<div class="concepto">
+<h4>Cálculo 3. Separar o no separar los valores de un comprobante</h4>
+<p><strong>Situación.</strong> Una factura de un proveedor incluye camisetas por 600,00 dólares y una consultoría de una sociedad por 400,00 dólares. El total de la base es 1.000,00 dólares.</p>
+<p><strong>Supuesto didáctico.</strong> Las camisetas son bienes muebles de naturaleza corporal (grupo del 2 %) y la consultoría es un servicio profesional de sociedad (grupo del 5 %).</p>
+<p><strong>Qué buscamos.</strong> La retención de renta en dos casos: con los valores separados y sin separar.</p>
+<p><strong>Datos.</strong> Bienes: 600,00 dólares al 2 %. Servicio: 400,00 dólares al 5 %. Total de la base: 1.000,00 dólares.</p>
+<p><strong>Por qué esta operación.</strong> Cuando los valores están separados, cada concepto se retiene con su porcentaje. Cuando no lo están, la resolución exige el porcentaje más alto.</p>
+<p><strong>Procedimiento.</strong> Caso separado: 600,00 × 0,02 = 12,00; 400,00 × 0,05 = 20,00; retención total = 12,00 + 20,00 = 32,00 dólares. Caso no separado: 1.000,00 × 0,05 = 50,00 dólares.</p>
+<p><strong>Resultado.</strong> Separado: 32,00 dólares. Sin separar: 50,00 dólares. La diferencia es 18,00 dólares.</p>
+<p><strong>Comprobación.</strong> El caso no separado debe ser siempre igual o mayor que el separado cuando el porcentaje más alto corresponde a uno de los conceptos: 50 es mayor que 32, y ese es el resultado esperado. Si el resultado sin separar te diera menor, habrías aplicado un porcentaje que no corresponde.</p>
+<p><strong>Interpretación.</strong> Por eso los comprobantes deben identificar cada concepto con su valor. Un comprobante bien separado permite pagar lo que corresponde a cada concepto y evita una retención mayor o menor por una mala descripción.</p>
+</div>
+
+<h3>5. El comprobante de retención</h3>
+<p>Cada retención debe acreditarse con un comprobante de retención emitido por el agente de retención. Ese documento es la prueba de que el valor fue retenido y de que el sujeto retenido puede usarlo después. Sin el comprobante, el asiento puede cuadrar, pero la cuenta de retención queda sin respaldo, como ocurre con cualquier derecho que no se puede documentar. Los requisitos formales del comprobante y sus plazos dependen de la normativa de comprobantes de venta y de retención, que no se desarrolla en esta sesión.</p>
+
+<h3>6. Cómo se registra la retención</h3>
+<p>La retención exige dos asientos, uno por cada parte de la operación. Quien paga registra el gasto o el costo por el valor del servicio, el pago neto en caja y la obligación de entregar la retención al SRI. Quien recibe el pago registra el efectivo que recibe, un derecho por la retención que le practicaron y el ingreso por el valor del servicio. En ambos casos el asiento debe cuadrar, pero la igualdad no basta: cada cuenta debe estar en el lado que corresponde a su naturaleza.</p>
+<p>Las cuentas que aparecen aquí no tienen código en el plan de cuentas que usamos. Se llaman <strong>provisionales</strong>: el docente decidirá después su código definitivo. Hasta entonces, las identificaremos con su nombre.</p>
+
+<div class="asiento">
+<h4>Asiento 1. Andes Global registra el pago de la consultoría (perspectiva del comprador)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario. Fecha del caso: día de pago.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Honorarios profesionales (cuenta provisional, gasto)</td><td>1.000,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja (1101)</td><td></td><td>950,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Retención de impuesto a la renta por pagar (cuenta provisional, pasivo)</td><td></td><td>50,00</td></tr>
+<tr><td><em>Glosa: P/R consultoría prestada por Asesores Litoral Cía. Ltda., con retención del 5 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.000,00 = haber 950,00 + 50,00. La cuenta de honorarios aumenta en el debe porque es un gasto del período; la caja disminuye en el haber porque sale efectivo; la retención por pagar aumenta en el haber porque es una obligación con el SRI.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 2. Asesores Litoral registra el cobro (perspectiva de quien presta el servicio)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario. Fecha del caso: día de cobro.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td>950,00</td><td></td></tr>
+<tr><td>Retención de impuesto a la renta a favor (cuenta provisional, activo)</td><td>50,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Ingresos por servicios (cuenta provisional)</td><td></td><td>1.000,00</td></tr>
+<tr><td><em>Glosa: P/R servicio de consultoría a Servicios Logísticos Andes Global S. A., cobrado con retención del 5 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.000,00 = haber 1.000,00. El ingreso es el valor del servicio, no el dinero recibido: la retención no disminuye el ingreso, sino que cambia el modo en que se cobra. La retención a favor es un derecho, por eso se registra en el debe.</p>
+</div>
+
+<h3>7. Preguntas que suelen aparecer</h3>
+<p><strong>¿Por qué el comprador registra el gasto por 1.000,00 dólares si pagó 950,00?</strong> Porque el gasto es el valor del servicio recibido. Los 50,00 dólares retenidos no son una disminución del gasto: son una deuda con el SRI que el comprador debe entregar en nombre del prestador.</p>
+<p><strong>¿Qué pasa si el concepto no aparece en la tabla?</strong> Se aplica el residual del 3 % previsto en el artículo 3. Esa regla existe para que todo pago tenga un porcentaje, pero no reemplaza la búsqueda del concepto específico: si la tabla lo contempla, ese porcentaje es el que corresponde.</p>
+<p><strong>¿El porcentaje cambia si el mismo servicio lo presta una persona natural?</strong> Puede cambiar. En la tabla 1, un servicio profesional prestado por una sociedad con título está en el 5 %, mientras que los honorarios de una persona natural por servicios donde prevalece el intelecto están en el 10 %. Por eso la forma jurídica del prestador es parte de la pregunta.</p>
+<p><strong>¿Quién paga la retención al SRI?</strong> La paga el agente de retención. Quien recibe el pago tiene un derecho por ese valor, cuyo uso se estudiará más adelante.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Andes Global paga 2.000,00 dólares a una persona natural por una asesoría en la que predomina el conocimiento profesional. Antes de calcular, decide qué porcentaje corresponde. Luego calcula la retención y el pago neto. Escribe tu respuesta antes de continuar.</p>
+<p class="ayuda">Si respondiste 3 %, revisa la tabla 1: el 3 % es para servicios de personas naturales donde prevalece la mano de obra, no el intelecto. Si respondiste 5 %, revisa a quién se paga: una persona natural no es una sociedad. La respuesta correcta es 10 %, con retención de 200,00 dólares y pago neto de 1.800,00 dólares.</p>
+</div>
+
+<h3>8. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Trabaja individualmente. Antes de abrir cada solución, escribe tu respuesta y tu procedimiento. Si tu resultado no coincide, compara paso a paso: casi todos los errores vienen de tres decisiones, que son el concepto del pago, el porcentaje de la tabla y la base sobre la que se aplica.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Calcular la retención de una consultoría</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás la retención y el pago neto de un servicio. Supongamos que una empresa paga 2.000,00 dólares, sin IVA, a Asesores Litoral Cía. Ltda. por una consultoría prestada por una sociedad residente con profesionales titulados. Determina el porcentaje, la retención y el pago neto.</p>
+<p class="ayuda">Identifica el concepto y su grupo en la tabla 1. Después multiplica la base por el porcentaje y resta la retención del valor del servicio.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Porcentaje: 5 %, porque es un servicio profesional de sociedad con título. Retención = 2.000,00 × 0,05 = 100,00 dólares. Pago neto = 2.000,00 − 100,00 = 1.900,00 dólares.</p>
+<p><strong>Comprobación:</strong> 1.900,00 + 100,00 = 2.000,00. Además, 5 % de 2.000 es 10 % de 1.000, es decir, 100.</p>
+<p><strong>Error frecuente:</strong> aplicar el 10 % porque la consultoría parece «de mayor valor». El porcentaje depende del concepto y de quién presta el servicio, no del monto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El monto no determina el porcentaje. Lo que lo determina es el concepto del pago y la condición de quien lo recibe. Con esa información, el cálculo es una multiplicación directa.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Elegir el porcentaje para cuatro pagos</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad clasificarás cuatro pagos y justificarás el porcentaje que corresponde a cada uno. Supón que todos los valores son sin IVA: (a) arriendo de una bodega a una persona natural; (b) servicios de una persona natural en los que predomina la mano de obra; (c) honorarios de un abogado que es persona natural, por un servicio en el que predomina el conocimiento profesional; (d) un servicio que no figura en la tabla 1. Indica el porcentaje de cada uno y el criterio que usaste.</p>
+<p class="ayuda">Para cada caso pregúntate: ¿qué se paga?, ¿quién lo recibe?, ¿predomina la mano de obra o el conocimiento? Si ninguna fila corresponde, revisa el residual del artículo 3.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>(a) Arriendo de inmueble: 10 %, grupo de arrendamiento. (b) Servicio de persona natural con predominio de la mano de obra: 3 %. (c) Honorarios de persona natural con predominio del intelecto: 10 %. (d) Concepto no listado: residual del 3 %, según el artículo 3.</p>
+<p><strong>Comprobación:</strong> cada respuesta tiene un criterio distinto para llegar al porcentaje. Si dos casos te dieron el mismo porcentaje, pregúntate si eso se debe a un criterio común o a una confusión.</p>
+<p><strong>Error frecuente:</strong> usar 10 % para toda prestación de una persona natural. El 10 % corresponde a honorarios por intelecto y a arriendos; la mano de obra va al 3 %.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Clasificar el concepto antes de calcular evita el error más común de la sesión. El porcentaje sale de la tabla, no de la intuición sobre cuánto cuesta un servicio.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Comparar un comprobante con valores separados y sin separar</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad compararás la retención de un mismo comprobante según se separen o no sus valores. Un proveedor emite un comprobante por 1.000,00 dólares de base: 300,00 dólares de bienes muebles de naturaleza corporal y 700,00 dólares de servicios profesionales de una sociedad. Calcula la retención en los dos casos y explica la diferencia.</p>
+<p class="ayuda">Primero calcula el caso separado, con cada valor y su porcentaje. Después calcula el caso no separado, aplicando el porcentaje más alto a todo el valor.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Separado: 300,00 × 0,02 = 6,00; 700,00 × 0,05 = 35,00; total 41,00 dólares. No separado: 1.000,00 × 0,05 = 50,00 dólares. La diferencia es 9,00 dólares.</p>
+<p><strong>Comprobación:</strong> el caso no separado aplica el 5 % a los 1.000,00. El separado aplica el 5 % solo a los 700,00 de servicios y el 2 % a los 300,00 de bienes. La diferencia, 9,00 dólares, equivale al 5 % de los 300,00 de bienes (15,00) menos su 2 % (6,00): 15,00 − 6,00 = 9,00.</p>
+<p><strong>Error frecuente:</strong> sumar los dos porcentajes o promediarlos. La resolución no prevé ninguna de esas operaciones: cuando los valores no se separan, se aplica el porcentaje más alto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La regla del porcentaje más alto es una protección: obliga a describir cada concepto con su valor en el comprobante. Un comprobante bien separado permite una retención precisa.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Registrar el pago de mano de obra a una persona natural</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás la retención de un pago por mano de obra y registrarás la operación desde la perspectiva de quien paga. Supongamos que Servicios Logísticos Andes Global S. A. paga 1.200,00 dólares, sin IVA, a una persona natural por servicios en los que predomina la mano de obra. Calcula la retención y el pago neto, y escribe el asiento del comprador con su glosa.</p>
+<p class="ayuda">La retención es el porcentaje del concepto sobre el valor del pago. El gasto es el valor del servicio; la caja recibe el pago neto; la diferencia es la obligación con el SRI.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Retención = 1.200,00 × 0,03 = 36,00 dólares. Pago neto = 1.200,00 − 36,00 = 1.164,00 dólares.</p>
+<p><strong>Asiento:</strong> Debe Gasto por servicios de mano de obra (cuenta provisional) 1.200,00; Haber Caja (1101) 1.164,00; Haber Retención de impuesto a la renta por pagar (cuenta provisional) 36,00. Glosa: P/R servicios de mano de obra de persona natural, con retención del 3 %.</p>
+<p><strong>Comprobación:</strong> debe 1.200,00 = haber 1.164,00 + 36,00. Además, 1.164,00 + 36,00 = 1.200,00.</p>
+<p><strong>Error frecuente:</strong> registrar el gasto por 1.164,00 dólares. Ese error deja sin registrar la obligación de 36,00 dólares con el SRI, aunque el asiento cuadre con el pago neto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un asiento puede cuadrar y estar mal clasificado: si el gasto no incluye la retención por pagar, la deuda con el SRI desaparece del balance. Por eso el gasto se mide por el valor del servicio.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: la misma consultoría prestada por una persona natural</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad observarás cómo cambia la retención cuando cambia la condición de quien presta el servicio. Supongamos que la consultoría del cálculo 1 es de 1.000,00 dólares, pero la presta una persona natural, por un servicio en el que predomina el intelecto. El caso original sigue siendo el del cálculo 1. Calcula la retención y el pago neto, y compara con el caso original.</p>
+<p class="ayuda">Identifica el nuevo concepto de la tabla 1 y su porcentaje. Compara después la retención y el pago neto con los del cálculo 1.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Porcentaje: 10 %, honorarios de personas naturales por servicios en los que predomina el intelecto. Retención = 1.000,00 × 0,10 = 100,00 dólares. Pago neto = 1.000,00 − 100,00 = 900,00 dólares.</p>
+<p><strong>Comparación:</strong> la retención sube de 50,00 a 100,00 dólares y el pago neto baja de 950,00 a 900,00 dólares. El valor del servicio no cambió; cambió el concepto y, con él, el porcentaje.</p>
+<p><strong>Error frecuente:</strong> pensar que el cambio se debe al monto. El valor es el mismo; lo que cambió es quién presta el servicio y qué concepto representa.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un cambio en la condición del prestador puede cambiar el porcentaje aunque el valor sea idéntico. Por eso siempre debes registrar, junto con el monto, el concepto y el tipo de prestador.</p></div>
+</div>
+
+<h3>9. Cierre de la sesión</h3>
+<p>Volvamos a la situación inicial: de los 1.000,00 dólares de la consultoría, 950,00 llegaron a la sociedad prestadora y 50,00 se entregan al SRI. La retención depende de tres decisiones: el concepto del pago, el porcentaje de la tabla y la base sobre la que se aplica. Si el comprobante mezcla conceptos, la regla de la pluralidad obliga a usar el porcentaje más alto cuando los valores no están separados. Y el asiento se registra desde dos perspectivas: el comprador reconoce el gasto, la caja y la obligación; el prestador, la caja, el derecho y el ingreso.</p>
+<p>Como tarea de transferencia, imagina un pago de 1.500,00 dólares a una sociedad residente por un servicio profesional que requiere título, al que se suma un arriendo de 600,00 dólares a una persona natural. Calcula la retención de cada pago, por separado, y explica por qué no conviene sumarlos antes de aplicar el porcentaje.</p>
+<p>Para revisar por dificultad: si no sabes qué porcentaje corresponde, relee la sección 2 y los ejercicios 1 y 2; si tu cálculo es correcto pero el porcentaje no, revisa la sección 4 y el ejercicio 3; si tu asiento cuadra pero no se entiende la deuda, relee la sección 6 y el ejercicio 4.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Agente de retención:</strong> quien paga y debe retener el impuesto según la normativa.</li>
+<li><strong>Sujeto retenido:</strong> quien vende el bien o presta el servicio y a quien se practica la retención.</li>
+<li><strong>Pago o acreditación en cuenta:</strong> el pago en efectivo o el registro de la deuda en la cuenta del proveedor.</li>
+<li><strong>Pago neto:</strong> valor del pago menos la retención.</li>
+<li><strong>Comprobante de retención:</strong> documento que acredita la retención practicada.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval1" data-panel="eval1" aria-labelledby="t-eval1">
+<h2 id="t-eval1">Evaluación de la sesión 01 · Retención del impuesto a la renta</h2>
+<p class="meta">Semana 5 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="1"></div>
+</section>
+
+<section class="pestana" id="ses02" data-panel="ses02">
+<h2>Sesión 02 · Práctica integrada: factura con IVA y dos retenciones</h2>
+<p class="meta">Semana 5 · Unidad 2 · Práctica integrada de impuestos: factura con IVA, retención de IVA y retención en la fuente del impuesto a la renta, desde el comprador y el vendedor (sesión global 14) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que Comercializadora Costa Verde Cía. Ltda. vende 100 camisetas a Servicios Logísticos Andes Global S. A., que las compra para uniformar a su personal. La factura lleva IVA y, al pagar, Andes Global retiene dos valores distintos. Costa Verde recibe menos dinero del que muestra la factura. ¿Qué parte del pago es ingreso, qué parte es impuesto y qué parte se entrega al SRI? Y para Andes Global, ¿qué registra por cada una de esas partes?</p>
+<p>Esta sesión une lo que aprendiste en las dos sesiones anteriores. Al terminar podrás calcular, en una misma factura, la base, el IVA, la retención de IVA, la retención del impuesto a la renta y el pago neto; registrar la venta desde la perspectiva de quien vende y la compra desde la de quien compra; y comprobar que cada asiento cuadra y que cada cuenta está en el lado que le corresponde.</p>
+<p>Trabaja primero en papel. Escribe cada cifra con su base y su porcentaje antes de pasar a la siguiente. Cuando las dos retenciones aparezcan en la misma factura, la pregunta clave es siempre la misma: ¿sobre qué valor se calcula este porcentaje?</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. El caso de esta sesión</h3>
+<p>Supongamos que Comercializadora Costa Verde Cía. Ltda., una empresa comercial, vende a Servicios Logísticos Andes Global S. A. 100 camisetas a 12,00 dólares cada una, sin IVA. Andes Global es una empresa de servicios vinculada con Negocios Internacionales, y compra las camisetas como uniforme de su personal, no para revenderlas. El caso es independiente de los meses de la semana 4: la venta de esta sesión no continúa ni corrige ninguna cifra de esa semana.</p>
+<p>Dos supuestos didácticos sostienen el caso. El primero: Andes Global actúa como agente de retención del IVA y del impuesto a la renta. Esa designación es un supuesto de estudio; no está verificada para la empresa real que se parezca a este caso, y el docente debe confirmarla antes de usarla en una evaluación oficial. El segundo: el IVA pagado en las camisetas que Andes Global usa como uniforme se trata como crédito tributario. Ese punto está pendiente de decisión del docente, y si no se confirma, el asiento de la compra cambiaría. Lo indicaremos en cada asiento donde aparezca.</p>
+
+<h3>2. Cómo se calcula cada cifra de la factura</h3>
+<p>Antes de calcular, conviene ordenar la factura con el mismo esquema de la sesión 01: qué valor es la base, qué porcentaje corresponde a cada concepto, sobre qué valor se aplica y qué resultado produce. La tabla 2 hace exactamente eso. Léela por filas: cada fila dice de dónde sale una cifra y por qué.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 2. Cifras de la factura de Costa Verde a Andes Global (100 camisetas a 12,00 dólares sin IVA)</caption>
+<thead><tr><th>Concepto</th><th>Cálculo</th><th>Sobre qué valor se aplica</th><th>Resultado (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Base de la venta</td><td>100 × 12,00</td><td>Valor sin IVA</td><td>1.200,00</td></tr>
+<tr><td>IVA de la venta</td><td>1.200,00 × 15 %</td><td>Base (tarifa general de la semana 4)</td><td>180,00</td></tr>
+<tr><td>Total de la factura</td><td>1.200,00 + 180,00</td><td>Base más IVA</td><td>1.380,00</td></tr>
+<tr><td>Retención de IVA (30 %)</td><td>180,00 × 30 %</td><td>IVA de la operación, no la base</td><td>54,00</td></tr>
+<tr><td>Retención de impuesto a la renta (2 %)</td><td>1.200,00 × 2 %</td><td>Valor del bien sin IVA, según la convención de la sesión 01</td><td>24,00</td></tr>
+<tr><td>Pago neto de Andes Global</td><td>1.380,00 − 54,00 − 24,00</td><td>Total de la factura menos las dos retenciones</td><td>1.302,00</td></tr>
+</tbody></table></div>
+
+<p>Hay dos cosas que debes notar en la tabla. La primera es que cada retención tiene su propia base. La retención de IVA se aplica sobre el impuesto, porque es una parte del IVA que se adelanta al Estado, como viste en la semana 4. La retención de impuesto a la renta se aplica sobre el valor del bien, según el porcentaje del concepto, como viste en la sesión 01. Confundir las dos bases es el error más frecuente de esta sesión. La segunda es que el pago neto no depende de cuál retención se calculó primero: se obtiene restando ambas del total de la factura.</p>
+
+<div class="concepto">
+<h4>Cálculo 4. Base, IVA y total de la factura</h4>
+<p><strong>Situación.</strong> Costa Verde debe emitir la factura por la venta de 100 camisetas a Andes Global.</p>
+<p><strong>Supuesto didáctico.</strong> El precio unitario de 12,00 dólares es sin IVA y la tarifa general es de 15 %, la misma que usamos en la semana 4.</p>
+<p><strong>Qué buscamos.</strong> La base, el IVA y el total, en dólares.</p>
+<p><strong>Datos.</strong> Cantidad: 100. Precio unitario: 12,00 dólares. Tarifa: 15 %.</p>
+<p><strong>Por qué esta operación.</strong> La base es el valor de la venta y el IVA se calcula sobre ella. El total suma el impuesto a la base, porque es lo que paga el comprador antes de las retenciones.</p>
+<p><strong>Procedimiento.</strong> Base = 100 × 12,00 = 1.200,00 dólares. IVA = 1.200,00 × 0,15 = 180,00 dólares. Total = 1.200,00 + 180,00 = 1.380,00 dólares.</p>
+<p><strong>Resultado.</strong> Base 1.200,00; IVA 180,00; total 1.380,00 dólares.</p>
+<p><strong>Comprobación.</strong> Al dividir el total entre 1,15 debe salir la base: 1.380,00 ÷ 1,15 = 1.200,00. Es una vía distinta de la multiplicación directa y confirma el resultado.</p>
+<p><strong>Interpretación.</strong> Andes Global debe 1.380,00 dólares antes de retener. El error que se evita es calcular el IVA sobre 1.380,00, lo que daría 207,00 dólares.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 5. Retención de IVA sobre el impuesto</h4>
+<p><strong>Situación.</strong> Andes Global es agente de retención de IVA y debe retener una parte del impuesto de la factura.</p>
+<p><strong>Supuesto didáctico.</strong> La designación de agente de retención es un supuesto de estudio. El porcentaje de 30 % corresponde a la transferencia de bienes gravados, según la tabla 3 de la semana 4.</p>
+<p><strong>Qué buscamos.</strong> El valor de la retención de IVA, en dólares.</p>
+<p><strong>Datos.</strong> IVA de la operación: 180,00 dólares. Porcentaje de retención: 30 % del IVA.</p>
+<p><strong>Por qué esta operación.</strong> La retención de IVA es una parte del impuesto, no del valor del bien. Por eso el porcentaje se aplica a 180,00 y no a 1.200,00.</p>
+<p><strong>Procedimiento.</strong> Retención de IVA = 180,00 × 0,30 = 54,00 dólares.</p>
+<p><strong>Resultado.</strong> 54,00 dólares.</p>
+<p><strong>Comprobación.</strong> La retención no puede superar el IVA de la operación. Como 54,00 es menor que 180,00, es coherente. Otro control: 180 ÷ 10 = 18 es el 10 % del IVA, y 18 × 3 = 54 es el 30 %.</p>
+<p><strong>Interpretación.</strong> De los 180,00 dólares de IVA, Andes Global entrega 54,00 al SRI en nombre de Costa Verde. El resto del IVA queda como parte del pago que se hace a Costa Verde. El error que se evita es retener el 30 % de la base, lo que daría 360,00 dólares, una cifra mayor que todo el impuesto.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 6. Retención de renta y pago neto</h4>
+<p><strong>Situación.</strong> Andes Global compra un bien mueble de naturaleza corporal, las camisetas, y debe practicar la retención del impuesto a la renta.</p>
+<p><strong>Supuesto didáctico.</strong> El porcentaje de 2 % corresponde a bienes muebles de naturaleza corporal (tabla 1 de la sesión 01). La base es el valor sin IVA, 1.200,00 dólares.</p>
+<p><strong>Qué buscamos.</strong> La retención del impuesto a la renta y el pago neto de Andes Global.</p>
+<p><strong>Datos.</strong> Base: 1.200,00 dólares. Porcentaje: 2 %, es decir, 0,02. Total de la factura: 1.380,00 dólares. Retención de IVA: 54,00 dólares.</p>
+<p><strong>Por qué esta operación.</strong> El porcentaje del concepto se aplica sobre el valor del bien. Si se aplicara sobre el total con IVA, la retención sería mayor y no respondería a la convención de la sesión.</p>
+<p><strong>Procedimiento.</strong> Retención de renta = 1.200,00 × 0,02 = 24,00 dólares. Pago neto = 1.380,00 − 54,00 − 24,00 = 1.302,00 dólares.</p>
+<p><strong>Resultado.</strong> Retención de renta 24,00 dólares; pago neto 1.302,00 dólares.</p>
+<p><strong>Comprobación.</strong> La suma de las dos retenciones y el pago neto debe volver al total: 1.302,00 + 54,00 + 24,00 = 1.380,00. El control confirma que no se restó dos veces ninguna cantidad.</p>
+<p><strong>Interpretación.</strong> Costa Verde recibe 1.302,00 dólares en efectivo y tiene dos derechos: 54,00 de retención de IVA y 24,00 de retención de renta. El error que se evita es restar el 2 % del total, lo que daría 27,60 dólares y un pago neto de 1.298,40 dólares.</p>
+</div>
+
+<h3>3. El asiento de la venta: perspectiva del vendedor</h3>
+<p>Costa Verde es la empresa que vende. Su asiento registra tres cosas: el efectivo que recibe, los dos derechos por las retenciones y el ingreso con su impuesto. El IVA cobrado es una obligación frente al SRI, porque la empresa lo recibe por cuenta del Estado; por eso aparece en el haber junto con las ventas. Las dos retenciones son derechos, y aparecen en el debe. La suma del debe y del haber debe ser igual al total de la factura, 1.380,00 dólares, porque ese es el valor total que la operación genera.</p>
+
+<div class="asiento">
+<h4>Asiento 3. Costa Verde registra la venta con retenciones (perspectiva del vendedor)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario. Fecha del caso: día de la venta y el cobro neto.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td>1.302,00</td><td></td></tr>
+<tr><td>Retención de IVA a favor (cuenta provisional, activo)</td><td>54,00</td><td></td></tr>
+<tr><td>Retención de impuesto a la renta a favor (cuenta provisional, activo)</td><td>24,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Ventas (4101)</td><td></td><td>1.200,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;IVA cobrado (cuenta provisional, pasivo)</td><td></td><td>180,00</td></tr>
+<tr><td><em>Glosa: P/R venta de 100 camisetas a Servicios Logísticos Andes Global S. A., cobrada neta de retenciones de IVA (30 %) y de impuesto a la renta (2 %).</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.302,00 + 54,00 + 24,00 = 1.380,00; haber 1.200,00 + 180,00 = 1.380,00. El asiento cuadra y cada cuenta está en su lado: la caja aumenta en el debe porque entra efectivo; las ventas y el IVA cobrado aumentan en el haber porque son ingreso y obligación.</p>
+</div>
+
+<h3>4. El asiento de la compra: perspectiva del comprador</h3>
+<p>Andes Global registra la compra desde el otro lado. Recibe las camisetas como uniforme, así que la cuenta de uniformes no es mercadería para vender; la clasificación definitiva depende del uso y de las condiciones, y se estudiará más adelante. Su asiento registra el valor de los uniformes, el IVA pagado como crédito, la caja por el pago neto y las dos retenciones que debe entregar al SRI.</p>
+<p>Observa que el comprador no registra la retención como un gasto. Cuando retiene, no está pagando más: está entregando al SRI una parte del pago que corresponde al vendedor. Por eso la retención aparece en el haber, como obligación.</p>
+
+<div class="asiento">
+<h4>Asiento 4. Andes Global registra la compra de uniformes (perspectiva del comprador)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario. Fecha del caso: día de la compra y el pago neto.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Uniformes del personal (cuenta provisional)</td><td>1.200,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA (cuenta provisional, activo)</td><td>180,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja (1101)</td><td></td><td>1.302,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Retención de IVA por pagar (cuenta provisional, pasivo)</td><td></td><td>54,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Retención de impuesto a la renta por pagar (cuenta provisional, pasivo)</td><td></td><td>24,00</td></tr>
+<tr><td><em>Glosa: P/R compra de 100 camisetas como uniforme a Comercializadora Costa Verde Cía. Ltda., con retenciones de IVA (30 %) y de impuesto a la renta (2 %).</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.200,00 + 180,00 = 1.380,00; haber 1.302,00 + 54,00 + 24,00 = 1.380,00. El asiento cuadra. Supuesto explícito: el IVA de 180,00 se registra como crédito tributario. Esa decisión está pendiente del docente; si se resolviera de otro modo, el IVA formaría parte del valor de los uniformes y el débito cambiaría.</p>
+</div>
+
+<h3>5. Preguntas que suelen aparecer</h3>
+<p><strong>¿Por qué no se registra el costo de las camisetas en el asiento de Costa Verde?</strong> Porque la salida de inventario que corresponde al costo de los bienes vendidos es un tema posterior del programa, que se estudia en las unidades de inventarios. Esta sesión solo registra la venta y sus retenciones.</p>
+<p><strong>¿Puede cuadrar un asiento que registra la caja por el total de la factura?</strong> Sí. Si Caja registra 1.380,00 en lugar de 1.302,00 y el ingreso y el IVA quedan igual, el asiento cuadra. Pero la caja queda sobrestimada en 78,00 dólares, porque Costa Verde no recibió esos valores: el asiento cuadra y está mal. Es la misma lección de la semana 4: la igualdad no prueba la clasificación.</p>
+<p><strong>¿Qué pasa si la retención de renta se calcula sobre el total?</strong> Se obtiene 27,60 dólares, es decir, 3,60 dólares más que los 24,00 que corresponden con la convención de la sesión. El error no es pequeño: la retención quedaría mal calculada en el mismo caso y el pago neto sería distinto.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Costa Verde vende 40 camisetas a 12,00 dólares cada una, sin IVA, a un cliente con las mismas dos retenciones. Antes de calcular, responde: ¿sobre qué valor se aplica la retención de IVA y sobre cuál la de renta? Luego calcula los tres valores (base, IVA y total) y las dos retenciones.</p>
+<p class="ayuda">Si la retención de renta te salió sobre el total de 552,00, revisa la pregunta inicial: el 2 % se aplica sobre el valor del bien, 480,00, y no sobre el total. La respuesta correcta es 9,60 dólares de renta, 21,60 dólares de IVA y un pago neto de 520,80 dólares.</p>
+</div>
+
+<h3>6. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Trabaja individualmente. Escribe tu respuesta antes de abrir cada solución. Si tu pago neto no coincide, compara las dos retenciones: revisa primero sobre qué valor aplicaste cada porcentaje.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Factura y pago neto de 40 camisetas</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás la base, el IVA, el total y el pago neto de una venta con dos retenciones. Supongamos que Costa Verde vende 40 camisetas a 12,00 dólares cada una, sin IVA, a Andes Global, que actúa como agente de retención de IVA (30 %) y del impuesto a la renta (2 % sobre el valor del bien). Determina la base, el IVA, el total, las dos retenciones y el pago neto.</p>
+<p class="ayuda">Calcula primero la base y el IVA. Después aplica la retención de IVA al IVA y la de renta a la base. Resta ambas del total.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 40 × 12,00 = 480,00. IVA = 480,00 × 0,15 = 72,00. Total = 552,00. Retención de IVA = 72,00 × 0,30 = 21,60. Retención de renta = 480,00 × 0,02 = 9,60. Pago neto = 552,00 − 21,60 − 9,60 = 520,80.</p>
+<p><strong>Comprobación:</strong> 520,80 + 21,60 + 9,60 = 552,00. El total vuelve a salir.</p>
+<p><strong>Error frecuente:</strong> calcular la retención de renta sobre el total de 552,00, lo que daría 11,04 dólares. Ese error se estudia en el ejercicio 4.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cada retención tiene su base. El IVA se retiene sobre el impuesto, y la renta sobre el valor del bien. Si las confundes, el pago neto cambia aunque el total sea correcto.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Asiento del vendedor para la venta del ejercicio 1</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás la venta del ejercicio 1 desde la perspectiva de Costa Verde y comprobarás que el asiento cuadra. Usa los valores que obtuviste en el ejercicio 1 y escribe la glosa.</p>
+<p class="ayuda">Caja recibe el pago neto. Las retenciones son derechos y van en el debe. Las ventas y el IVA cobrado van en el haber.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Debe: Caja (1101) 520,80; Retención de IVA a favor 21,60; Retención de impuesto a la renta a favor 9,60. Haber: Ventas (4101) 480,00; IVA cobrado 72,00. Glosa: P/R venta de 40 camisetas a Servicios Logísticos Andes Global S. A., con retenciones de IVA y de renta.</p>
+<p><strong>Comprobación:</strong> debe 520,80 + 21,60 + 9,60 = 552,00; haber 480,00 + 72,00 = 552,00. El asiento cuadra.</p>
+<p><strong>Error frecuente:</strong> registrar Ventas por 552,00. Así se infla el ingreso con el IVA, aunque el asiento cuadre.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El vendedor registra el ingreso por la base, el IVA como obligación y las retenciones como derechos. La suma de los tres lados del cobro siempre debe volver al total de la factura.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Asiento del comprador para la misma compra</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás la compra del ejercicio 1 desde la perspectiva de Andes Global, que compra las camisetas como uniforme. Usa los valores del ejercicio 1 y explica por qué las retenciones aparecen en el haber.</p>
+<p class="ayuda">El uniforme es el valor de la base. El IVA pagado es un crédito. Caja registra el pago neto. Las retenciones son obligaciones frente al SRI.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Debe: Uniformes del personal (provisional) 480,00; Crédito tributario de IVA (provisional) 72,00. Haber: Caja (1101) 520,80; Retención de IVA por pagar 21,60; Retención de impuesto a la renta por pagar 9,60.</p>
+<p><strong>Comprobación:</strong> debe 480,00 + 72,00 = 552,00; haber 520,80 + 21,60 + 9,60 = 552,00. El asiento cuadra.</p>
+<p><strong>Explicación:</strong> las retenciones van en el haber porque son valores que Andes Global debe entregar al SRI. Si las registrara en el debe, estaría tratándolas como un derecho de la empresa, y eso no es lo que ocurre. El supuesto del crédito tributario de IVA sigue pendiente de decisión del docente.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El comprador lleva el pago neto a caja y deja en el haber lo que debe al SRI. Así su asiento refleja que el pago real es menor que la factura, sin ocultar la obligación.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Revisar un cálculo con error</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás el error de un cálculo y lo corregirás. Un comprador de la factura del ejercicio 1 (total 552,00 dólares) calcula la retención de renta del 2 % sobre el total y obtiene 11,04 dólares. Explica qué error cometió y calcula la retención correcta y la diferencia.</p>
+<p class="ayuda">Pregunta primero sobre qué valor debe aplicarse el porcentaje de renta. Luego compara los dos resultados.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>El error es aplicar el 2 % sobre el total de 552,00, que incluye el IVA. La retención correcta se aplica sobre el valor del bien: 480,00 × 0,02 = 9,60 dólares. La diferencia es 11,04 − 9,60 = 1,44 dólares, que el comprador retendría de más.</p>
+<p><strong>Comprobación:</strong> 9,60 + 1,44 = 11,04. La diferencia coincide con el error.</p>
+<p><strong>Consecuencia:</strong> si la retención incorrecta se practicara, el pago neto sería 519,36 dólares en lugar de 520,80 dólares. El vendedor recibiría menos y el SRI recibiría un valor que no corresponde al concepto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un porcentaje solo tiene sentido sobre la base que la norma o la convención del caso indica. Antes de calcular, pregúntate sobre qué valor se aplica.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: liquidación del IVA del mes</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad liquidarás el IVA de Costa Verde en un período. Supongamos que en el mes, Costa Verde tiene IVA cobrado de 72,00 dólares por la venta del ejercicio 1, y crédito tributario de 50,00 dólares por sus compras. El caso original sigue siendo el de la factura de 100 camisetas. Calcula el IVA por pagar y explica qué asiento registra la liquidación.</p>
+<p class="ayuda">Compara el IVA cobrado con el crédito tributario. Si el cobrado es mayor, la diferencia es el IVA por pagar.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>IVA por pagar = 72,00 − 50,00 = 22,00 dólares. Asiento de liquidación: Debe IVA cobrado 72,00; Haber Crédito tributario de IVA 50,00; Haber IVA por pagar 22,00. Debe 72,00 = haber 72,00.</p>
+<p><strong>Comprobación:</strong> 50,00 + 22,00 = 72,00. El crédito se usa completo y lo que queda es la obligación.</p>
+<p><strong>Error frecuente:</strong> sumar el crédito al IVA cobrado, lo que daría 122,00 dólares por pagar. La liquidación compara los dos valores; no los suma.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La liquidación compara lo que se cobró con lo que se pagó con derecho a descuento. Si lo cobrado supera el crédito, la diferencia es lo que la empresa debe entregar.</p></div>
+</div>
+
+<h3>7. Cierre de la sesión</h3>
+<p>Volvamos a la situación inicial: Costa Verde factura 1.380,00 dólares y recibe 1.302,00. La diferencia son dos retenciones con bases distintas: 54,00 dólares de IVA, calculados sobre el impuesto, y 24,00 dólares de renta, calculados sobre el valor del bien. Para el vendedor, el ingreso es la base de 1.200,00; el IVA es una obligación; las retenciones son derechos. Para el comprador, la compra es el valor de los uniformes; el IVA es un crédito; y las retenciones son obligaciones frente al SRI.</p>
+<p>Como tarea de transferencia, calcula una factura de 60 pares de medias a 5,00 dólares cada uno, sin IVA, con retención de IVA del 30 % y retención de renta del 2 % sobre el valor del bien. Después escribe el asiento del comprador y comprueba que cuadra con el pago neto.</p>
+<p>Para revisar por dificultad: si no sabes sobre qué valor aplicar cada porcentaje, relee la tabla 2 y el cálculo 5; si tu asiento no cuadra, revisa qué cuenta quedó en el lado contrario, con la sección 3 y el ejercicio 2; si tu pago neto no coincide, revisa el ejercicio 4.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Base:</strong> valor sin IVA de la venta o del bien.</li>
+<li><strong>Retención de IVA:</strong> parte del IVA de la operación que el comprador entrega al SRI; se calcula sobre el impuesto.</li>
+<li><strong>Retención de renta:</strong> parte del valor del pago que el agente entrega al SRI según el porcentaje del concepto.</li>
+<li><strong>Pago neto:</strong> total de la factura menos las retenciones.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval2" data-panel="eval2" aria-labelledby="t-eval2">
+<h2 id="t-eval2">Evaluación de la sesión 02 · Factura con IVA y dos retenciones</h2>
+<p class="meta">Semana 5 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="2"></div>
+</section>
+
+<section class="pestana" id="ses03" data-panel="ses03">
+<h2>Sesión 03 · De los documentos fuente al libro diario</h2>
+<p class="meta">Semana 5 · Unidad 2 · Análisis y reconocimiento de transacciones mercantiles a partir de documentos fuente; registro en el libro diario o jornalización (sesión global 15) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Imagina que Comercializadora Costa Verde Cía. Ltda. termina una semana con un escritorio lleno de papeles: una factura de compra, una factura de venta cobrada en efectivo, un comprobante de pago, un recibo de arriendo y una cotización de un proveedor que nunca se concretó. ¿Todos esos documentos deben registrarse? Si alguno no debe registrarse, ¿por qué? Y si uno debe registrarse, ¿qué cuentas se afectan y en qué lado?</p>
+<p>Esta sesión te enseña a responder esas preguntas. Al terminar podrás distinguir un documento fuente de una transacción; decidir si una operación debe reconocerse; escribir el asiento de cada transacción en el libro diario, con su glosa y su comprobación; y explicar por qué una transacción puede cuadrar y aun así estar mal clasificada.</p>
+<p>Lee cada documento como si fuera tuyo. Antes de escribir el asiento, responde en voz baja: ¿qué ocurrió?, ¿qué recibió o entregó la empresa?, ¿qué cambió en su patrimonio?</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. Del documento a la transacción</h3>
+<p>Un <strong>documento fuente</strong> es el papel o el archivo que respalda una operación: una factura, un comprobante de retención, un recibo, una cotización o una orden de compra. El documento no es la operación: es su prueba. La contabilidad registra operaciones que han ocurrido, no documentos por el solo hecho de tenerlos. Por eso el primer paso es preguntar qué ocurrió realmente.</p>
+<p>Una <strong>transacción</strong> es una operación que modifica el patrimonio de la empresa: transfiere bienes o servicios, genera un derecho o una obligación, o mueve dinero. Una cotización no lo hace. Una cotización es un precio que un proveedor ofrece, pero si nadie compra, no hay derecho ni obligación. Tampoco una orden de compra sin entrega ni factura registra todavía una transacción: la empresa todavía no recibió el bien ni tiene una deuda cierta. Esto no significa que el documento no sea útil; significa que todavía no es un hecho contable.</p>
+<p>Para decidir si una operación debe reconocerse, pregúntate tres cosas en orden. Primero, ¿hubo una transferencia de bienes o servicios, o de dinero? Segundo, ¿la operación afecta activos, pasivos, patrimonio, ingresos o gastos de la empresa? Tercero, ¿existe un documento que la respalde? Si las tres respuestas son afirmativas, la operación se registra. Si alguna falla, hay que averiguar qué falta antes de registrar.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 3. Documentos de Comercializadora Costa Verde Cía. Ltda. para un período de estudio (datos didácticos)</caption>
+<thead><tr><th>Documento</th><th>Qué muestra</th><th>¿Es transacción registrable?</th></tr></thead>
+<tbody>
+<tr><td>D1. Factura de compra de 200 camisetas a Confecciones Montubia S. A., a crédito</td><td>Base 2.000,00; IVA 300,00; total 2.300,00.</td><td>Sí. Hay transferencia de bienes y una deuda con el proveedor.</td></tr>
+<tr><td>D2. Factura de venta de 50 camisetas, cobrada en efectivo</td><td>Base 750,00; IVA 112,50; total 862,50.</td><td>Sí. Hay transferencia de bienes y entrada de dinero.</td></tr>
+<tr><td>D3. Comprobante de pago de 1.000,00 dólares a Confecciones Montubia S. A.</td><td>Pago parcial de la deuda de la factura D1.</td><td>Sí. Disminuye una deuda y disminuye la caja.</td></tr>
+<tr><td>D4. Cotización de un proveedor por 500,00 dólares</td><td>Precio ofrecido, sin compra confirmada.</td><td>No. No hay transferencia ni derecho u obligación.</td></tr>
+<tr><td>D5. Recibo de arriendo de una bodega, base 800,00 dólares, pagado a una persona natural</td><td>Gasto de arriendo y retención de renta del 10 %.</td><td>Sí. Hay un gasto y una obligación con el SRI.</td></tr>
+</tbody></table></div>
+
+<h3>2. El libro diario y la jornalización</h3>
+<p>Registrar una transacción en el libro diario se llama <strong>jornalización</strong>. El libro diario guarda las operaciones en orden cronológico, y cada operación se escribe como un asiento: una fecha, las cuentas afectadas, los importes en el debe o en el haber y una glosa. La glosa explica el motivo del asiento; en este material comienza con «P/R», abreviatura de «por», por ejemplo «P/R compra a crédito de camisetas». Un asiento puede tener dos o más cuentas, pero la suma del debe debe igualar la suma del haber.</p>
+<p>La igualdad es necesaria, pero no suficiente. Un asiento puede cuadrar y estar mal clasificado: si registras un arriendo como inventario, el debe y el haber pueden ser iguales y el error seguir ahí. Por eso, antes de escribir un asiento, debes saber qué ocurrió, qué cuentas corresponden, cuál es la naturaleza de cada una y si cada valor aumenta o disminuye en el lado correcto.</p>
+
+<div class="concepto">
+<h4>Cálculo 7. IVA de la compra y de la venta</h4>
+<p><strong>Situación.</strong> Costa Verde compra a crédito 200 camisetas a Confecciones Montubia y vende 50 camisetas al contado. Ambas operaciones llevan IVA de 15 %.</p>
+<p><strong>Supuesto didáctico.</strong> El precio de compra es 10,00 dólares por camiseta, sin IVA, y el de venta es 15,00 dólares, también sin IVA. Estos precios son del caso de esta sesión, no del resto de la semana 4.</p>
+<p><strong>Qué buscamos.</strong> La base, el IVA y el total de la compra y de la venta.</p>
+<p><strong>Datos.</strong> Compra: 200 × 10,00 dólares. Venta: 50 × 15,00 dólares. Tarifa: 15 %.</p>
+<p><strong>Por qué esta operación.</strong> El IVA se calcula sobre la base de cada operación. La compra genera crédito tributario, porque Costa Verde podrá descontarlo; la venta genera IVA cobrado, porque debe entregarlo.</p>
+<p><strong>Procedimiento.</strong> Compra: base 2.000,00; IVA 2.000,00 × 0,15 = 300,00; total 2.300,00. Venta: base 750,00; IVA 750,00 × 0,15 = 112,50; total 862,50.</p>
+<p><strong>Resultado.</strong> Compra: 2.000,00 + 300,00 = 2.300,00 dólares. Venta: 750,00 + 112,50 = 862,50 dólares.</p>
+<p><strong>Comprobación.</strong> Al dividir cada total entre 1,15 debe salir la base: 2.300 ÷ 1,15 = 2.000 y 862,50 ÷ 1,15 = 750.</p>
+<p><strong>Interpretación.</strong> La compra aumenta la deuda con el proveedor en 2.300,00, pero el inventario solo aumenta en 2.000,00. El error que se evita es registrar 2.300,00 como inventario, porque el IVA pagado se recupera y no es costo de la mercadería.</p>
+</div>
+
+<h3>3. Cómo se escribe cada asiento</h3>
+<p>Escribe los asientos de la sesión en el orden en que ocurrieron. Cada asiento se numera de forma continua dentro de la semana, y en esta sesión comienza en el número 5 porque los asientos 1 a 4 se usaron en las sesiones anteriores.</p>
+
+<div class="asiento">
+<h4>Asiento 5. Compra a crédito de 200 camisetas (documento D1)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día de la factura.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Inventarios de mercaderías (1104)</td><td>2.000,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA (cuenta provisional, activo)</td><td>300,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Proveedores por pagar (2101)</td><td></td><td>2.300,00</td></tr>
+<tr><td><em>Glosa: P/R compra a crédito de 200 camisetas a Confecciones Montubia S. A., con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 2.000,00 + 300,00 = 2.300,00; haber 2.300,00. La mercadería es un bien para vender, por eso va a inventarios; el IVA es un derecho, por eso va en el debe como crédito; la deuda con el proveedor es un pasivo y va en el haber.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 6. Venta al contado de 50 camisetas (documento D2)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día de la venta y el cobro.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja (1101)</td><td>862,50</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Ventas (4101)</td><td></td><td>750,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;IVA cobrado (cuenta provisional, pasivo)</td><td></td><td>112,50</td></tr>
+<tr><td><em>Glosa: P/R venta al contado de 50 camisetas a cliente final, con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 862,50 = haber 750,00 + 112,50. La caja aumenta porque entra efectivo; las ventas son ingreso y el IVA cobrado es una obligación, ambos en el haber.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 7. Pago parcial a Confecciones Montubia S. A. (documento D3)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día del pago.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Proveedores por pagar (2101)</td><td>1.000,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja (1101)</td><td></td><td>1.000,00</td></tr>
+<tr><td><em>Glosa: P/R pago parcial de la factura de compra de 200 camisetas.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.000,00 = haber 1.000,00. El pago disminuye la deuda con el proveedor, que es un pasivo y se reduce en el debe. Sigue quedando una deuda de 1.300,00 dólares por la factura D1.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 8. Liquidación del IVA del período</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: cierre del período.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>IVA cobrado (cuenta provisional)</td><td>112,50</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Crédito tributario de IVA (cuenta provisional)</td><td></td><td>112,50</td></tr>
+<tr><td><em>Glosa: P/R compensación del IVA cobrado del período con el crédito tributario.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 112,50 = haber 112,50. El IVA cobrado queda en cero porque se compensó. El crédito tributario baja de 300,00 a 187,50 dólares, y ese saldo deudor queda pendiente: su destino depende de la normativa, que no se estudia en esta sesión.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 9. Pago del arriendo de la bodega con retención de renta (documento D5)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Fecha del caso: día del pago del arriendo.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Gasto de arriendo (cuenta provisional)</td><td>800,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja (1101)</td><td></td><td>720,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Retención de impuesto a la renta por pagar (cuenta provisional, pasivo)</td><td></td><td>80,00</td></tr>
+<tr><td><em>Glosa: P/R arriendo de bodega a persona natural, con retención de impuesto a la renta del 10 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 800,00 = haber 720,00 + 80,00. El arriendo es un gasto y se mide por su valor total, 800,00 dólares; la caja sale por el pago neto, 720,00, y los 80,00 restantes son una obligación con el SRI. Este es el mismo cálculo del cálculo 2 de la sesión 01, aplicado al registro del período.</p>
+</div>
+
+<h3>4. Preguntas que suelen aparecer</h3>
+<p><strong>¿Por qué la cotización de la tabla 3 no se registra?</strong> Porque no hubo transferencia de bienes, ni derecho, ni obligación. La cotización es una propuesta, y el registro empieza cuando la compra se confirma y se recibe la factura o el bien.</p>
+<p><strong>¿Por qué el pago parcial de 1.000,00 dólares no cambia el inventario?</strong> Porque el inventario se reconoció cuando llegó la mercadería, en el asiento 5. El pago solo cambia la deuda con el proveedor y la caja; no vuelve a tocar la mercadería ni el ingreso.</p>
+<p><strong>¿Qué pasa si la compra se registra como gasto y no como inventario?</strong> El asiento puede cuadrar, pero el inventario queda sin reconocer y la mercadería que sigue en el almacén no aparece en el balance. Lo que corresponde se decide con el destino del bien: esta compra es para vender, por eso va a inventarios.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar</h4>
+<p>Costa Verde recibe una cotización de un proveedor por 800,00 dólares, y el mismo día recibe otra factura de compra de 300,00 dólares que ya llegó con la mercadería. ¿Cuál de los dos documentos debe jornalizarse? Antes de responder, pregúntate si hubo transferencia de bienes o servicios.</p>
+<p class="ayuda">Si respondiste la cotización, revisa la sección 1: una cotización no transfiere bienes ni genera una deuda. La factura con mercadería recibida sí debe registrarse. La respuesta correcta es la factura de 300,00 dólares, y la cotización no se registra.</p>
+</div>
+
+<h3>5. Práctica guiada e independiente</h3>
+<p>A continuación encontrarás cinco ejercicios. Trabaja individualmente. Escribe tu respuesta antes de abrir cada solución. Revisa primero si la operación debe registrarse; después calcula y escribe el asiento.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Decidir qué documentos se registran</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad clasificarás cinco documentos de Costa Verde como transacción registrable o no registrable. Los documentos son: (a) cotización de un proveedor por 600,00 dólares; (b) orden de compra de 300 camisetas, sin entrega ni factura; (c) factura de compra de 1.150,00 dólares, con la mercadería ya recibida; (d) comprobante de pago en efectivo de 400,00 dólares a un proveedor con una factura ya registrada; (e) factura de venta de 483,00 dólares emitida y cobrada. Indica cuáles se registran y justifica con las tres preguntas de la sección 1.</p>
+<p class="ayuda">Pregunta en cada caso si hubo transferencia de bienes o dinero, si cambió el patrimonio y si hay un documento que lo respalde.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Se registran: (c), porque hubo transferencia de bienes y una deuda con el proveedor; (d), porque disminuyó una deuda y la caja; (e), porque hubo venta y entrada de efectivo. No se registran: (a), porque es una propuesta sin transferencia; (b), porque todavía no hubo entrega ni factura, por lo que no hay derecho ni obligación.</p>
+<p><strong>Comprobación:</strong> cada documento que se registra cumple las tres preguntas. Los dos que no se registran fallan en la primera o en la segunda: no hay transferencia y no hay cambio en el patrimonio.</p>
+<p><strong>Error frecuente:</strong> registrar la orden de compra porque «ya se decidió» la compra. Una decisión interna no es una transacción hasta que existe la transferencia.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>No todo documento es un asiento. Antes de escribir una cuenta, debes demostrar que hubo una operación que cambió el patrimonio de la empresa.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Jornalizar una compra al contado con IVA</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás una compra pagada en efectivo. Supongamos que Costa Verde compra 120 camisetas a 9,00 dólares cada una, sin IVA, y paga en efectivo el total de la factura, con IVA de 15 %. Calcula la base, el IVA y el total, y escribe el asiento con su glosa.</p>
+<p class="ayuda">Calcula primero la base y el IVA. Después decide qué cuenta recibe la mercadería y qué cuenta recibe el derecho al IVA. Caja registra el total pagado.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 120 × 9,00 = 1.080,00. IVA = 1.080,00 × 0,15 = 162,00. Total = 1.242,00.</p>
+<p><strong>Asiento:</strong> Debe Inventarios de mercaderías (1104) 1.080,00; Debe Crédito tributario de IVA 162,00; Haber Caja (1101) 1.242,00. Glosa: P/R compra al contado de 120 camisetas, con IVA de 15 %.</p>
+<p><strong>Comprobación:</strong> debe 1.080,00 + 162,00 = 1.242,00 = haber 1.242,00. Además, 1.242 ÷ 1,15 = 1.080, que es la base.</p>
+<p><strong>Error frecuente:</strong> registrar el inventario por 1.242,00. Así se incluye en la mercadería un IVA que se recupera.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Pagar en efectivo no cambia la clasificación de la compra. Lo que cambia es la cuenta de la caja. La mercadería, el IVA recuperable y el pago siguen siendo los mismos.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Jornalizar una venta al contado</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás una venta cobrada al contado. Supongamos que Costa Verde vende 30 camisetas a 14,00 dólares cada una, sin IVA, y cobra el total en efectivo, con IVA de 15 %. Calcula la base, el IVA y el total, y escribe el asiento.</p>
+<p class="ayuda">La caja recibe el total. El ingreso es la base. El IVA cobrado es una obligación y va en el haber.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Base = 30 × 14,00 = 420,00. IVA = 420,00 × 0,15 = 63,00. Total = 483,00.</p>
+<p><strong>Asiento:</strong> Debe Caja (1101) 483,00; Haber Ventas (4101) 420,00; Haber IVA cobrado 63,00. Glosa: P/R venta al contado de 30 camisetas, con IVA de 15 %.</p>
+<p><strong>Comprobación:</strong> debe 483,00 = haber 420,00 + 63,00. Además, 483 ÷ 1,15 = 420.</p>
+<p><strong>Error frecuente:</strong> registrar 483,00 en Ventas. Así el ingreso incluye un impuesto que la empresa debe entregar al Estado.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>En la venta, el ingreso y el impuesto se separan aunque el cobro sea uno solo. La caja recibe el total, pero el ingreso es solo la base.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Jornalizar el arriendo de una bodega con retención</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad registrarás el pago de un arriendo con retención de renta. Supongamos que Costa Verde paga 900,00 dólares, sin IVA, por el arriendo de una bodega a una persona natural. Aplica el porcentaje del arrendamiento de bienes inmuebles, calcula la retención y el pago neto, y escribe el asiento.</p>
+<p class="ayuda">Identifica el porcentaje en la tabla 1 de la sesión 01. El gasto es el valor total del arriendo; la caja recibe el pago neto; la retención es una obligación.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Retención = 900,00 × 0,10 = 90,00. Pago neto = 900,00 − 90,00 = 810,00.</p>
+<p><strong>Asiento:</strong> Debe Gasto de arriendo (provisional) 900,00; Haber Caja (1101) 810,00; Haber Retención de impuesto a la renta por pagar (provisional) 90,00. Glosa: P/R arriendo de bodega a persona natural, con retención del 10 %.</p>
+<p><strong>Comprobación:</strong> debe 900,00 = haber 810,00 + 90,00. Además, 810 + 90 = 900.</p>
+<p><strong>Error frecuente:</strong> registrar el gasto por 810,00. La retención no reduce el gasto: es una obligación que se entrega al SRI.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un gasto se mide por su valor total aunque se pague por un monto menor. La diferencia que se retiene es una deuda con el Estado, y el asiento debe mostrarla.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: liquidación con un saldo de crédito</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad liquidarás el IVA de un período en el que el crédito es mayor que el IVA cobrado. Supongamos que en el período Costa Verde tiene IVA cobrado de 63,00 dólares por la venta del ejercicio 3, y crédito tributario de 162,00 dólares por la compra del ejercicio 2. El caso original sigue siendo el de Costa Verde en esta sesión. Escribe el asiento de liquidación y determina el saldo que queda.</p>
+<p class="ayuda">Compensa el IVA cobrado con el crédito tributario hasta el monto menor. El saldo que queda del crédito no es un ingreso ni un gasto.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p>Asiento: Debe IVA cobrado 63,00; Haber Crédito tributario de IVA 63,00. Glosa: P/R compensación del IVA cobrado con el crédito tributario. Después del asiento, el IVA cobrado queda en cero y el crédito queda en 162,00 − 63,00 = 99,00 dólares, un saldo deudor.</p>
+<p><strong>Comprobación:</strong> debe 63,00 = haber 63,00. El saldo de 99,00 dólares se verifica así: 162,00 − 63,00 = 99,00.</p>
+<p><strong>Error frecuente:</strong> registrar el saldo de 99,00 como ingreso o como IVA por pagar. Un saldo de crédito no es ni una deuda ni una ganancia: es un derecho cuyo tratamiento se estudiará con la normativa.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La liquidación compensa lo que se debe con lo que se puede descontar. Cuando el crédito supera lo cobrado, no hay deuda en ese período, y el excedente es un derecho cuyo uso es un tema posterior.</p></div>
+</div>
+
+<h3>6. Cierre de la sesión</h3>
+<p>Volvamos a la situación inicial: de los cinco documentos del escritorio, cuatro son transacciones registrables y uno, la cotización, no lo es todavía. Para cada transacción, el asiento se escribe en el orden de los hechos, con su glosa, su comprobación y sus cuentas en el lado que les corresponde. La igualdad del debe y del haber confirma la aritmética, pero no la clasificación: esa la decides antes, a partir del documento y de la naturaleza de la operación.</p>
+<p>Como tarea de transferencia, toma tres documentos de tu semana imaginaria, uno de compra, uno de venta y uno de pago de servicio, y escribe el asiento de cada uno. Antes de escribir, responde las tres preguntas de la sección 1. Si alguna respuesta no es clara, anota qué información falta.</p>
+<p>Para revisar por dificultad: si no sabes si un documento se registra, relee la sección 1 y el ejercicio 1; si tu asiento cuadra pero la cuenta no te convence, revisa la sección 2 y el cálculo 7; si el saldo de la liquidación no coincide, revisa el ejercicio 5.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Documento fuente:</strong> papel o archivo que respalda una operación; no es la operación misma.</li>
+<li><strong>Jornalización:</strong> registro de las transacciones en el libro diario, en orden cronológico.</li>
+<li><strong>Glosa:</strong> explicación breve del motivo del asiento; en este material comienza con «P/R».</li>
+<li><strong>Crédito tributario de IVA:</strong> derecho a descontar el IVA pagado en compras, al liquidar el período.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval3" data-panel="eval3" aria-labelledby="t-eval3">
+<h2 id="t-eval3">Evaluación de la sesión 03 · Documentos fuente y jornalización</h2>
+<p class="meta">Semana 5 · Unidad 2. Normas tributarias y pasos para el proceso contable, primera parte · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="3"></div>
+</section>
+
+<section class="pestana" id="reflexion" data-panel="reflexion">
+<h2>Reflexión</h2>
+<p class="meta">Semana 5 · Cuatro reflexiones sin respuesta correcta ni calificación.</p>
+
+<h3>Lo que no es tuyo, aunque llegue a tu caja</h3>
+<p>Cuando una empresa recibe un pago, es fácil pensar que todo el dinero le pertenece. Pero una parte puede corresponder al Estado, porque la retención es un adelanto del impuesto de quien prestó el servicio o vendió el bien. Reconocer esa diferencia evita confundir el efectivo con el ingreso y ayuda a respetar tanto al proveedor como a la institución que recibe el valor.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué consecuencias tendría para el proveedor y para el comprador un pago que no muestre las retenciones con claridad?</p>
+
+<h3>El comprobante que hace creíble la operación</h3>
+<p>Un comprobante de retención acredita que el valor fue retenido. Sin él, el proveedor no puede demostrar lo que se le descontó, y el comprador no puede demostrar que cumplió. Un documento completo protege a ambas partes, aunque nadie lo mire hasta el final del período.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué revisarías antes de aceptar un comprobante de retención que te llega de un cliente? Enumera tres controles y explica por qué cada uno importa.</p>
+
+<h3>Cuando el comprobante no separa lo que compras</h3>
+<p>En la práctica, un mismo comprobante puede mezclar bienes y servicios sin mostrar cuánto corresponde a cada uno. La norma obliga a aplicar el porcentaje más alto en ese caso. Eso puede parecer una exigencia dura, pero también es un incentivo para describir cada concepto con claridad.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿quién debería responder por un comprobante mal descrito: quien lo emitió, quien lo recibió o ambos? Justifica tu respuesta con un argumento y su contraargumento.</p>
+
+<h3>Cuando las normas cambian</h3>
+<p>Los porcentajes de retención se revisan con el tiempo. Lo que se aplicaba el año anterior puede no servir hoy, y un material escrito hace unos meses puede necesitar una nueva verificación. Mantener la fuente oficial a mano es una forma de responsabilidad profesional, no solo una tarea técnica.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿qué decisión tomarías si descubres que una tabla que usabas quedó desactualizada después de emitir varias facturas? Describe qué revisarías primero y a quién avisarías.</p>
+</section>
+
+<section class="pestana" id="ia" data-panel="ia">
+<h2>Actividad con IA</h2>
+<p class="meta">Semana 5 · Actividad individual · Tiempo orientativo: 20 minutos, incluidos en la sesión 03</p>
+
+<h3>1. Trabajo inicial propio</h3>
+<p>Antes de consultar cualquier herramienta, calcula la retención del impuesto a la renta de un pago de 1.000,00 dólares, sin IVA, que una empresa hace a una sociedad residente por un servicio profesional que requiere título. Usa el porcentaje que corresponde según la tabla 1 de la sesión 01. Anota el porcentaje, la retención y el pago neto, con el procedimiento.</p>
+
+<h3>2. Prompt exacto</h3>
+<div class="prompt">
+<p>«Explica qué porcentaje de retención en la fuente del impuesto a la renta corresponde a un servicio profesional prestado por una sociedad residente que requiere título, y a un arriendo de inmueble pagado a una persona natural. Calcula la retención de ambos pagos de 1.000 dólares, sin IVA, y el pago neto de cada uno. Indica qué norma y qué fecha de vigencia sustentan cada porcentaje.»</p>
+</div>
+
+<h3>3. Contraste con el material</h3>
+<p>Compara la respuesta de la herramienta con tu trabajo inicial y con la tabla 1 de la sesión 01. Revisa si la herramienta identificó bien los conceptos, si aplicó el porcentaje a la base correcta y si citó la resolución vigente, que es la NAC-DGERCGC26-00000009, con vigencia desde el 1 de marzo de 2026.</p>
+
+<h3>4. Verificación de al menos una afirmación</h3>
+<p>Verifica en el sitio oficial del Servicio de Rentas Internas el porcentaje de un concepto que te haya dado la herramienta. Anota la fuente, su fecha y el artículo en el que aparece. Si la respuesta de la herramienta menciona una resolución distinta o una fecha diferente, identifica cuál es la vigente. La respuesta de la herramienta no es una fuente verificada por sí sola.</p>
+
+<h3>5. Justificación</h3>
+<p>Escribe en media página qué aceptaste de la respuesta, qué corregiste y qué rechazaste, y por qué. Cita la sección del material o el artículo de la resolución que sustenta cada decisión.</p>
+
+<h3>6. Lista de autoevaluación</h3>
+<ul>
+<li>¿Identifiqué el concepto del pago antes de elegir el porcentaje?</li>
+<li>¿Calculé la retención sobre la base y no sobre el total con IVA?</li>
+<li>¿Verifiqué la resolución y su fecha de vigencia en una fuente oficial?</li>
+<li>¿Distinguí la retención de renta de la retención de IVA en la respuesta de la herramienta?</li>
+<li>¿Justifiqué cada corrección con el material o con la norma?</li>
+</ul>
+</section>
+
+<section class="pestana" id="biblio" data-panel="biblio">
+<h2>Bibliografía</h2>
+<p class="meta">Referencias en APA 7, en orden alfabético.</p>
+<ul class="referencias">
+<li>Asamblea Nacional del Ecuador. (s. f.). <em>Ley de Régimen Tributario Interno</em>, artículo 66 (crédito tributario del impuesto al valor agregado).</li>
+<li>IFRS Foundation. (s. f.). <em>Norma Internacional de Contabilidad 2: Inventarios</em>, párrafo 11 (texto en español).</li>
+<li>Servicio de Rentas Internas. (2020, 29 de septiembre). <em>Resolución NAC-DGERCGC20-00000061: porcentajes de retención del impuesto al valor agregado</em>. https://www.sri.gob.ec/o/sri-portlet-biblioteca-alfresco-internet/descargar/185c7087-f119-4f0d-8dcd-702c30ebd793/NAC-DGERCGC20-00000061.pdf</li>
+<li>Servicio de Rentas Internas. (2023). <em>Resolución NAC-DGERCGC23-00000026, que reforma la Resolución NAC-DGERCGC20-00000061</em>.</li>
+<li>Servicio de Rentas Internas. (2025, 26 de diciembre). <em>Circular NAC-DGECCGC25-00000006</em> (vigencia de la tarifa general del impuesto al valor agregado).</li>
+<li>Servicio de Rentas Internas. (2026). <em>Circulares NAC-DGECCGC26-00000002 y NAC-DGECCGC26-00000005</em> (aplicación del impuesto al valor agregado a productos alimenticios). Consultar la versión vigente en el sitio oficial del SRI.</li>
+<li>Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009: porcentajes de retención en la fuente del impuesto a la renta</em>. Vigente desde el 1 de marzo de 2026. https://www.sri.gob.ec/o/sri-portlet-biblioteca-alfresco-internet/descargar/272ca6a9-d679-4b4e-8da0-fb4671cf5f8f/NAC-DGERCGC26-00000009_Ret_IR.pdf</li>
+</ul>
+<p class="nota">Se recomienda verificar cada referencia en Google Scholar (scholar.google.com) o en el repositorio institucional antes de citar en trabajos académicos. La vigencia normativa se verifica en fuentes oficiales; Google Scholar no la sustituye.</p>
+</section>
+</main>
+
+<footer>
+  <p>Universidad de Guayaquil · Facultad de Ciencias Administrativas · Paralelo NIN-SVE-1-19 · Docente: Gabriel Francisco García Gutiérrez.</p>
+  <p>Las empresas Confecciones Montubia S. A., Comercializadora Costa Verde Cía. Ltda., Servicios Logísticos Andes Global S. A. y Asesores Litoral Cía. Ltda. son ficticias. Sus cifras y hechos son supuestos didácticos.</p>
+  <p>Las puntuaciones de las evaluaciones de práctica no son notas oficiales del examen parcial.</p>
+</footer>
+
+<script>
+/* ==========================================================
+   1. Datos de evaluación (generados desde ej_semana.json)
+   ========================================================== */
+const EVALUACIONES = [{"sesion": 1, "titulo": "Evaluación de la sesión 01 · Retención del impuesto a la renta", "items": [{"tipo": "Teórica", "pregunta": "¿Qué es una retención en la fuente del impuesto a la renta?", "opciones": ["Un descuento comercial que el vendedor concede al comprador por pagar de contado.", "Un impuesto distinto del impuesto a la renta, que reemplaza al IVA en los servicios.", "Un valor que el agente de retención entrega al SRI por cuenta de quien recibe el pago o la acreditación en cuenta.", "El IVA que se devuelve al comprador cuando la factura tiene errores."], "correcta": 2, "retro": ["Incorrecto. Un descuento reduce el precio que paga el comprador. La retención no reduce el valor del servicio: es un valor que se entrega al SRI.", "Incorrecto. La retención sigue siendo parte del impuesto a la renta y no reemplaza al IVA. Son tributos distintos.", "CORRECTO. La retención es un adelanto del impuesto que el agente entrega al SRI en nombre de quien recibe el pago, al momento del pago o de la acreditación en cuenta.", "Incorrecto. La retención no devuelve IVA. Es un valor del impuesto a la renta que se entrega al SRI en el momento del pago."], "general": "La retención adelanta una parte del impuesto a la renta: no cambia el valor del servicio ni es un descuento comercial."}, {"tipo": "Análisis", "pregunta": "Un agente de retención paga 2.000,00 dólares, sin IVA, a una sociedad residente por servicios profesionales que requieren profesionales titulados. ¿Cuál es la retención del impuesto a la renta?", "opciones": ["100,00 dólares.", "200,00 dólares.", "40,00 dólares.", "150,00 dólares."], "correcta": 0, "retro": ["CORRECTO. Para servicios profesionales de sociedades con título, el porcentaje es 5 %: 2.000 × 0,05 = 100,00 dólares.", "Incorrecto. 200,00 corresponde al 10 %, que aplica a honorarios de personas naturales por servicios en los que predomina el intelecto. Aquí el prestador es una sociedad.", "Incorrecto. 40,00 resulta de aplicar el 2 %, que corresponde a bienes muebles de naturaleza corporal, no a un servicio profesional.", "Incorrecto. 150,00 no sale de aplicar ninguno de los porcentajes de la resolución a 2.000,00 dólares."], "general": "El porcentaje se toma del concepto del pago y del tipo de prestador; el monto no lo determina."}, {"tipo": "Teórica", "pregunta": "¿Qué porcentaje de retención del impuesto a la renta corresponde al arrendamiento de un bien inmueble pagado a una persona natural?", "opciones": ["2 %.", "3 %.", "5 %.", "10 %."], "correcta": 3, "retro": ["Incorrecto. El 2 % corresponde a la compra de bienes muebles de naturaleza corporal, no al arriendo de inmuebles.", "Incorrecto. El 3 % corresponde a servicios de personas naturales en los que predomina la mano de obra, no al arriendo.", "Incorrecto. El 5 % corresponde a servicios profesionales prestados por sociedades residentes con título.", "CORRECTO. El arrendamiento de bienes inmuebles está en el grupo del 10 % de la resolución vigente."], "general": "Cada concepto de pago tiene su grupo de porcentaje; el arriendo y los honorarios por intelecto comparten el 10 %."}, {"tipo": "Análisis", "pregunta": "Un comprobante de 1.000,00 dólares de base incluye bienes muebles de naturaleza corporal (2 %) y servicios profesionales de una sociedad con título (5 %). Los valores no están separados en el comprobante. ¿Cuál es la retención del impuesto a la renta?", "opciones": ["20,00 dólares.", "50,00 dólares.", "32,00 dólares.", "10,00 dólares."], "correcta": 1, "retro": ["Incorrecto. 20,00 resulta de aplicar el 2 % a todo el valor. Cuando los valores no se separan, no se aplica el porcentaje menor.", "CORRECTO. Sin separación se aplica el porcentaje más alto, 5 %: 1.000,00 × 0,05 = 50,00 dólares.", "Incorrecto. 32,00 supone separar los valores de cada concepto, y el enunciado dice que no están separados.", "Incorrecto. 10,00 corresponde al 1 % del total, porcentaje que no se aplica a este caso."], "general": "Si los valores no se separan, se aplica el porcentaje más alto de los conceptos que intervienen."}, {"tipo": "Análisis", "pregunta": "Un comprador paga 800,00 dólares, sin IVA, por servicios en los que predomina la mano de obra, prestados por una persona natural. ¿Cuánto paga neto al proveedor?", "opciones": ["776,00 dólares.", "752,00 dólares.", "24,00 dólares.", "760,00 dólares."], "correcta": 0, "retro": ["CORRECTO. La retención es 800 × 0,03 = 24,00; el pago neto es 800 − 24 = 776,00 dólares.", "Incorrecto. 752,00 resulta de retener el 6 %, porcentaje que no corresponde a este concepto.", "Incorrecto. 24,00 es la retención, no el pago neto. El pago neto es lo que recibe el proveedor después de la retención.", "Incorrecto. 760,00 resulta de retener el 5 %, que corresponde a servicios profesionales de sociedades, no a mano de obra de personas naturales."], "general": "El pago neto es el valor del pago menos la retención; el porcentaje depende del concepto."}, {"tipo": "Teórica", "pregunta": "¿Qué porcentaje se aplica a un pago que no tiene un porcentaje específico en la resolución vigente?", "opciones": ["No se retiene nada.", "El 10 %, por ser el porcentaje más alto.", "El 3 %, previsto como porcentaje residual.", "El 5 %, por ser un servicio."], "correcta": 2, "retro": ["Incorrecto. La resolución no deja sin retención a los pagos sin porcentaje específico: se aplica el residual.", "Incorrecto. El 10 % no es residual: es el porcentaje de conceptos específicos. Ser el más alto no lo convierte en residual.", "CORRECTO. El artículo 3 de la resolución establece que todo pago no contemplado en un porcentaje específico está sujeto al 3 %.", "Incorrecto. El 5 % corresponde a servicios profesionales de sociedades con título, no a todos los servicios."], "general": "El residual del 3 % cubre los pagos sin porcentaje específico; no reemplaza la búsqueda del concepto en la resolución."}, {"tipo": "Análisis", "pregunta": "Un comprador paga 950,00 dólares por una consultoría de 1.000,00 dólares, sin IVA, prestada por una sociedad, y retiene 50,00 dólares. Registra: Debe Honorarios 950,00; Haber Caja 950,00. ¿Qué error comete?", "opciones": ["Ninguno: el asiento cuadra.", "Usa el 10 % en lugar del 5 %.", "Olvida sumar el IVA al honorario.", "Registra el gasto por 950,00 en lugar de 1.000,00 y omite la obligación de 50,00 con el SRI."], "correcta": 3, "retro": ["Incorrecto. El asiento cuadra, pero la clasificación es incorrecta: el gasto debe ser el valor del servicio y la retención debe registrarse como obligación.", "Incorrecto. La retención de 50,00 sí corresponde al 5 %. El error no está en el porcentaje, sino en el registro del gasto y de la obligación.", "Incorrecto. El enunciado da el valor sin IVA. Sumar IVA no corrige el asiento.", "CORRECTO. El gasto es el valor del servicio, 1.000,00, y la retención de 50,00 es una obligación con el SRI. El asiento registra un gasto menor y no registra la obligación."], "general": "Un asiento puede cuadrar y estar mal: el gasto se mide por el valor del servicio y la retención por pagar es una obligación."}, {"tipo": "Teórica", "pregunta": "En una retención del impuesto a la renta, ¿quién es el sujeto retenido?", "opciones": ["El comprador que retiene el valor.", "Quien vende el bien o presta el servicio, sobre cuyo pago se practica la retención.", "El Servicio de Rentas Internas.", "El banco que procesa el pago."], "correcta": 1, "retro": ["Incorrecto. El comprador es el agente de retención, quien practica la retención, no el sujeto retenido.", "CORRECTO. El sujeto retenido es quien vende o presta el servicio y recibe el pago con la retención descontada.", "Incorrecto. El SRI recibe lo retenido, pero no es el sujeto retenido.", "Incorrecto. El banco puede procesar el pago, pero no es quien vende o presta el servicio."], "general": "El agente de retención retiene; el sujeto retenido es quien vende o presta el servicio."}, {"tipo": "Análisis", "pregunta": "Un prestador de servicios, sociedad residente, recibe 950,00 dólares de un pago de 1.000,00 dólares, con una retención de 50,00 dólares. ¿Qué registra en su asiento de cobro?", "opciones": ["Debe Caja 1.000,00; Haber Ingresos 1.000,00.", "Debe Caja 950,00; Haber Ingresos 950,00.", "Debe Caja 950,00 y Debe Retención a favor 50,00; Haber Ingresos 1.000,00.", "Debe Retención a favor 1.000,00; Haber Caja 950,00 y Haber Ingresos 50,00."], "correcta": 2, "retro": ["Incorrecto. Caja no recibió 1.000,00: recibió 950,00, y la retención de 50,00 queda como derecho.", "Incorrecto. El ingreso es el valor del servicio, 1.000,00, no el dinero recibido. La retención no reduce el ingreso.", "CORRECTO. Caja recibe 950,00, la retención de 50,00 es un derecho en el debe, y el ingreso es el valor del servicio, 1.000,00, en el haber.", "Incorrecto. La retención es un derecho de naturaleza deudora, va en el debe, y el ingreso no se reduce a 50,00."], "general": "El ingreso es el valor del servicio; el efectivo recibido y la retención son partes del cobro que se registran por separado."}, {"tipo": "Análisis", "pregunta": "¿Por qué la retención a favor de quien recibió el pago se registra en el debe?", "opciones": ["Porque es un derecho de naturaleza deudora, cuyo uso se estudiará más adelante.", "Porque es una obligación de pagar al SRI.", "Porque es un ingreso del período.", "Porque es un gasto del comprador."], "correcta": 0, "retro": ["CORRECTO. La retención a favor es un derecho que el prestador tiene frente al pago recibido; las cuentas de derechos tienen naturaleza deudora y se registran en el debe.", "Incorrecto. Una obligación con el SRI sería un pasivo y se registraría en el haber. Quien recibió el pago no debe ese valor.", "Incorrecto. Un ingreso se registra en el haber. La retención no es un ingreso: no aumenta el valor del servicio.", "Incorrecto. Un gasto es del comprador, no del prestador. La retención a favor es un derecho del prestador."], "general": "Los derechos son de naturaleza deudora; las obligaciones y los ingresos son de naturaleza acreedora."}, {"tipo": "Teórica", "pregunta": "¿Qué documento acredita la retención practicada?", "opciones": ["El recibo de caja del prestador.", "La factura de compra del comprador.", "La declaración mensual del IVA.", "El comprobante de retención emitido por el agente de retención."], "correcta": 3, "retro": ["Incorrecto. El recibo de caja documenta un cobro y no acredita el valor que el agente retuvo.", "Incorrecto. La factura documenta la venta o el servicio. La retención se acredita con su propio comprobante.", "Incorrecto. La declaración del IVA es de otro tributo y no acredita una retención del impuesto a la renta.", "CORRECTO. El comprobante de retención es el documento que acredita lo retenido y que el prestador conserva como respaldo."], "general": "Sin comprobante de retención, el derecho queda sin respaldo, aunque el asiento cuadre."}, {"tipo": "Análisis", "pregunta": "Un agente de retención paga 2.000,00 dólares, sin IVA, a una persona natural por servicios en los que predomina el intelecto. ¿Cuál es la retención del impuesto a la renta?", "opciones": ["50,00 dólares.", "200,00 dólares.", "60,00 dólares.", "100,00 dólares."], "correcta": 1, "retro": ["Incorrecto. 50,00 es el 2,5 % del pago y no corresponde a ningún grupo de porcentaje de la resolución.", "CORRECTO. Los honorarios de personas naturales por servicios en los que predomina el intelecto están en el 10 %: 2.000 × 0,10 = 200,00 dólares.", "Incorrecto. 60,00 corresponde al 3 %, que aplica a servicios en los que predomina la mano de obra.", "Incorrecto. 100,00 corresponde al 5 %, que aplica a servicios profesionales de sociedades, no de personas naturales."], "general": "La condición del prestador y el tipo de servicio determinan el porcentaje; el monto no lo cambia."}, {"tipo": "Análisis", "pregunta": "Un comprador paga un arriendo de 600,00 dólares, sin IVA, a una persona natural, y registra: Debe Gasto de arriendo 600,00; Haber Caja 540,00; Haber Retención de renta por pagar 60,00. ¿Qué conclusión es correcta?", "opciones": ["El asiento no cuadra y debe registrarse el gasto por 540,00.", "El asiento cuadra, pero el gasto debería ser 540,00 para reflejar lo pagado.", "El asiento es correcto: el gasto es el valor del arriendo y la retención es una obligación con el SRI.", "El asiento está bien, pero la retención debió ser del 3 %."], "correcta": 2, "retro": ["Incorrecto. El asiento cuadra: 540 + 60 = 600. El problema no es de igualdad sino de la medida del gasto.", "Incorrecto. El gasto es el valor del arriendo recibido, 600,00. Lo pagado en caja, 540,00, no es el gasto.", "CORRECTO. El arriendo se mide por su valor total, la caja sale por el pago neto y la retención de 60,00 es una obligación frente al SRI.", "Incorrecto. El arriendo está en el 10 %, no en el 3 %. Con el 10 % la retención de 600,00 es 60,00, como se registró."], "general": "Un gasto se mide por el valor total de lo recibido; lo retenido es una obligación que debe mostrarse en el asiento."}, {"tipo": "Teórica", "pregunta": "¿En qué se diferencian la retención de IVA y la retención de impuesto a la renta?", "opciones": ["La de IVA se calcula sobre el impuesto de la operación; la de renta se calcula sobre el valor del pago, con el porcentaje del concepto.", "Ambas se calculan sobre la base con el mismo porcentaje.", "La de renta siempre es el 30 % del IVA.", "Ambas las paga el vendedor al SRI."], "correcta": 0, "retro": ["CORRECTO. La retención de IVA es una parte del impuesto, mientras que la de renta depende del concepto del pago y se calcula sobre el valor del pago.", "Incorrecto. Ambas retenciones no usan la misma base ni el mismo porcentaje: la de IVA se aplica al impuesto y la de renta al valor del pago.", "Incorrecto. La retención de renta no es un porcentaje del IVA. Depende del concepto, como 2 %, 3 %, 5 % o 10 %.", "Incorrecto. Quien retiene es el agente de retención, es decir, el comprador. El vendedor es el sujeto retenido."], "general": "Las dos retenciones se distinguen por la base y por el porcentaje: el IVA se retiene sobre el impuesto; la renta sobre el valor del pago según el concepto."}, {"tipo": "Análisis", "pregunta": "Una factura de 1.000,00 dólares de base incluye bienes muebles de naturaleza corporal por 500,00 dólares (2 %) y servicios profesionales de una sociedad con título por 500,00 dólares (5 %). Los valores están separados en el comprobante. ¿Cuál es la retención total del impuesto a la renta?", "opciones": ["25,00 dólares.", "35,00 dólares.", "50,00 dólares.", "30,00 dólares."], "correcta": 1, "retro": ["Incorrecto. 25,00 corresponde solo a la parte de servicios. Los bienes también se retienen, con su 2 %.", "CORRECTO. Con los valores separados: 500 × 0,02 = 10,00 y 500 × 0,05 = 25,00; total 35,00 dólares.", "Incorrecto. 50,00 es el resultado de aplicar el porcentaje más alto a todo el valor, lo que solo corresponde cuando los valores no se separan.", "Incorrecto. 30,00 resulta de promediar los porcentajes, operación que la resolución no prevé."], "general": "Cuando los valores están separados, cada concepto se retiene con su porcentaje."}]}, {"sesion": 2, "titulo": "Evaluación de la sesión 02 · Factura con IVA y dos retenciones", "items": [{"tipo": "Teórica", "pregunta": "En el caso didáctico de una venta de 100 camisetas a 12,00 dólares sin IVA, ¿sobre qué valor se calcula la retención de renta del 2 %?", "opciones": ["Sobre el IVA de 180,00 dólares.", "Sobre el valor sin IVA de 1.200,00 dólares.", "Sobre el total de 1.380,00 dólares.", "Sobre el pago neto de 1.302,00 dólares."], "correcta": 1, "retro": ["Incorrecto. El IVA es la base de la retención de IVA, no de la de renta. La renta se calcula sobre el valor del bien.", "CORRECTO. Según la convención de la sesión, la retención de renta se aplica sobre el valor del bien sin IVA: 1.200 × 0,02 = 24,00 dólares.", "Incorrecto. El total incluye el IVA. Aplicar el 2 % al total cambia el resultado y no corresponde a la convención.", "Incorrecto. El pago neto es el resultado después de las retenciones. No puede ser la base de una retención que se calcula antes."], "general": "La retención de renta se calcula sobre el valor del bien, según la convención de esta sesión; la de IVA se calcula sobre el impuesto."}, {"tipo": "Análisis", "pregunta": "Una compra de 40 camisetas a 12,00 dólares sin IVA tiene una factura total de 552,00 dólares, con IVA de 72,00. El comprador retiene el 30 % del IVA (21,60) y el 2 % de la base (9,60). ¿Cuál es el pago neto?", "opciones": ["552,00 dólares.", "530,40 dólares.", "542,40 dólares.", "520,80 dólares."], "correcta": 3, "retro": ["Incorrecto. 552,00 es el total de la factura. Ambas retenciones se restan antes de calcular el pago neto.", "Incorrecto. 530,40 resulta de restar solo la retención de IVA. Falta descontar la retención de renta de 9,60.", "Incorrecto. 542,40 resulta de restar solo la retención de renta. Falta descontar la retención de IVA de 21,60.", "CORRECTO. 552,00 − 21,60 − 9,60 = 520,80 dólares."], "general": "El pago neto es el total de la factura menos todas las retenciones que se practican en la operación."}, {"tipo": "Análisis", "pregunta": "Una comercializadora vende 100 camisetas a 12,00 dólares sin IVA, con IVA de 15 %. El comprador retiene 54,00 dólares de IVA y 24,00 dólares de renta, y paga 1.302,00 dólares en efectivo. ¿Cuál es el asiento correcto de la comercializadora?", "opciones": ["Debe Caja 1.302,00; Debe Retención de IVA a favor 54,00; Debe Retención de renta a favor 24,00; Haber Ventas 1.200,00; Haber IVA cobrado 180,00.", "Debe Caja 1.380,00; Haber Ventas 1.200,00; Haber IVA cobrado 180,00.", "Debe Caja 1.302,00; Debe Retención de IVA a favor 54,00; Haber Ventas 1.380,00.", "Debe Caja 1.302,00; Haber Ventas 1.302,00."], "correcta": 0, "retro": ["CORRECTO. Caja recibe el pago neto, las dos retenciones son derechos en el debe, y el ingreso y el IVA cobrado van en el haber. El asiento suma 1.380,00 en cada lado.", "Incorrecto. Registra el total como caja, pero la comercializadora no recibió las retenciones. El asiento cuadra, pero la caja queda sobrestimada en 78,00 dólares.", "Incorrecto. El asiento no cuadra: el debe suma 1.356,00 y el haber 1.380,00. Falta la retención de renta a favor de 24,00.", "Incorrecto. El ingreso no puede ser el pago neto, y el IVA cobrado no aparece. Ventas registra la base de 1.200,00."], "general": "El vendedor registra el efectivo que recibe, sus derechos por las retenciones y el ingreso con su IVA cobrado."}, {"tipo": "Teórica", "pregunta": "¿Qué clase de cuenta es la retención de renta a favor que registra quien vendió?", "opciones": ["Pasivo, porque es una deuda con el SRI.", "Ingreso, porque aumenta el efectivo del período.", "Activo de naturaleza deudora, porque es un derecho del vendedor frente al pago recibido.", "Gasto, porque el comprador la descontó del pago."], "correcta": 2, "retro": ["Incorrecto. Un pasivo es una deuda de la empresa. Aquí el derecho lo tiene quien vendió, no quien debe.", "Incorrecto. La retención no es un ingreso: el ingreso es el valor del bien o servicio vendido.", "CORRECTO. Es un derecho del vendedor, por eso es un activo y su naturaleza es deudora.", "Incorrecto. Un gasto es una erogación de la empresa. La retención no representa un gasto para quien la sufrió: es un derecho."], "general": "Las cuentas de derechos son activos de naturaleza deudora; las obligaciones son pasivos de naturaleza acreedora."}, {"tipo": "Análisis", "pregunta": "En una compra, el comprador retiene 54,00 dólares de IVA y 24,00 dólares de renta. ¿En qué lado del asiento del comprador aparecen estas retenciones y por qué?", "opciones": ["En el debe, porque son gastos del período.", "En el haber, porque son obligaciones de entregar al SRI lo retenido.", "En el debe, porque son derechos del vendedor.", "No aparecen, porque se pagan con la caja."], "correcta": 1, "retro": ["Incorrecto. Las retenciones no son gastos del comprador. Son valores que debe entregar al SRI.", "CORRECTO. Quien retiene debe entregar esos valores al SRI, y su naturaleza es acreedora; por eso van en el haber.", "Incorrecto. Son derechos del vendedor, pero en el asiento del comprador son obligaciones, no derechos.", "Incorrecto. La caja registra solo el pago neto. Las retenciones quedan como obligaciones, no se pagan con la caja en ese momento."], "general": "Quien retiene registra la retención como obligación en el haber, mientras que el vendedor la registra como derecho en el debe."}, {"tipo": "Análisis", "pregunta": "Un comprador paga 1.302,00 dólares en efectivo por una factura de 1.380,00 dólares, después de retener 54,00 dólares de IVA y 24,00 dólares de renta. ¿Qué cantidad registra en la cuenta Caja?", "opciones": ["1.302,00 dólares.", "1.380,00 dólares.", "1.200,00 dólares.", "1.326,00 dólares."], "correcta": 0, "retro": ["CORRECTO. Caja registra el efectivo que sale, que es el pago neto de la factura.", "Incorrecto. 1.380,00 es el total de la factura. Caja no sale por ese total, porque 78,00 quedan retenidos.", "Incorrecto. 1.200,00 es la base sin IVA. La caja no registra la base, sino el pago neto.", "Incorrecto. 1.326,00 resulta de restar solo la retención de 54,00. Falta descontar la retención de renta de 24,00."], "general": "La caja registra lo que efectivamente se paga; las retenciones son obligaciones por separado."}, {"tipo": "Análisis", "pregunta": "Un comprador calcula la retención de renta del 2 % sobre el total de 1.380,00 dólares de una factura con IVA y obtiene 27,60 dólares. ¿Qué error comete?", "opciones": ["Usa el 5 % en lugar del 2 %.", "Olvida la retención de IVA.", "Aplica el porcentaje de renta sobre el total con IVA, en lugar del valor del bien sin IVA de 1.200,00 dólares.", "No comete ningún error."], "correcta": 2, "retro": ["Incorrecto. El cálculo usa el 2 %: 1.380 × 0,02 = 27,60. El problema no está en el porcentaje sino en la base.", "Incorrecto. Aunque la retención de IVA existe en la operación, el enunciado trata solo la de renta. El error está en la base de la renta.", "CORRECTO. La renta se calcula sobre el valor del bien sin IVA: 1.200 × 0,02 = 24,00. Usar el total eleva la retención en 3,60 dólares.", "Incorrecto. El 2 % se aplica sobre el valor del bien y no sobre el total. Por eso el resultado no corresponde."], "general": "Un porcentaje solo tiene sentido sobre la base que la norma o la convención del caso indica."}, {"tipo": "Teórica", "pregunta": "¿Qué diferencia hay entre el IVA cobrado y el crédito tributario de IVA?", "opciones": ["El IVA cobrado es un activo y el crédito es un pasivo.", "Ambos son ingresos del período.", "Son la misma cuenta con dos nombres distintos.", "El IVA cobrado es una obligación de naturaleza acreedora; el crédito tributario es un derecho de naturaleza deudora."], "correcta": 3, "retro": ["Incorrecto. Es al revés: el IVA cobrado es un pasivo, porque se debe entregar al Estado, y el crédito es un activo.", "Incorrecto. Ninguno es ingreso: el ingreso es la base de la venta. El IVA cobrado es obligación y el crédito es derecho.", "Incorrecto. Son cuentas distintas: una representa lo que se debe y otra lo que se puede descontar.", "CORRECTO. El IVA cobrado es una obligación y el crédito es un derecho. Su naturaleza y su lado en el asiento son opuestos."], "general": "Obligaciones y derechos se distinguen por su naturaleza: las obligaciones son acreedoras y los derechos son deudores."}, {"tipo": "Análisis", "pregunta": "En un período, una empresa tiene IVA cobrado de 72,00 dólares y crédito tributario de 50,00 dólares. ¿Cuál es el IVA por pagar?", "opciones": ["122,00 dólares.", "22,00 dólares.", "50,00 dólares.", "72,00 dólares."], "correcta": 1, "retro": ["Incorrecto. 122,00 suma los dos valores. La liquidación compara el IVA cobrado con el crédito y no los suma.", "CORRECTO. 72,00 − 50,00 = 22,00 dólares es lo que la empresa debe entregar en el período.", "Incorrecto. 50,00 es el crédito tributario. Si no se compensa con el IVA cobrado, la liquidación queda incompleta.", "Incorrecto. 72,00 es el IVA cobrado sin descontar el crédito, que es un derecho que se usa en la liquidación."], "general": "La liquidación resta el crédito del IVA cobrado: la diferencia es lo que se debe."}, {"tipo": "Teórica", "pregunta": "En una venta con retenciones de IVA y de renta, ¿cuál es el ingreso de la empresa vendedora, si la base de la venta es 1.200,00 dólares, el IVA es 180,00 dólares y el pago neto recibido es 1.302,00 dólares?", "opciones": ["La base sin IVA, 1.200,00 dólares.", "El pago neto, 1.302,00 dólares.", "El total de la factura, 1.380,00 dólares.", "El IVA cobrado, 180,00 dólares."], "correcta": 0, "retro": ["CORRECTO. El ingreso es el valor de la venta sin IVA. Las retenciones y el IVA no son ingreso.", "Incorrecto. El pago neto es lo que llega a caja, no el ingreso. Las retenciones son derechos que el vendedor reconoce aparte.", "Incorrecto. El total incluye el IVA, que es una obligación con el Estado. No es ingreso.", "Incorrecto. El IVA cobrado es una obligación. Registrarlo como ingreso sobrestimaría las ventas."], "general": "El ingreso es la base de la venta; el efectivo recibido, las retenciones y el IVA se registran aparte."}, {"tipo": "Análisis", "pregunta": "Una empresa compra camisetas para el uniforme de su personal. ¿Qué información hace falta para decidir el tratamiento definitivo de esa compra?", "opciones": ["Solo el precio unitario.", "Ninguna: el tratamiento es siempre gasto del período.", "El uso del bien y las condiciones de su entrega, junto con la política aplicable.", "El nombre del proveedor."], "correcta": 2, "retro": ["Incorrecto. El precio es necesario para calcular el valor, pero no basta para decidir la cuenta, porque el tratamiento depende del uso.", "Incorrecto. No todas las compras son gastos. El tratamiento depende del uso y de las condiciones de la operación.", "CORRECTO. La clasificación depende del uso del bien, de cuándo y cómo se entrega o se consume, y de las políticas aplicables.", "Incorrecto. El nombre del proveedor no determina la cuenta. Lo que la determina es el uso y las condiciones."], "general": "Una cuenta se elige por el uso del bien y las condiciones de la operación, no por su nombre ni por quién lo vende."}, {"tipo": "Análisis", "pregunta": "Un pago tiene un total de 690,00 dólares, del cual el comprador retiene 27,00 dólares de IVA y 12,00 dólares de renta. ¿Cuál es el pago neto?", "opciones": ["663,00 dólares.", "678,00 dólares.", "627,00 dólares.", "651,00 dólares."], "correcta": 3, "retro": ["Incorrecto. 663,00 resulta de restar solo la retención de IVA. Falta descontar la de renta.", "Incorrecto. 678,00 resulta de restar solo la retención de renta. Falta descontar la de IVA.", "Incorrecto. 627,00 resulta de restar 63,00, una cifra que no corresponde a ninguna de las dos retenciones.", "CORRECTO. 690,00 − 27,00 − 12,00 = 651,00 dólares."], "general": "El pago neto es el total menos todas las retenciones de la operación."}, {"tipo": "Análisis", "pregunta": "Un registro de una venta con retenciones asienta Caja por 1.380,00 dólares, en lugar de 1.302,00, con Ventas por 1.200,00 e IVA cobrado por 180,00. ¿Qué ocurre?", "opciones": ["Está correcto, porque el asiento cuadra.", "Cuadra, pero la caja queda sobreestimada en 78,00 dólares porque no recibió los valores retenidos.", "No cuadra, porque la caja debería ser menor que el ingreso.", "Está bien, porque las retenciones se registran dentro de Ventas."], "correcta": 1, "retro": ["Incorrecto. Cuadrar no prueba la clasificación. Aquí la caja registra un valor que no entró.", "CORRECTO. El asiento cuadra (1.380 = 1.200 + 180), pero Caja muestra 78,00 dólares más de lo que realmente recibió: 54,00 + 24,00.", "Incorrecto. El asiento sí cuadra: los dos lados suman 1.380,00. El error está en el valor de la caja.", "Incorrecto. Las retenciones son derechos que van en cuentas propias, no dentro de Ventas. Dentro de Ventas se infla el ingreso."], "general": "La igualdad del debe y del haber no demuestra que cada cuenta tenga el valor correcto."}, {"tipo": "Análisis", "pregunta": "Una empresa vende 40 camisetas a 12,00 dólares cada una, sin IVA. ¿Cuál es el ingreso que debe reconocer por la venta?", "opciones": ["480,00 dólares.", "552,00 dólares.", "72,00 dólares.", "520,80 dólares."], "correcta": 0, "retro": ["CORRECTO. 40 × 12,00 = 480,00 dólares. Es la base de la venta y el ingreso reconocido.", "Incorrecto. 552,00 es el total con IVA. El IVA no es ingreso.", "Incorrecto. 72,00 es el IVA. Es una obligación con el Estado, no un ingreso.", "Incorrecto. 520,80 es un pago neto después de retenciones. El efectivo recibido no es el ingreso."], "general": "El ingreso es la base de la venta, antes de impuestos y retenciones."}, {"tipo": "Teórica", "pregunta": "¿Qué efecto tiene la retención de renta en el efectivo de quien vendió?", "opciones": ["Aumenta su caja.", "No la afecta en absoluto.", "Reduce el efectivo recibido, y el valor retenido se registra como un derecho.", "Elimina el IVA de la operación."], "correcta": 2, "retro": ["Incorrecto. La retención nunca aumenta la caja. Reduce el efectivo recibido y genera un derecho aparte.", "Incorrecto. Sí la afecta: el efectivo que llega es menor que el total de la factura.", "CORRECTO. La caja recibe el pago neto; el valor retenido queda como derecho del vendedor, cuyo uso se estudiará más adelante.", "Incorrecto. La retención de renta no elimina el IVA. Son valores distintos de la misma operación."], "general": "La retención disminuye el efectivo recibido, pero no disminuye el ingreso: el valor retenido queda como un derecho."}]}, {"sesion": 3, "titulo": "Evaluación de la sesión 03 · Documentos fuente y jornalización", "items": [{"tipo": "Teórica", "pregunta": "¿Qué es un documento fuente?", "opciones": ["El libro mayor de la empresa.", "El estado de resultados del período.", "El saldo final de la cuenta Caja.", "El documento que respalda una operación, como una factura, un comprobante de retención o un recibo."], "correcta": 3, "retro": ["Incorrecto. El libro mayor resume los movimientos registrados en el diario; no es el documento que respalda la operación.", "Incorrecto. El estado de resultados es un estado financiero que se elabora después de registrar las operaciones.", "Incorrecto. El saldo de Caja es un resultado de los asientos, no el documento que prueba una operación.", "CORRECTO. El documento fuente es la prueba de la operación; la operación misma es el hecho que se registra."], "general": "El documento respalda la operación; no es la operación ni el asiento."}, {"tipo": "Análisis", "pregunta": "Un proveedor envía una cotización por 500,00 dólares. No se confirma la compra ni se recibe mercadería. ¿Cómo se registra?", "opciones": ["No se registra como transacción: no hay transferencia de bienes, servicios ni dinero, ni derecho u obligación.", "Debe Inventarios 500,00; Haber Proveedores por pagar 500,00.", "Debe Gasto 500,00; Haber Caja 500,00.", "Debe Caja 500,00; Haber Ventas 500,00."], "correcta": 0, "retro": ["CORRECTO. La cotización es una propuesta. Mientras no haya transferencia ni obligación, no hay asiento.", "Incorrecto. Registrar inventario sin recibir la mercadería ni tener factura crea un activo que no existe.", "Incorrecto. No hubo pago ni gasto: la caja no salió. Registrar un gasto y una salida de efectivo inventaría un hecho que no ocurrió.", "Incorrecto. No hubo venta ni entrada de dinero. Ventas representa ingresos reales, no propuestas."], "general": "Un documento no es una transacción: se registra cuando la operación transfiere bienes, servicios o dinero, o genera derechos u obligaciones."}, {"tipo": "Análisis", "pregunta": "Una empresa compra a crédito 200 camisetas a 10,00 dólares cada una, sin IVA, con IVA de 15 %, para venderlas. ¿Cuál es el asiento correcto?", "opciones": ["Debe Inventarios 2.000,00; Haber Caja 2.300,00.", "Debe Inventarios 2.300,00; Haber Proveedores por pagar 2.300,00.", "Debe Inventarios 2.000,00 y Debe Crédito tributario de IVA 300,00; Haber Proveedores por pagar 2.300,00.", "Debe Gasto de compras 2.300,00; Haber Proveedores por pagar 2.300,00."], "correcta": 2, "retro": ["Incorrecto. La compra es a crédito, así que la caja no sale. El haber debe ser Proveedores por pagar.", "Incorrecto. El inventario no incluye el IVA recuperable: solo la base de 2.000,00 entra a la mercadería.", "CORRECTO. La mercadería entra por la base, el IVA es un derecho y la deuda con el proveedor es el total de 2.300,00.", "Incorrecto. La compra es mercadería para vender, no gasto. Gasto de compras sería una clasificación incorrecta."], "general": "En una compra a crédito para vender, la base va a inventario, el IVA a crédito tributario y el total a proveedores."}, {"tipo": "Teórica", "pregunta": "¿Qué asiento registra un pago parcial de 1.000,00 dólares a un proveedor?", "opciones": ["Debe Ventas; Haber Caja.", "Debe Proveedores por pagar 1.000,00; Haber Caja 1.000,00.", "Debe Caja; Haber Proveedores por pagar.", "Debe Inventarios; Haber Caja."], "correcta": 1, "retro": ["Incorrecto. Ventas no se afecta por un pago a un proveedor. Es una cuenta de ingresos.", "CORRECTO. El pago disminuye la deuda con el proveedor (debe) y disminuye la caja (haber).", "Incorrecto. Ese asiento aumentaría la caja y la deuda: sería un cobro o una nueva deuda, no un pago.", "Incorrecto. Un pago no cambia el inventario, que se reconoció al recibir la mercadería."], "general": "Un pago a proveedor disminuye la deuda en el debe y la caja en el haber."}, {"tipo": "Análisis", "pregunta": "Una empresa vende al contado 50 camisetas a 15,00 dólares cada una, sin IVA, con IVA de 15 %. ¿Cuál es el asiento correcto?", "opciones": ["Debe Caja 750,00; Haber Ventas 750,00.", "Debe Caja 862,50; Haber Ventas 862,50.", "Debe Caja 750,00 y Debe IVA cobrado 112,50; Haber Ventas 862,50.", "Debe Caja 862,50; Haber Ventas 750,00 y Haber IVA cobrado 112,50."], "correcta": 3, "retro": ["Incorrecto. Caja recibe el total con IVA, no solo la base. Además, falta el IVA cobrado.", "Incorrecto. Registra el total como ingreso. El IVA cobrado es una obligación, no ingreso.", "Incorrecto. El IVA cobrado no va en el debe: es una obligación con naturaleza acreedora.", "CORRECTO. Caja recibe 862,50; Ventas registra la base de 750,00; el IVA cobrado de 112,50 va en el haber. El asiento cuadra."], "general": "En una venta al contado, la caja recibe el total, el ingreso es la base y el IVA es una obligación."}, {"tipo": "Análisis", "pregunta": "Al liquidar el período, el IVA cobrado es 112,50 dólares y el crédito tributario es 300,00 dólares. ¿Qué asiento compensa el IVA cobrado?", "opciones": ["Debe IVA cobrado 112,50; Haber Crédito tributario de IVA 112,50.", "Debe IVA cobrado 300,00; Haber Crédito tributario de IVA 300,00.", "Debe Crédito tributario 112,50; Haber IVA cobrado 112,50.", "Debe Ventas 112,50; Haber Crédito tributario 112,50."], "correcta": 0, "retro": ["CORRECTO. La compensación cancela el IVA cobrado con el crédito, hasta el monto menor.", "Incorrecto. Compensar por 300,00 supera el IVA cobrado de 112,50 y dejaría sin cancelar una obligación que no corresponde.", "Incorrecto. Está invertido: el crédito disminuye en el haber y el IVA cobrado en el debe.", "Incorrecto. Ventas no se afecta en una liquidación: la compensación ocurre entre el IVA cobrado y el crédito."], "general": "La liquidación cancela el IVA cobrado con el crédito; la diferencia dice si hay deuda o saldo a favor."}, {"tipo": "Análisis", "pregunta": "Después de la liquidación de 112,50 dólares de IVA cobrado frente a un crédito tributario inicial de 300,00 dólares, ¿cuál es el saldo del crédito tributario que queda?", "opciones": ["0,00 dólares.", "187,50 dólares, como derecho de naturaleza deudora cuyo destino se estudia con la normativa.", "412,50 dólares, como ingreso del período.", "112,50 dólares, como pasivo."], "correcta": 1, "retro": ["Incorrecto. Solo se compensaron 112,50 dólares. El crédito tiene todavía 187,50 dólares.", "CORRECTO. 300,00 − 112,50 = 187,50. Es un derecho cuyo destino depende de la normativa, que no se estudia aquí.", "Incorrecto. Sumar 300,00 y 112,50 no es un cálculo válido. El crédito se reduce, no aumenta.", "Incorrecto. 112,50 es el IVA cobrado compensado. El crédito es un derecho, no un pasivo."], "general": "Un saldo de crédito no es ingreso ni deuda: es un derecho cuyo tratamiento depende de la normativa vigente."}, {"tipo": "Teórica", "pregunta": "¿Por qué el gasto de un arriendo de 800,00 dólares, pagado con una retención de 80,00 dólares, se registra por 800,00 y no por 720,00?", "opciones": ["Porque Caja siempre registra el total del gasto.", "Porque la retención de 80,00 reduce el gasto del período.", "Porque el gasto es el valor del arriendo recibido; los 80,00 retenidos son una obligación con el SRI, no una reducción del gasto.", "Porque el arriendo no admite retención."], "correcta": 2, "retro": ["Incorrecto. Caja registra el pago neto, 720,00, no el total del gasto.", "Incorrecto. La retención no reduce el gasto: es una obligación frente al SRI.", "CORRECTO. El gasto mide lo recibido; la diferencia retenida se paga después al SRI y por eso aparece como obligación.", "Incorrecto. El arriendo sí admite retención: el arriendo de inmuebles está en el grupo del 10 % de la resolución."], "general": "El gasto se mide por el valor recibido; lo retenido aparece como obligación, no como menor gasto."}, {"tipo": "Análisis", "pregunta": "Un arriendo de 600,00 dólares, sin IVA, se paga a una persona natural. ¿Cuál es la retención del impuesto a la renta?", "opciones": ["6,00 dólares.", "30,00 dólares.", "120,00 dólares.", "60,00 dólares."], "correcta": 3, "retro": ["Incorrecto. 6,00 resulta de aplicar el 1 %, que no corresponde al arriendo.", "Incorrecto. 30,00 resulta de aplicar el 5 %, que corresponde a servicios profesionales de sociedades.", "Incorrecto. 120,00 resulta de aplicar el 20 %, porcentaje que no existe en la resolución vigente.", "CORRECTO. El arrendamiento de inmuebles está en el 10 %: 600,00 × 0,10 = 60,00 dólares."], "general": "El arriendo de inmuebles tiene el 10 %; calcular la retención sobre el valor sin IVA da el resultado."}, {"tipo": "Teórica", "pregunta": "¿Qué contiene la glosa de un asiento del libro diario?", "opciones": ["Una explicación breve del motivo de la operación, por ejemplo «P/R compra a crédito de camisetas».", "El saldo final de la cuenta.", "Solo el número de la factura.", "La firma de quien revisa el libro."], "correcta": 0, "retro": ["CORRECTO. La glosa explica por qué se registra el asiento; en este material comienza con «P/R».", "Incorrecto. El saldo se obtiene en el libro mayor, no en la glosa del asiento.", "Incorrecto. El número de factura ayuda a localizar el documento, pero la glosa debe explicar la operación.", "Incorrecto. La firma no es parte de la glosa. La glosa describe el motivo de la operación."], "general": "La glosa explica el motivo del asiento y permite reconstruir la operación sin volver al documento."}, {"tipo": "Análisis", "pregunta": "Una empresa compra al contado 100 camisetas a 10,00 dólares cada una, sin IVA, con IVA de 15 %, y paga el total en efectivo. ¿Cuál es el asiento correcto?", "opciones": ["Debe Inventarios 1.000,00; Haber Caja 1.000,00.", "Debe Inventarios 1.000,00 y Debe Crédito tributario de IVA 150,00; Haber Caja 1.150,00.", "Debe Inventarios 1.150,00; Haber Caja 1.150,00.", "Debe Inventarios 1.150,00; Haber Ventas 1.150,00."], "correcta": 1, "retro": ["Incorrecto. Omite el IVA pagado, que es un derecho de la empresa, y registra menos de lo que realmente sale de caja.", "CORRECTO. La mercadería entra por la base de 1.000,00, el IVA es crédito de 150,00 y la caja sale por el total de 1.150,00.", "Incorrecto. Registrar el IVA dentro del inventario sobrestima la mercadería; el crédito debe ir aparte.", "Incorrecto. Ventas es ingreso: una compra no genera ingreso. Y la contrapartida es Caja, no Ventas."], "general": "En una compra al contado, la base va a inventario, el IVA a crédito y el total sale de caja."}, {"tipo": "Análisis", "pregunta": "Un período muestra IVA cobrado de 63,00 dólares y crédito tributario de 150,00 dólares. ¿Qué afirmación es correcta?", "opciones": ["Hay 213,00 dólares de IVA por pagar.", "Hay 63,00 dólares de IVA por pagar.", "No hay IVA por pagar; el crédito que sobra, de 87,00 dólares, es un derecho cuyo tratamiento se verificará en la normativa.", "Hay 87,00 dólares de ingreso del período."], "correcta": 2, "retro": ["Incorrecto. Sumar los dos valores no es liquidar. El crédito compensa el IVA cobrado.", "Incorrecto. Se olvida el crédito de 150,00, que compensa el IVA cobrado.", "CORRECTO. 150,00 − 63,00 = 87,00. El excedente es un derecho; su tratamiento depende de la normativa, que se verifica aparte.", "Incorrecto. Un saldo de crédito no es ingreso del período. Es un derecho frente a la liquidación."], "general": "Cuando el crédito supera el IVA cobrado, no hay deuda en el período y el excedente requiere verificar la norma."}, {"tipo": "Análisis", "pregunta": "Un pago de 500,00 dólares por servicios en los que predomina la mano de obra, prestados por una persona natural (3 %), se registra así: Debe Gasto 500,00; Haber Caja 485,00; Haber Retención por pagar 15,00. ¿Qué conclusión es correcta?", "opciones": ["El asiento es correcto: 3 % de 500,00 es 15,00.", "El asiento está mal: la retención debería ser 50,00.", "El asiento está mal: el gasto debe registrarse en Ventas.", "El asiento cuadra, pero la retención debería ser del 10 %."], "correcta": 0, "retro": ["CORRECTO. 500 × 0,03 = 15,00; la caja recibe 485,00 y el gasto se registra por el total de 500,00.", "Incorrecto. 50,00 corresponde al 10 % de 500,00, y el concepto es mano de obra, que va al 3 %.", "Incorrecto. Un servicio recibido es un gasto, no un ingreso. Ventas no registra la compra de servicios.", "Incorrecto. El 10 % corresponde a honorarios por intelecto y arriendos; la mano de obra va al 3 %."], "general": "El gasto se registra por el valor recibido, la caja por el pago neto y la retención como obligación."}, {"tipo": "Teórica", "pregunta": "¿Qué criterio permite reconocer una operación en la jornalización?", "opciones": ["Que el documento tenga la firma del gerente.", "Que el monto supere 1.000,00 dólares.", "Que el documento esté impreso.", "Que la operación modifique activos, pasivos, patrimonio, ingresos o gastos de la entidad."], "correcta": 3, "retro": ["Incorrecto. La firma no determina si una operación es una transacción. Lo que importa es el efecto económico.", "Incorrecto. El monto no decide si se registra. Una operación pequeña también modifica el patrimonio.", "Incorrecto. Un documento impreso o digital puede ser fuente válida. Lo que importa es la operación que documenta.", "CORRECTO. Si la operación cambia algún elemento del patrimonio y está respaldada por un documento, se jornaliza."], "general": "Una operación se registra cuando modifica el patrimonio de la empresa y tiene un documento que la respalda."}, {"tipo": "Análisis", "pregunta": "Un documento de pedido de 250 unidades, sin entrega ni factura, llega a una empresa. ¿Qué afirmación es correcta?", "opciones": ["Debe registrarse como venta, porque el cliente ya confirmó.", "Todavía no es una transacción registrable: falta la transferencia de bienes o la deuda, y se espera la factura o la entrega.", "Debe registrarse como gasto, porque es un compromiso.", "Debe registrarse como inventario, porque ya hay una orden."], "correcta": 1, "retro": ["Incorrecto. Una venta exige entrega o transferencia. Una orden confirmada todavía no cambia el patrimonio.", "CORRECTO. Sin entrega, factura ni transferencia, no hay derecho ni obligación cierta. Se registra cuando ocurre la operación.", "Incorrecto. Un compromiso no es un gasto. El gasto se reconoce cuando el servicio o el bien se consume o se recibe.", "Incorrecto. El inventario se reconoce cuando la mercadería llega. La orden sola no es mercadería recibida."], "general": "Un compromiso no es una transacción: el registro empieza cuando hay transferencia, derecho u obligación."}]}];
+
+/* ==========================================================
+   2. Navegación por pestañas
+   ========================================================== */
+(function () {
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('[data-panel]'));
+
+  function mostrar(id, enfocar) {
+    panels.forEach(p => { p.hidden = (p.dataset.panel !== id); });
+    tabs.forEach(t => {
+      const activa = t.dataset.target === id;
+      t.setAttribute('aria-selected', activa ? 'true' : 'false');
+      t.tabIndex = activa ? 0 : -1;
+      if (activa && enfocar) t.focus();
+    });
+    const panel = document.querySelector('[data-panel="' + id + '"]');
+    if (panel) {
+      const titulo = panel.querySelector('h2');
+      if (titulo) { titulo.setAttribute('tabindex', '-1'); titulo.focus({ preventScroll: true }); }
+    }
+    try { history.replaceState(null, '', '#' + id); } catch (e) { /* vista previa sin permiso para cambiar la URL: se ignora */ }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => mostrar(t.dataset.target, false));
+    t.addEventListener('keydown', e => {
+      let j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (j !== null) { e.preventDefault(); tabs[j].focus(); mostrar(tabs[j].dataset.target, true); }
+    });
+  });
+
+  const inicial = (location.hash || '').replace('#', '');
+  mostrar(panels.some(p => p.dataset.panel === inicial) ? inicial : 'intro', false);
+})();
+
+/* ==========================================================
+   3. Evaluaciones de práctica
+   Cada evaluación se dibuja desde EVALUACIONES. Las respuestas
+   se guardan solo en memoria de la pestaña mientras esté abierta.
+   ========================================================== */
+(function () {
+  const LETRAS = ['a', 'b', 'c', 'd'];
+
+  function dibujar(ev, raiz) {
+    const n = ev.items.length;
+    let respuestas = Array(n).fill(null);
+    const nombre = 'ev' + ev.sesion + '-';
+
+    raiz.innerHTML = '';
+
+    // 3.1 Cabecera
+    const cab = document.createElement('div');
+    cab.className = 'cabecera-eval';
+    cab.innerHTML = '<p class="nota-practica">' + (ev.diagnostica
+      ? 'Esta prueba es diagnóstica y formativa: no tiene nota. Sirve para identificar qué conviene repasar.'
+      : 'Esta evaluación es de práctica. Sus respuestas le muestran qué comprende y qué conviene revisar; no sustituye a las evaluaciones oficiales.') + '</p>';
+    const prog = document.createElement('p');
+    prog.className = 'progreso';
+    prog.setAttribute('aria-live', 'polite');
+    cab.appendChild(prog);
+    raiz.appendChild(cab);
+
+    // 3.2 Preguntas
+    const formulario = document.createElement('form');
+    formulario.setAttribute('novalidate', 'novalidate');
+    formulario.addEventListener('submit', e => e.preventDefault());
+    raiz.appendChild(formulario);
+
+    ev.items.forEach((it, i) => {
+      const fs = document.createElement('fieldset');
+      const leyenda = document.createElement('legend');
+      leyenda.innerHTML = 'Pregunta ' + (i + 1) + ' de ' + n;
+      fs.appendChild(leyenda);
+
+      const badge = document.createElement('span');
+      badge.className = 'insignia';
+      badge.textContent = '[' + it.tipo + ']';
+      fs.appendChild(badge);
+
+      const enun = document.createElement('p');
+      enun.textContent = it.pregunta;
+      fs.appendChild(enun);
+
+      const opts = document.createElement('div');
+      opts.className = 'opts';
+      it.opciones.forEach((texto, k) => {
+        const id = nombre + 'p' + i + '-' + k;
+        const etiqueta = document.createElement('label');
+        etiqueta.setAttribute('for', id);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = nombre + 'p' + i;
+        radio.id = id;
+        radio.value = String(k);
+        const letra = document.createElement('span');
+        letra.className = 'letra';
+        letra.textContent = LETRAS[k] + ')';
+        const txt = document.createElement('span');
+        txt.textContent = texto;
+        etiqueta.appendChild(radio);
+        etiqueta.appendChild(letra);
+        etiqueta.appendChild(txt);
+        opts.appendChild(etiqueta);
+        radio.addEventListener('change', () => elegir(i, k));
+      });
+      fs.appendChild(opts);
+
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.setAttribute('aria-live', 'polite');
+      fs.appendChild(fb);
+
+      const gen = document.createElement('p');
+      gen.className = 'gen';
+      gen.textContent = 'Idea que conviene recordar: ' + it.general;
+      fs.appendChild(gen);
+
+      formulario.appendChild(fs);
+    });
+
+    // 3.3 Resultado y acciones
+    const resultado = document.createElement('div');
+    resultado.className = 'resultado';
+    resultado.setAttribute('aria-live', 'polite');
+    raiz.appendChild(resultado);
+
+    const acciones = document.createElement('div');
+    acciones.className = 'acciones';
+    const btnReintento = document.createElement('button');
+    btnReintento.type = 'button';
+    btnReintento.className = 'btn principal';
+    btnReintento.textContent = 'Intentar nuevamente';
+    btnReintento.hidden = true;
+    btnReintento.addEventListener('click', () => reiniciar(false));
+    const btnReinicio = document.createElement('button');
+    btnReinicio.type = 'button';
+    btnReinicio.className = 'btn';
+    btnReinicio.textContent = 'Reiniciar cuestionario';
+    btnReinicio.addEventListener('click', () => reiniciar(true));
+    acciones.appendChild(btnReintento);
+    acciones.appendChild(btnReinicio);
+    raiz.appendChild(acciones);
+
+    // 3.4 Lógica de respuesta
+    function elegir(i, k) {
+      if (bloqueado) return;
+      respuestas[i] = k;
+      const it = ev.items[i];
+      const fieldset = formulario.querySelectorAll('fieldset')[i];
+      const fb = fieldset.querySelector('.fb');
+      const gen = fieldset.querySelector('.gen');
+      const acierto = (k === it.correcta);
+      fb.className = 'fb ' + (acierto ? 'ok' : 'mal');
+      fb.textContent = it.retro[k];
+      gen.classList.add('visible');
+      actualizar();
+    }
+
+    // 3.5 Cálculo de progreso, aciertos y bloqueo
+    let bloqueado = false;
+    function actualizar() {
+      const contestadas = respuestas.filter(x => x !== null).length;
+      const aciertos = respuestas.reduce((s, x, i) => s + (x === ev.items[i].correcta ? 1 : 0), 0);
+      prog.textContent = 'Respondidas: ' + contestadas + ' de ' + n + '. Aciertos hasta ahora: ' + aciertos + '.';
+
+      if (contestadas < n) {
+        bloqueado = false;
+        resultado.innerHTML = '';
+        btnReintento.hidden = true;
+        return;
+      }
+
+      // Evaluación completa: se bloquea la edición hasta reiniciar.
+      bloqueado = true;
+      formulario.querySelectorAll('input').forEach(inp => inp.disabled = true);
+      const porcentaje = Math.round((aciertos / n) * 100);
+      const nota = (aciertos / n * 10).toFixed(1).replace('.', ',');
+      let texto = '<strong>Resultado: ' + aciertos + ' de ' + n + ' respuestas correctas (' + porcentaje + ' %).</strong>';
+      if (ev.diagnostica) {
+        texto += '<br>Esta prueba no tiene calificación. Revise las preguntas erradas con sus retroalimentaciones.';
+      } else {
+        texto += '<br>Puntaje de práctica: ' + nota + ' sobre 10. No es una nota oficial.';
+      }
+      if (aciertos < n) {
+        texto += '<br>Revise las preguntas erradas y, si lo desea, intente nuevamente con las mismas preguntas en el mismo orden.';
+        btnReintento.hidden = false;
+      } else {
+        texto += '<br>Respondió todas las preguntas correctamente. No es necesario repetir el cuestionario.';
+        btnReintento.hidden = true;
+      }
+      resultado.innerHTML = texto;
+    }
+
+    // 3.6 Reinicio y reintento
+    function reiniciar(completo) {
+      respuestas = Array(n).fill(null);
+      bloqueado = false;
+      formulario.querySelectorAll('input').forEach(inp => { inp.disabled = false; inp.checked = false; });
+      formulario.querySelectorAll('.fb').forEach(f => { f.className = 'fb'; f.textContent = ''; });
+      formulario.querySelectorAll('.gen').forEach(g => g.classList.remove('visible'));
+      btnReintento.hidden = true;
+      resultado.innerHTML = '';
+      actualizar();
+      if (completo) {
+        const primera = formulario.querySelector('input');
+        if (primera) primera.focus();
+      }
+    }
+
+    actualizar();
+  }
+
+  document.querySelectorAll('.quiz[data-eval]').forEach(raiz => {
+    const num = parseInt(raiz.dataset.eval, 10);
+    const ev = EVALUACIONES.find(e => e.sesion === num);
+    if (ev) dibujar(ev, raiz);
+  });
+})();
+</script>
+</body>
+</html>
