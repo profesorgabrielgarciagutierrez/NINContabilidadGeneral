@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contabilidad General · Semana 07</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- 1. Variables y base ---------- */
+:root{
+  --azul:#003366; --celeste:#87CEEB; --azul-claro:#E8F4FD; --texto:#1d1d1d;
+  --ok:#14532d; --ok-fondo:#e6f4ea; --mal:#7f1d1d; --mal-fondo:#fdecec; --borde:#c9d6e2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.6;color:var(--texto);background:#fff}
+h1,h2,h3,h4{font-family:Lora,Georgia,"Times New Roman",serif;color:var(--azul);line-height:1.25}
+h2{font-size:1.6rem;margin:.2rem 0 .6rem}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem}
+h4{font-size:1.05rem;margin:1.1rem 0 .4rem}
+p{margin:.6rem 0;max-width:72ch}
+ul,ol{max-width:72ch;padding-left:1.4rem}
+li{margin:.3rem 0}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:6px 10px;z-index:10}
+.meta{font-size:.92rem;color:#3b4a5a;margin:0 0 1rem}
+.tiempos{font-size:.95rem}
+
+/* ---------- 2. Encabezado y menú ---------- */
+header.cabecera{background:var(--azul);color:#fff;padding:14px 16px}
+header.cabecera h1{color:#fff;font-size:1.25rem;margin:0}
+header.cabecera p{margin:2px 0 0;font-size:.92rem;color:#e3eef8}
+nav.menu{background:var(--celeste);color:#000;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;border-bottom:1px solid #6fbcd9}
+nav.menu ul{display:flex;list-style:none;margin:0;padding:0;max-width:none}
+nav.menu li{margin:0}
+nav.menu button{font:inherit;font-size:.95rem;background:transparent;color:#000;border:0;padding:12px 14px;cursor:pointer;min-height:44px}
+nav.menu button:hover{background:rgba(255,255,255,.35)}
+nav.menu button[aria-selected="true"]{background:#fff;color:var(--azul);font-weight:700}
+
+main{padding:16px 16px 48px;max-width:860px;margin:0 auto}
+
+/* ---------- 3. Secciones y bloques ---------- */
+.pestana[hidden]{display:none}
+.concepto{border-left:5px solid var(--azul);padding:.6rem .9rem;margin:1rem 0;background:#f7fafd}
+.concepto h4{margin-top:.1rem}
+.ejemplo{background:var(--azul-claro);padding:.7rem .9rem;margin:1rem 0;border-radius:4px}
+.ejemplo h4{margin-top:.1rem}
+.nota-lateral{border:1px solid var(--borde);border-left:5px solid #2a7fb8;background:#fbfdff;padding:.7rem .9rem;margin:0 0 1.2rem;border-radius:4px}
+.nota-lateral h3{margin-top:.1rem}
+.nota-lateral p:first-of-type{margin-top:.2rem}
+.pausa{font-style:normal}
+.prompt{background:#f4f4f4;padding:.6rem .8rem;border-radius:4px}
+.ejercicio{border-top:1px solid var(--borde);margin-top:1.4rem;padding-top:.4rem}
+.ejercicio .tiempo{font-size:.92rem;color:#3b4a5a;margin:0}
+.ayuda{font-style:italic}
+.tabla-wrap{overflow-x:auto;max-width:100%}
+.asiento{border:1px solid var(--borde);border-radius:4px;padding:.4rem .9rem .6rem;margin:1rem 0;background:#fff}
+.asiento h4{margin-top:.3rem}
+table{border-collapse:collapse;margin:.8rem 0;min-width:60%}
+caption{caption-side:top;text-align:left;font-weight:700;padding:4px 0;color:var(--azul);font-family:Lora,Georgia,serif}
+th,td{border:1px solid var(--borde);padding:6px 8px;vertical-align:top;text-align:left;min-width:110px}
+th{background:var(--azul-claro)}
+.referencias li{margin-bottom:.7rem;padding-left:1.4rem;text-indent:-1.4rem;list-style:none;max-width:72ch}
+.nota{font-size:.95rem;border-top:1px solid var(--borde);padding-top:.6rem}
+.calc{font-family:Consolas,"Courier New",monospace;font-size:.95rem;background:#f7f9fb;border:1px solid var(--borde);padding:.5rem .7rem;overflow-x:auto;white-space:pre;max-width:100%}
+.tcuenta{display:flex;flex-wrap:wrap;gap:12px;margin:.8rem 0}
+.tcuenta table{min-width:0;width:100%}
+
+/* ---------- 4. Solución desplegable ---------- */
+details.solucion{margin:.7rem 0;border:1px solid var(--azul);border-radius:4px;background:#fff}
+details.solucion>summary{cursor:pointer;padding:.55rem .8rem;font-weight:700;color:var(--azul);background:#eef5fb;min-height:44px;display:flex;align-items:center}
+details.solucion>*:not(summary){padding:0 .8rem}
+details.solucion[open]>summary{border-bottom:1px solid var(--borde)}
+details.solucion>*:last-child{padding-bottom:.8rem}
+
+/* ---------- 5. Evaluación ---------- */
+.quiz{margin-top:.5rem}
+.quiz .cabecera-eval{background:var(--azul-claro);padding:.7rem .9rem;border-radius:4px;margin-bottom:1rem}
+.quiz .progreso{font-weight:600;margin:.2rem 0}
+.quiz fieldset{border:1px solid var(--borde);border-radius:4px;padding:.7rem .9rem;margin:0 0 1rem}
+.quiz legend{font-weight:700;color:var(--azul);padding:0 .3rem;font-family:Lora,Georgia,serif}
+.quiz .insignia{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:10px;background:var(--azul);color:#fff;margin-right:6px;vertical-align:middle}
+.quiz .opts{display:grid;gap:6px;margin:.5rem 0}
+.quiz .opts label{display:flex;gap:10px;align-items:flex-start;padding:10px 10px;border:1px solid var(--borde);border-radius:4px;cursor:pointer;min-height:44px}
+.quiz .opts label:hover{background:#f5faff}
+.quiz .opts input{margin-top:5px;min-width:18px;min-height:18px}
+.quiz .letra{font-weight:700;color:var(--azul)}
+.quiz .fb{margin-top:.5rem;padding:.6rem .8rem;border-radius:4px;display:none}
+.quiz .fb.ok{display:block;background:var(--ok-fondo);color:var(--ok);border-left:5px solid var(--ok)}
+.quiz .fb.mal{display:block;background:var(--mal-fondo);color:var(--mal);border-left:5px solid var(--mal)}
+.quiz .gen{font-size:.93rem;margin-top:.4rem;color:#34434f;display:none}
+.quiz .gen.visible{display:block}
+.quiz .resultado{border:2px solid var(--azul);border-radius:4px;padding:.8rem 1rem;margin:1rem 0;background:#fff}
+.quiz .acciones{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0}
+.quiz button.btn{font:inherit;font-weight:600;padding:10px 14px;min-height:44px;border-radius:4px;border:2px solid var(--azul);background:#fff;color:var(--azul);cursor:pointer}
+.quiz button.btn.principal{background:var(--azul);color:#fff}
+.quiz button.btn[hidden]{display:none}
+.quiz .nota-practica{font-size:.93rem;color:#34434f}
+
+/* ---------- 6. Pie ---------- */
+footer{background:#f2f5f8;color:#2a3440;padding:14px 16px;font-size:.9rem;border-top:1px solid var(--borde)}
+footer p{margin:.2rem 0}
+
+/* ---------- 7. Pantallas estrechas ---------- */
+@media (max-width:420px){
+  body{font-size:16px}
+  main{padding:12px 12px 40px}
+  h2{font-size:1.4rem}
+  table{font-size:.92rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#principal">Ir al contenido</a>
+<header class="cabecera">
+  <h1>Contabilidad General</h1>
+  <p>Licenciatura en Negocios Internacionales · Ciclo II de 2026 · Semana 07: Del diario al balance y hacia el inventario</p>
+</header>
+
+<nav class="menu" aria-label="Secciones de la semana">
+  <ul role="tablist">
+    <li><button type="button" role="tab" id="tab-intro" data-target="intro" aria-controls="intro" aria-selected="false" tabindex="-1">Repaso</button></li>
+    <li><button type="button" role="tab" id="tab-ses01" data-target="ses01" aria-controls="ses01" aria-selected="false" tabindex="-1">Sesión 01</button></li>
+    <li><button type="button" role="tab" id="tab-eval1" data-target="eval1" aria-controls="eval1" aria-selected="false" tabindex="-1">Evaluación 01</button></li>
+    <li><button type="button" role="tab" id="tab-ses02" data-target="ses02" aria-controls="ses02" aria-selected="false" tabindex="-1">Sesión 02</button></li>
+    <li><button type="button" role="tab" id="tab-eval2" data-target="eval2" aria-controls="eval2" aria-selected="false" tabindex="-1">Evaluación 02</button></li>
+    <li><button type="button" role="tab" id="tab-ses03" data-target="ses03" aria-controls="ses03" aria-selected="false" tabindex="-1">Sesión 03</button></li>
+    <li><button type="button" role="tab" id="tab-eval3" data-target="eval3" aria-controls="eval3" aria-selected="false" tabindex="-1">Evaluación 03</button></li>
+    <li><button type="button" role="tab" id="tab-reflexion" data-target="reflexion" aria-controls="reflexion" aria-selected="false" tabindex="-1">Reflexión</button></li>
+    <li><button type="button" role="tab" id="tab-ia" data-target="ia" aria-controls="ia" aria-selected="false" tabindex="-1">Actividad con IA</button></li>
+    <li><button type="button" role="tab" id="tab-biblio" data-target="biblio" aria-controls="biblio" aria-selected="false" tabindex="-1">Bibliografía</button></li>
+  </ul>
+</nav>
+
+<main id="principal">
+<section class="pestana" id="intro" data-panel="intro">
+<h2>Repaso · Del diario al balance y hacia el inventario</h2>
+<p class="meta">Semana 7 · Unidades 2 y 3 · Ciclo contable, impuestos del período e inventarios · Tiempo orientativo de lectura: 5 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Esta semana cierra el primer parcial y da el primer paso hacia la unidad 3. Tendrás que recorrer un mes completo de una empresa de servicios, desde sus documentos hasta el balance de comprobación; luego reunir lo aprendido en las unidades 1 y 2 en un caso que deja algunos datos incompletos; y por último medir un inventario con la norma que lo regula. Las tres sesiones se apoyan en las semanas anteriores, así que este repaso te recuerda qué debes tener disponible.</p>
+<p>Al terminar la semana podrás registrar las operaciones de un mes de una empresa de servicios; liquidar el IVA del período; mayorizar las cuentas y preparar un balance de comprobación; decir qué errores detecta el balance y cuáles deja pasar; señalar los datos que faltan para concluir; y medir un lote de mercadería al costo o al valor neto realizable, el menor de ambos.</p>
+</div>
+
+<h3>La cadena que vas a recorrer</h3>
+<p>Todo registro contable sigue la misma cadena. Primero está el documento fuente, que prueba que la operación ocurrió y entrega sus cifras: una factura, un comprobante de retención, un recibo de cobro. Después la operación se escribe en el libro diario como asiento, con sus cuentas, sus importes en el debe y en el haber, y una glosa que explica el motivo. Luego cada movimiento se traslada a la cuenta correspondiente del libro mayor, y con los saldos del mayor se prepara el balance de comprobación. Más adelante, los saldos se ajustan y se presentan en los estados financieros.</p>
+<p>Esa cadena tiene un orden lógico. Cada paso toma el resultado del anterior y lo vuelve más útil para decidir. Si un documento está mal leído, el asiento lo heredará; si el asiento tiene la cuenta equivocada, el mayor la repetirá; y si el balance cuadra, eso solo prueba la aritmética del traslado, no la exactitud de cada registro.</p>
+
+<h3>Tres ideas que vuelven esta semana</h3>
+<p>La primera es la partida doble: cada asiento tiene un debe y un haber iguales, y esa igualdad es necesaria aunque no basta. La segunda es la naturaleza de la cuenta: los activos, los derechos y los gastos aumentan en el debe; los pasivos, las obligaciones, el patrimonio y los ingresos aumentan en el haber. La tercera es la diferencia entre el ingreso y el cobro, y entre el gasto y el pago: una venta a crédito produce ingreso antes de cobrar, y una compra a crédito produce deuda antes de pagar.</p>
+<p>Recuerda también dos reglas del IVA. El IVA que pagas en una compra para vender es un derecho frente al SRI, y se registra como crédito tributario de IVA, separado de la mercadería. El IVA que cobras en una venta es una obligación frente al SRI, y se registra como IVA cobrado, separado del ingreso. Al cerrar el período, el IVA cobrado se compensa con el crédito tributario hasta el monto menor, y lo que sobra queda como saldo en su propio lado.</p>
+
+<h3>Cómo estudiar esta semana</h3>
+<p>Trabaja con papel y lápiz. Cuando una pausa te pida que escribas algo, hazlo antes de leer la explicación que sigue; una respuesta incompleta te dice más que una respuesta copiada. Al mayorizar, dibuja la cuenta T con sus dos columnas, copia cada movimiento con su número de asiento y calcula el saldo al final. Si un saldo no coincide con lo que esperabas, revisa primero el lado en que pusiste cada movimiento.</p>
+<p>La semana 8 es la semana del examen del primer parcial. Ese examen cubre las unidades 1 y 2, es decir, las sesiones globales 01 a 19 del plan analítico. La sesión 02 de esta semana te muestra cómo reunir esos contenidos en un caso y te da orientaciones concretas para la evaluación. La fecha y el aula las asigna la Facultad, y el plan sitúa el período de exámenes entre el 30 de noviembre y el 5 de diciembre de 2026.</p>
+</section>
+
+
+<section class="pestana" id="ses01" data-panel="ses01">
+<h2>Sesión 01 · Un mes de operaciones: del documento al balance</h2>
+<p class="meta">Semana 7 · Unidad 2 · Ejercicio de una empresa de servicios: un mes de operaciones, desde el documento fuente hasta el balance de comprobación (sesión global 18) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Servicios Logísticos Andes Global S. A. coordina importaciones y exportaciones para empresas de su entorno. No fabrica nada ni compra mercadería para revender, así que no tiene inventario que contar. Lo que sí tiene es un flujo de documentos: facturas que le llegan por lo que compra, facturas que emite por lo que presta, un arriendo que paga cada mes y cobros y pagos que se reparten en el tiempo. Supongamos que en su primer mes de operaciones tiene veinticinco trabajadores y que todos sus documentos llegan a la oficina. ¿Cómo se convierte ese montón de papeles en un balance que el gerente pueda leer?</p>
+<p>Al terminar esta sesión podrás identificar qué documento respalda cada operación de la empresa; escribir cada asiento desde la perspectiva de Servicios Logísticos Andes Global S. A.; liquidar el IVA del mes; mayorizar las cuentas que usa la empresa y preparar su balance de comprobación. Para este trabajo necesitas recordar que el IVA pagado es un derecho, que el IVA cobrado es una obligación, y que la retención de renta es una obligación que la empresa tiene con el SRI cuando paga ciertos conceptos.</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. La empresa, su papel y su punto de vista</h3>
+<p>Antes de registrar nada conviene preguntar desde qué empresa se mira la operación. Servicios Logísticos Andes Global S. A. es una empresa de servicios vinculada con Negocios Internacionales. Su actividad es prestar un servicio: coordinar los trámites, el transporte y los documentos de una operación de comercio exterior. Por eso sus ingresos son servicios prestados y no ventas de bienes. Además, compra bienes y servicios para funcionar: útiles de oficina, el arriendo del local, electricidad, internet. Cada una de esas compras tiene un destino distinto, y ese destino decide la cuenta.</p>
+<p>Supongamos que la empresa inicia el mes sin saldos en las cuentas de este ejercicio. Este supuesto es didáctico: permite seguir todo el mes desde cero, sin depender de operaciones de otras semanas, que son casos independientes. Supongamos también que los socios aportan el capital inicial en efectivo, y que la empresa actúa como agente de retención del impuesto a la renta en el pago del arriendo. La condición de agente de retención es un supuesto del caso; en una empresa real depende de la calificación que haga el SRI.</p>
+<p>Observa que el aporte de los socios no es un ingreso ni un gasto. Es un movimiento entre la empresa y sus propietarios, y se registra en el patrimonio. Esa distinción, que llamamos separación patrimonial, es la primera que debes hacer cada vez que aparece dinero en la oficina: ¿el recurso pertenece a la empresa o a una persona?</p>
+
+<h3>2. Del documento al asiento</h3>
+<p>Toda operación comienza en un documento fuente. Una factura de compra prueba que la empresa recibió un bien o un servicio y que debe pagarlo. Una factura de venta prueba que la empresa prestó un servicio y que tiene derecho a cobrar. Un comprobante de pago o un recibo de cobro prueba que el dinero salió o entró. Un comprobante de retención prueba que una parte del pago se retuvo para el SRI. Una cotización, en cambio, solo muestra una propuesta: no prueba que nada haya ocurrido, y por eso no se registra.</p>
+<p>Del documento salen las cifras del asiento. Si la factura dice «base imponible 600,00» y «IVA 15 %», la base es el valor sin impuesto y el IVA es la base multiplicada por 15 %. La tarifa general de IVA es del 15 %, según la Circular NAC-DGECCGC25-00000006 del SRI, de 26 de diciembre de 2025, que mantiene vigente la última tarifa establecida. En las operaciones de este mes usamos esa tarifa. El total de la factura es la suma de la base y del IVA.</p>
+<p>Una vez identificado el documento, la pregunta siguiente es qué cuentas intervienen y en qué lado. Para eso se usa la naturaleza de cada cuenta, que ya conoces: los activos, los derechos y los gastos aumentan en el debe; los pasivos, las obligaciones, el patrimonio y los ingresos aumentan en el haber.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar: ¿gasto o activo?</h4>
+<p>Compras 600,00 dólares de útiles de oficina, sin IVA, para usarlos durante el mes. ¿Qué cuenta debe recibir el importe? Antes de seguir, escribe tu respuesta y la razón. Piensa en qué recibió la empresa y en cuánto tiempo lo va a usar.</p>
+<p class="ayuda">Si pensaste en un gasto porque los útiles se consumen en el mes, vas por buen camino; la explicación del ejercicio 2 lo confirma. Si pensaste en un activo porque la empresa recibió algo que le pertenece, revisa el criterio: un activo es un recurso que dará beneficios en períodos futuros. Lo que se consume dentro del mismo mes no cumple ese criterio en este caso.</p>
+</div>
+
+<h3>3. El IVA del mes: lo que pagas y lo que cobras</h3>
+<p>En una empresa de servicios el IVA aparece en dos direcciones. El IVA que la empresa paga en sus compras, como los útiles o el arriendo, es un derecho frente al SRI: se registra como crédito tributario de IVA, en el debe. El IVA que la empresa cobra en sus servicios es una obligación frente al SRI: se registra como IVA cobrado, en el haber. Ninguno de los dos es un ingreso ni un gasto. Son cuentas de paso que se compensan al cierre del período.</p>
+<p>Al final del mes se hace la liquidación. El IVA cobrado se compara con el crédito tributario. La compensación se hace hasta el monto menor. Si el cobrado es mayor, queda un IVA por pagar, que la empresa declara y paga al SRI. Si el crédito es mayor, queda un derecho que se arrastra al período siguiente. Esa es la lógica que usarás en el cálculo 2 y en el ejercicio 5.</p>
+
+<h3>4. La retención de renta del arriendo</h3>
+<p>Cuando la empresa paga un arriendo, puede estar obligada a retener una parte del pago como anticipo del impuesto a la renta del arrendador. La Resolución NAC-DGERCGC26-00000009 del SRI, vigente desde el 1 de marzo de 2026, fija en su artículo 2 una retención del 10 % para el arrendamiento de bienes inmuebles, bajo cualquier forma contractual. La tabla no distingue si el arrendador es una persona natural o una sociedad.</p>
+<p>La base sobre la que se calcula la retención es el valor del arriendo sin IVA. Esa es una convención de este curso, usada desde la semana 5. Así, en este caso el porcentaje es 10 % sobre el valor sin IVA, y el monto retenido es una obligación de la empresa con el SRI hasta que la pague. Para el arriendo, la empresa paga al arrendador el valor total menos la retención.</p>
+
+<h3>5. Las cuentas del mes y su naturaleza</h3>
+<p>Para registrar el mes necesitas once cuentas. La tabla 1 las presenta con su clase y el lado en que aumentan. Las cuentas se nombran sin código porque el plan de cuentas del curso todavía no fija los códigos de IVA y de retención; lo mismo ocurrió en semanas anteriores. Lo importante es el nombre y la naturaleza, que no cambian.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 1. Cuentas del mes de Servicios Logísticos Andes Global S. A., su clase y su naturaleza (datos didácticos)</caption>
+<thead><tr><th>Cuenta</th><th>Clase</th><th>Naturaleza</th><th>Aumenta en</th></tr></thead>
+<tbody>
+<tr><td>Caja</td><td>Activo</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Cuentas por cobrar a clientes</td><td>Activo (derecho a cobrar)</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Crédito tributario de IVA</td><td>Activo (derecho frente al SRI)</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Gasto de suministros de oficina</td><td>Gasto</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Gasto de arriendo</td><td>Gasto</td><td>Deudora</td><td>Debe</td></tr>
+<tr><td>Proveedores por pagar</td><td>Pasivo</td><td>Acreedora</td><td>Haber</td></tr>
+<tr><td>IVA cobrado</td><td>Pasivo (obligación frente al SRI)</td><td>Acreedora</td><td>Haber</td></tr>
+<tr><td>IVA por pagar</td><td>Pasivo (obligación frente al SRI)</td><td>Acreedora</td><td>Haber</td></tr>
+<tr><td>Retención de renta por pagar</td><td>Pasivo (obligación frente al SRI)</td><td>Acreedora</td><td>Haber</td></tr>
+<tr><td>Capital social</td><td>Patrimonio</td><td>Acreedora</td><td>Haber</td></tr>
+<tr><td>Ingresos por servicios</td><td>Ingreso</td><td>Acreedora</td><td>Haber</td></tr>
+</tbody></table></div>
+
+<h3>6. Los asientos del mes</h3>
+<p>A continuación se registran las operaciones del mes en el orden en que ocurrieron. Cada asiento indica el documento que lo respalda, las cuentas, los importes y la glosa. Lee cada uno con lápiz en la mano: primero intenta explicar qué cuenta aumenta o disminuye, y después compara con la explicación. La numeración de los asientos empieza en 1 en esta semana.</p>
+
+<div class="asiento">
+<h4>Asiento 1. Aporte de los socios en efectivo (día 2)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: comprobante de depósito de los socios (supuesto del caso).</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja</td><td>15.000,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Capital social</td><td></td><td>15.000,00</td></tr>
+<tr><td><em>Glosa: P/R aporte en efectivo de los socios para el capital de la empresa.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 15.000,00 = haber 15.000,00. Caja aumenta por el efectivo que entra; el capital aumenta porque el aporte es un derecho de los socios sobre la empresa, y el patrimonio tiene naturaleza acreedora.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 2. Útiles de oficina comprados a crédito (día 3)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: factura de Distribuidora Papelera Litoral S. A. (empresa ficticia): base 600,00; IVA 90,00; total 690,00; pago a 30 días.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Gasto de suministros de oficina</td><td>600,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA</td><td>90,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Proveedores por pagar</td><td></td><td>690,00</td></tr>
+<tr><td><em>Glosa: P/R compra a crédito de útiles de oficina consumidos en el mes, con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 600,00 + 90,00 = 690,00; haber 690,00. La base es el gasto porque los útiles se consumen en el mes; el IVA pagado es un derecho; la deuda con el proveedor es el total de la factura.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 3. Arriendo de la oficina con retención de renta (día 5)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: factura de arriendo del mes (supuesto: base 1.200,00; IVA 15 % = 180,00; total 1.380,00) y comprobante del pago neto.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Gasto de arriendo</td><td>1.200,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA</td><td>180,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja</td><td></td><td>1.260,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Retención de renta por pagar</td><td></td><td>120,00</td></tr>
+<tr><td><em>Glosa: P/R arriendo de la oficina del mes; pago neto con retención de renta del 10 % sobre la base sin IVA.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.200,00 + 180,00 = 1.380,00; haber 1.260,00 + 120,00 = 1.380,00. El gasto es la base del arriendo, porque es lo que la empresa usó; la retención es una obligación con el SRI; la caja sale solo por el pago neto.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 4. Servicio de coordinación prestado a crédito (día 9)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: factura de venta a Importadora Pacífico Sur S. A. (empresa ficticia): base 4.000,00; IVA 600,00; total 4.600,00; cobro a 30 días.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Cuentas por cobrar a clientes</td><td>4.600,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Ingresos por servicios</td><td></td><td>4.000,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;IVA cobrado</td><td></td><td>600,00</td></tr>
+<tr><td><em>Glosa: P/R servicio de coordinación de importación prestado a crédito, con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 4.600,00 = haber 4.000,00 + 600,00. Aquí el ingreso se reconoce cuando el servicio se presta y existe el derecho a cobrar, aunque el dinero llegue después. Por eso el ingreso y el cobro quedan en momentos distintos.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 5. Servicio de asesoría cobrado al contado (día 12)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: factura de venta a cliente ocasional: base 1.500,00; IVA 225,00; total 1.725,00, pagado en efectivo.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja</td><td>1.725,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Ingresos por servicios</td><td></td><td>1.500,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;IVA cobrado</td><td></td><td>225,00</td></tr>
+<tr><td><em>Glosa: P/R servicio de asesoría documental cobrado al contado, con IVA de 15 %.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.725,00 = haber 1.500,00 + 225,00. El ingreso es la base; el IVA cobrado es una obligación que la empresa entregará al SRI, por eso no es ingreso.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 6. Cobro parcial a Importadora Pacífico Sur S. A. (día 18)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: comprobante de cobro de 2.300,00 dólares correspondiente a la factura del día 9.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Caja</td><td>2.300,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Cuentas por cobrar a clientes</td><td></td><td>2.300,00</td></tr>
+<tr><td><em>Glosa: P/R cobro parcial de la factura del servicio prestado a crédito.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 2.300,00 = haber 2.300,00. El cobro no crea un ingreso nuevo: el ingreso ya se reconoció en el asiento 4. Aquí solo cambia la forma del derecho: deja de ser una cuenta por cobrar y pasa a ser efectivo.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 7. Pago parcial a Distribuidora Papelera Litoral S. A. (día 20)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: comprobante de pago de 345,00 dólares a cuenta de la factura del día 3.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Proveedores por pagar</td><td>345,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Caja</td><td></td><td>345,00</td></tr>
+<tr><td><em>Glosa: P/R pago parcial a proveedor por compra de útiles de oficina.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 345,00 = haber 345,00. El pago disminuye la deuda, por eso va en el debe de proveedores, y disminuye la caja, por eso va en el haber.</p>
+</div>
+
+<div class="asiento">
+<h4>Asiento 8. Liquidación del IVA del mes (día 30)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: resumen de IVA del mes, a partir de los asientos 2, 3, 4 y 5.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>IVA cobrado</td><td>825,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Crédito tributario de IVA</td><td></td><td>270,00</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;IVA por pagar</td><td></td><td>555,00</td></tr>
+<tr><td><em>Glosa: P/R liquidación del IVA del mes: IVA cobrado compensado con el crédito tributario; saldo por pagar al SRI.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 825,00 = haber 270,00 + 555,00. La compensación se hizo por el monto menor de los dos derechos; el saldo que queda, 555,00 dólares, es la obligación del mes.</p>
+</div>
+
+<h3>7. Mayorizar y preparar el balance</h3>
+<p>Ahora traslada cada movimiento a la cuenta correspondiente, en el mismo lado en que aparece en el asiento, y anota el número de asiento junto a la cifra. La mayorización del mes produce los saldos que ves en la tabla 2. Como cada cuenta tiene su naturaleza, el saldo se presenta en el lado que le corresponde. Si el saldo cae en el lado contrario a su naturaleza, hay que revisar antes de seguir.</p>
+
+<div class="calc">Caja: debe 15.000,00 + 1.725,00 + 2.300,00 = 19.025,00. Haber 1.260,00 + 345,00 = 1.605,00. Saldo = 19.025,00 − 1.605,00 = 17.420,00 deudor.</div>
+
+<div class="concepto">
+<h4>Cálculo 1. Saldo de Caja al cierre del mes</h4>
+<p><strong>Situación.</strong> El gerente quiere saber cuánto efectivo tiene la empresa al cierre del mes.</p>
+<p><strong>Supuestos y finalidad.</strong> Se supone que la caja empieza en cero, porque el aporte del socio es el primer movimiento del mes (asiento 1). El cálculo muestra cómo un saldo deudor sale de comparar dos lados.</p>
+<p><strong>Qué buscamos.</strong> El saldo de la cuenta Caja, en dólares y con su naturaleza.</p>
+<p><strong>Datos y origen.</strong> Debe de 15.000,00 (asiento 1), 1.725,00 (asiento 5) y 2.300,00 (asiento 6). Haber de 1.260,00 (asiento 3) y 345,00 (asiento 7).</p>
+<p><strong>Por qué esta operación.</strong> La caja es un activo de naturaleza deudora. Un saldo deudor es lo esperado: indica que hay efectivo disponible.</p>
+<p><strong>Procedimiento.</strong> Debe total = 19.025,00. Haber total = 1.605,00. Saldo = 19.025,00 − 1.605,00 = 17.420,00.</p>
+<p><strong>Resultado.</strong> 17.420,00 dólares deudores.</p>
+<p><strong>Comprobación.</strong> El saldo más el haber debe dar el debe: 17.420,00 + 1.605,00 = 19.025,00. Esta comprobación reconstruye el debe a partir del saldo; no repite la misma resta.</p>
+<p><strong>Interpretación.</strong> La empresa tiene 17.420,00 dólares de efectivo al cierre del mes. Como el saldo es deudor, es coherente con la naturaleza de la caja. Un saldo acreedor en esta cuenta habría sido la señal de revisar.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 2. Liquidación del IVA del mes</h4>
+<p><strong>Situación.</strong> Al cierre del mes hay que saber cuánto IVA debe pagar la empresa al SRI.</p>
+<p><strong>Supuestos y finalidad.</strong> Se supone que todas las operaciones del mes están gravadas con la tarifa de 15 %, como indican los documentos. El cálculo muestra la compensación entre un derecho y una obligación.</p>
+<p><strong>Qué buscamos.</strong> El IVA por pagar del mes, en dólares.</p>
+<p><strong>Datos y origen.</strong> IVA cobrado: 600,00 (asiento 4) y 225,00 (asiento 5). Crédito tributario: 90,00 (asiento 2) y 180,00 (asiento 3).</p>
+<p><strong>Por qué esta operación.</strong> El IVA cobrado es una obligación; el crédito tributario es un derecho. La compensación se hace hasta el monto menor, que aquí es el crédito.</p>
+<p><strong>Procedimiento.</strong> IVA cobrado = 600,00 + 225,00 = 825,00. Crédito tributario = 90,00 + 180,00 = 270,00. IVA por pagar = 825,00 − 270,00 = 555,00.</p>
+<p><strong>Resultado.</strong> 555,00 dólares por pagar al SRI.</p>
+<p><strong>Comprobación.</strong> La suma de la compensación y del saldo debe dar el cobrado: 270,00 + 555,00 = 825,00. Es una comprobación de la suma, no de la tarifa.</p>
+<p><strong>Interpretación.</strong> La empresa cobró más IVA del que pagó, y debe la diferencia. Si el crédito hubiera sido mayor, la diferencia sería un derecho para el mes siguiente, como verás en el ejercicio 5.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 3. Pago neto del arriendo</h4>
+<p><strong>Situación.</strong> Cuando la empresa paga el arriendo, cuánto sale de caja.</p>
+<p><strong>Supuestos y finalidad.</strong> Se supone que la base del arriendo es 1.200,00 sin IVA, que el IVA es 15 % y que la retención es 10 % sobre la base sin IVA, como se explicó en la sección 4.</p>
+<p><strong>Qué buscamos.</strong> El monto que sale de caja y el monto retenido.</p>
+<p><strong>Datos y origen.</strong> Base 1.200,00; IVA 15 %; retención 10 % de la base.</p>
+<p><strong>Por qué esta operación.</strong> El gasto es la base, porque es el valor del servicio recibido; la retención es una obligación; lo que sale de caja es el total menos la retención.</p>
+<p><strong>Procedimiento.</strong> IVA = 1.200,00 × 0,15 = 180,00. Total de la factura = 1.380,00. Retención = 1.200,00 × 0,10 = 120,00. Pago neto = 1.380,00 − 120,00 = 1.260,00.</p>
+<p><strong>Resultado.</strong> Caja sale por 1.260,00 dólares; se retienen 120,00 dólares.</p>
+<p><strong>Comprobación.</strong> El pago neto más la retención debe dar el total de la factura: 1.260,00 + 120,00 = 1.380,00.</p>
+<p><strong>Interpretación.</strong> El gasto del mes es 1.200,00, no 1.260,00 ni 1.380,00. Confundir el gasto con lo que salió de caja es el error más frecuente en este tipo de pago.</p>
+</div>
+
+<h3>8. El balance de comprobación del mes</h3>
+<p>Con los saldos del mayor se prepara el balance de comprobación preliminar. La tabla 2 lo presenta con las sumas de cada cuenta. El balance no se elabora para presentarlo a nadie: sirve para comprobar que los traslados se hicieron con igual cifra en ambos lados. Observa que las cuentas que quedaron en cero aparecen con 0,00, porque tuvieron movimientos.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 2. Balance de comprobación preliminar de Servicios Logísticos Andes Global S. A. al cierre del mes (dólares)</caption>
+<thead><tr><th>Cuenta</th><th>Suma debe</th><th>Suma haber</th><th>Saldo deudor</th><th>Saldo acreedor</th></tr></thead>
+<tbody>
+<tr><td>Caja</td><td>19.025,00</td><td>1.605,00</td><td>17.420,00</td><td></td></tr>
+<tr><td>Cuentas por cobrar a clientes</td><td>4.600,00</td><td>2.300,00</td><td>2.300,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA</td><td>270,00</td><td>270,00</td><td>0,00</td><td></td></tr>
+<tr><td>Gasto de suministros de oficina</td><td>600,00</td><td>0,00</td><td>600,00</td><td></td></tr>
+<tr><td>Gasto de arriendo</td><td>1.200,00</td><td>0,00</td><td>1.200,00</td><td></td></tr>
+<tr><td>Proveedores por pagar</td><td>345,00</td><td>690,00</td><td></td><td>345,00</td></tr>
+<tr><td>IVA cobrado</td><td>825,00</td><td>825,00</td><td>0,00</td><td></td></tr>
+<tr><td>IVA por pagar</td><td>0,00</td><td>555,00</td><td></td><td>555,00</td></tr>
+<tr><td>Retención de renta por pagar</td><td>0,00</td><td>120,00</td><td></td><td>120,00</td></tr>
+<tr><td>Capital social</td><td>0,00</td><td>15.000,00</td><td></td><td>15.000,00</td></tr>
+<tr><td>Ingresos por servicios</td><td>0,00</td><td>5.500,00</td><td></td><td>5.500,00</td></tr>
+<tr><td><strong>Totales</strong></td><td><strong>26.865,00</strong></td><td><strong>26.865,00</strong></td><td><strong>21.520,00</strong></td><td><strong>21.520,00</strong></td></tr>
+</tbody></table></div>
+
+<div class="concepto">
+<h4>Pausa para razonar: ¿qué prueba el balance?</h4>
+<p>Los totales de las dos columnas coinciden, y también los saldos. Antes de leer la explicación, escribe qué prueba esa igualdad y qué no prueba. ¿Podrías asegurar que la factura de arriendo se registró en la cuenta correcta solo porque el balance cuadra?</p>
+<p class="ayuda">Si respondiste que la igualdad prueba la aritmética del traslado y no la clasificación, vas bien. Un error de cuenta que mantenga el mismo importe en ambos lados deja el balance cuadrado. La clasificación se revisa con el documento y con la naturaleza de la operación.</p>
+</div>
+
+<h3>9. Cinco ejercicios para practicar</h3>
+<p>Los siguientes cinco ejercicios recorren el mismo mes. Trabaja cada uno por escrito, en tu cuaderno, antes de abrir la solución. Cada ejercicio indica el tiempo orientativo y tiene una ayuda para empezar.</p>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. ¿Qué es una transacción y desde qué empresa se registra?</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad clasificarás cuatro documentos de la empresa y justificarás cuáles se registran. Documento A: aporte de los socios en efectivo. Documento B: cotización de un proveedor de útiles, sin compra confirmada. Documento C: factura de venta de un servicio a crédito. Documento D: comprobante de un pago de 345,00 dólares a un proveedor de útiles, a cuenta de una factura ya recibida. Para cada documento, indica si genera un asiento en este mes y por qué.</p>
+<p class="ayuda">Pregúntate si hubo una transferencia de bienes, servicios o dinero, o si nació un derecho o una obligación. Una propuesta no transfiere nada.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Documento A.</strong> Sí se registra. Es un aporte de los socios que aumenta Caja y el patrimonio de la empresa (asiento 1). Es un movimiento entre la empresa y sus propietarios, no un ingreso.</p>
+<p><strong>Documento B.</strong> No se registra. Una cotización es una propuesta; no hay transferencia de bienes ni nace una obligación. Registrarla crearía una compra que no ocurrió.</p>
+<p><strong>Documento C.</strong> Sí se registra. El servicio se prestó y nace un derecho a cobrar. Es el asiento 4.</p>
+<p><strong>Documento D.</strong> Sí se registra, como pago de una deuda ya reconocida: disminuye Proveedores por pagar y Caja. Es exactamente el asiento 7. La factura a la que responde ya se registró el día 3, así que el pago no crea un gasto nuevo.</p>
+<p><strong>Comprobación.</strong> En cada documento que sí se registra hubo un cambio real en recursos o en obligaciones. El que no se registra es solo una propuesta.</p>
+<p><strong>Error frecuente:</strong> registrar una cotización porque tiene un importe alto. El importe no decide; lo decide la transferencia o el nacimiento de un derecho u obligación.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un documento es una fuente de datos. El asiento solo nace cuando la operación cambia la situación de la empresa.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Gasto o activo para los útiles de oficina</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad justificarás la cuenta del asiento 2. Supongamos que los útiles de oficina comprados el día 3 se usan íntegramente durante el mes. Explica por qué la base de 600,00 dólares se registra como gasto y no como activo, y describe qué cambiaría si esos útiles siguieran en la oficina sin usarse al cierre del mes.</p>
+<p class="ayuda">Piensa en cuánto tiempo beneficia el recurso a la empresa y en qué momento se consume. Después imagina el mismo bien sin uso al cierre.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Razonamiento.</strong> Un activo es un recurso que la empresa controla y del que espera beneficios en períodos futuros. Si los útiles se consumen durante el mismo mes, su beneficio ya se aprovechó en ese mes. Por eso, en este caso y bajo el supuesto de consumo, la base se registra como gasto del período.</p>
+<p><strong>Qué cambiaría.</strong> Si al cierre quedaran útiles sin usar, la parte no consumida seguiría siendo un recurso con beneficio futuro. Esa parte no debería quedar en el gasto del mes, y la clasificación tendría que revisarse para separar lo consumido de lo que queda.</p>
+<p><strong>Importante.</strong> El IVA de 90,00 dólares no cambia con la clasificación. Es un derecho frente al SRI en cualquier caso, porque la compra se hizo para la actividad gravada de la empresa.</p>
+<p><strong>Comprobación.</strong> Gasto 600,00 + crédito 90,00 = 690,00, igual al total de la factura y a la deuda que se registró con el proveedor.</p>
+<p><strong>Error frecuente:</strong> clasificar el bien por su nombre físico, papel o tinta, y no por el uso que le da la empresa. La clasificación depende del uso y del período en que se consume.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Lo que decide la cuenta es el uso del recurso y el momento en que beneficia a la empresa. El mismo bien físico puede ser gasto en un caso y activo en otro.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Arriendo con una base distinta</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad recalcularás el arriendo del asiento 3. Supongamos que la base del arriendo fuera de 1.500,00 dólares, con IVA de 15 % y retención de 10 % sobre la base sin IVA. Calcula el IVA, el total de la factura, la retención y el pago neto. Después escribe el asiento correspondiente.</p>
+<p class="ayuda">Primero calcula la base por el IVA y el total. Después calcula la retención sobre la base, no sobre el total.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Cálculo.</strong> IVA = 1.500,00 × 0,15 = 225,00. Total = 1.725,00. Retención = 1.500,00 × 0,10 = 150,00. Pago neto = 1.725,00 − 150,00 = 1.575,00.</p>
+<p><strong>Asiento.</strong> Debe Gasto de arriendo 1.500,00; Debe Crédito tributario de IVA 225,00; Haber Caja 1.575,00; Haber Retención de renta por pagar 150,00. Glosa: P/R arriendo de la oficina; pago neto con retención de renta del 10 % sobre la base sin IVA.</p>
+<p><strong>Comprobación.</strong> Debe 1.500,00 + 225,00 = 1.725,00; haber 1.575,00 + 150,00 = 1.725,00.</p>
+<p><strong>Interpretación.</strong> El gasto sube a 1.500,00 y la retención a 150,00. Si la retención se calculara sobre el total de 1.725,00, saldría una cifra distinta; por eso la base importa.</p>
+<p><strong>Error frecuente:</strong> aplicar la retención sobre el total con IVA, que daría 172,50 dólares. La convención del curso usa la base sin IVA.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Cada cifra del asiento tiene una base distinta. Escribir la base y el impuesto por separado evita confundir el gasto con el total pagado.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Cambiar un cobro y recalcular dos saldos</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad recalcularás dos saldos. Supongamos que el cobro del asiento 6 fue de 1.800,00 dólares y no de 2.300,00. El resto de los asientos no cambia. Calcula el saldo de Caja y el de Cuentas por cobrar a clientes, y explica por qué cambian en sentido contrario.</p>
+<p class="ayuda">Un cobro menor deja más deuda pendiente del cliente y menos efectivo en la caja. Calcula cada saldo con los movimientos que cambian.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Caja.</strong> Debe 15.000,00 + 1.725,00 + 1.800,00 = 18.525,00. Haber 1.605,00. Saldo = 18.525,00 − 1.605,00 = 16.920,00 deudor.</p>
+<p><strong>Cuentas por cobrar.</strong> Debe 4.600,00. Haber 1.800,00. Saldo = 4.600,00 − 1.800,00 = 2.800,00 deudor.</p>
+<p><strong>Comprobación.</strong> Caja: 16.920,00 + 1.605,00 = 18.525,00. Cuentas por cobrar: 2.800,00 + 1.800,00 = 4.600,00. El balance sigue cuadrando con los nuevos totales.</p>
+<p><strong>Interpretación.</strong> Los saldos cambian en 500,00 dólares en sentido contrario: menos efectivo y más deuda del cliente. El ingreso no cambia, porque se reconoció en el asiento 4 cuando se prestó el servicio.</p>
+<p><strong>Error frecuente:</strong> cambiar el ingreso por el cobro. El ingreso depende del servicio prestado; el cobro solo cambia la forma del derecho.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un movimiento afecta dos cuentas. Cuando cambias una cifra, recalcula las dos cuentas que la contienen y comprueba que el cambio sea coherente.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: un crédito mayor que el cobrado</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad liquidarás el IVA del mes en una variante. Supongamos que el crédito tributario del mes fuera de 900,00 dólares y no de 270,00, por compras adicionales de ese mes que no aparecen en los demás asientos. El IVA cobrado sigue siendo de 825,00 dólares. Escribe el asiento de liquidación y explica qué saldo queda y en qué lado.</p>
+<p class="ayuda">Compensa solo hasta el monto menor. Lo que sobra del derecho queda como saldo deudor de crédito tributario.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento.</strong> Debe IVA cobrado 825,00; Haber Crédito tributario de IVA 825,00. Glosa: P/R compensación del IVA cobrado con el crédito tributario hasta el monto menor.</p>
+<p><strong>Saldos.</strong> IVA cobrado: 825,00 − 825,00 = 0,00. Crédito tributario: 900,00 − 825,00 = 75,00 deudor.</p>
+<p><strong>Comprobación.</strong> El asiento cuadra: 825,00 = 825,00. El saldo deudor de 75,00 más la compensación de 825,00 da el crédito total de 900,00.</p>
+<p><strong>Interpretación.</strong> En esta variante no hay IVA por pagar. Queda un derecho de 75,00 dólares que se arrastra al mes siguiente, porque el crédito fue mayor que el cobrado.</p>
+<p><strong>Error frecuente:</strong> presentar el saldo de 75,00 dólares como IVA por pagar. Ese saldo es un derecho de la empresa frente al SRI, no una deuda con él.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La compensación cancela el monto menor. El saldo que queda siempre está en el lado de la cuenta que era mayor, y su naturaleza indica si es un derecho o una obligación.</p></div>
+</div>
+
+<h3>10. Cierre de la sesión</h3>
+<p>Volvamos a la pregunta de la apertura: cómo se convierte el montón de papeles en un balance legible. La respuesta es el recorrido que hiciste: cada documento sirvió para escribir un asiento; cada asiento se trasladó a sus cuentas; cada cuenta tiene un saldo que se lee según su naturaleza; y el balance comprueba que la aritmética del traslado es coherente. Al cierre del mes, la empresa tiene 17.420,00 dólares de caja, 2.300,00 dólares por cobrar a su cliente, 555,00 dólares de IVA por pagar y 120,00 dólares retenidos al SRI.</p>
+<p>La idea que debes llevarte es que el balance confirma la igualdad de los traslados, no la exactitud de cada registro. Un asiento puede cuadrar y tener la cuenta equivocada. La revisión combina el documento, el uso que la empresa da al recurso y la naturaleza de cada cuenta. Esa revisión es el objetivo de la sesión 02.</p>
+<p>Para revisar por dificultad: si no sabes qué documento registrar, relee la sección 1 y el ejercicio 1; si dudas entre gasto y activo, relee la pausa de la sección 2 y el ejercicio 2; si tu liquidación de IVA no cuadra, revisa la sección 3 y el cálculo 2; si el pago neto del arriendo te confunde, relee la sección 4 y el cálculo 3.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Documento fuente:</strong> comprobante que prueba que una operación ocurrió y entrega sus cifras.</li>
+<li><strong>Crédito tributario de IVA:</strong> derecho de la empresa frente al SRI por el IVA que pagó en sus compras.</li>
+<li><strong>IVA cobrado:</strong> obligación frente al SRI por el IVA que cobró en sus ventas o servicios.</li>
+<li><strong>Retención de renta:</strong> parte del pago que el agente de retención descuenta como anticipo del impuesto a la renta, y que queda como obligación con el SRI.</li>
+<li><strong>Separación patrimonial:</strong> distinción entre lo que pertenece a la empresa y lo que pertenece a sus socios o a una persona.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval1" data-panel="eval1" aria-labelledby="t-eval1">
+<h2 id="t-eval1">Evaluación de la sesión 01 · Un mes de operaciones</h2>
+<p class="meta">Semana 7 · Unidades 2 y 3 · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="1"></div>
+</section>
+
+<section class="pestana" id="ses02" data-panel="ses02">
+<h2>Sesión 02 · Caso integrador: reunir lo aprendido y declarar lo que falta</h2>
+<p class="meta">Semana 7 · Unidades 1 y 2 · Cierre del primer parcial: caso integrador de las unidades 1 y 2; identificación y declaración de datos incompletos; orientaciones para el examen (sesión global 19) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>La contadora de Servicios Logísticos Andes Global S. A. terminó el mes que trabajaste en la sesión 01. Tiene el balance de comprobación, la liquidación del IVA y una carpeta de documentos. El gerente le pregunta tres cosas: cuánto efectivo tiene la empresa, cuánto debe al Estado y si el balance es confiable. Las dos primeras preguntas tienen respuestas con los documentos. La tercera exige algo más: decir qué puede afirmarse, qué no y qué falta para completar la respuesta.</p>
+<p>Esta sesión reúne las unidades 1 y 2. Vas a usar la partida doble, la naturaleza de las cuentas, el IVA y la retención, el ciclo del diario al mayor y el balance. Al terminar podrás identificar los datos incompletos de un caso y declararlos sin inventar cifras; detectar un error que el balance no revela; corregir un asiento con su efecto sobre los saldos; y ordenar tu estudio para el examen de la semana 8.</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. Qué tiene la contadora y qué le falta</h3>
+<p>Un caso integrador no es una lista de cuentas: es una pregunta que pide decidir qué se sabe con certeza. Por eso conviene empezar por el inventario de documentos. La tabla 3 relaciona cada asiento de la sesión 01 con el documento que lo respalda, y señala lo que el documento no permite confirmar. Observa que ningún documento falta por completo; lo que falta, en varios casos, es un dato que ese documento debía traer o un documento complementario.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 3. Documentos del mes de Servicios Logísticos Andes Global S. A. y datos que no permiten confirmar (datos didácticos)</caption>
+<thead><tr><th>Asiento</th><th>Documento que lo respalda</th><th>Qué permite confirmar</th><th>Qué no permite confirmar</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Comprobante de depósito de los socios (supuesto)</td><td>Entrada de 15.000,00 dólares a caja y el aporte del capital</td><td>Nada relevante; el depósito consta.</td></tr>
+<tr><td>2</td><td>Factura de Distribuidora Papelera Litoral S. A.</td><td>Base 600,00, IVA 90,00 y deuda de 690,00</td><td>Nada relevante para el mes.</td></tr>
+<tr><td>3</td><td>Factura del arriendo y comprobante del pago neto</td><td>Base 1.200,00 y pago neto de 1.260,00</td><td>No consta el tipo de inmueble ni si el contrato causa IVA. No consta el comprobante de retención entregado al arrendador.</td></tr>
+<tr><td>4</td><td>Factura a Importadora Pacífico Sur S. A.</td><td>Ingreso de 4.000,00 y derecho a cobrar de 4.600,00</td><td>Nada relevante para el mes.</td></tr>
+<tr><td>5</td><td>Factura a cliente ocasional</td><td>Ingreso de 1.500,00 y cobro de 1.725,00</td><td>No consta la identificación del cliente en la factura.</td></tr>
+<tr><td>6</td><td>Comprobante de cobro de 2.300,00 dólares</td><td>Cobro parcial de la factura del asiento 4</td><td>Nada relevante para el mes.</td></tr>
+<tr><td>7</td><td>Comprobante de pago de 345,00 dólares</td><td>Pago a cuenta de la deuda con el proveedor</td><td>No indica si corresponde a la factura del día 3 o a otra factura del mismo proveedor.</td></tr>
+<tr><td>8</td><td>Resumen de IVA del mes</td><td>IVA cobrado 825,00; crédito 270,00; IVA por pagar 555,00</td><td>No consta el arqueo de caja, es decir, el conteo del efectivo al cierre que permita contrastar el saldo de 17.420,00 dólares.</td></tr>
+</tbody></table></div>
+
+<h3>2. Declarar un dato faltante: la estructura de la respuesta</h3>
+<p>Cuando falta un dato, la tentación es llenar el hueco con una cifra razonable. Eso produce un balance que parece completo y no lo es. La alternativa profesional es declarar la insuficiencia con una estructura fija de tres partes. Primero se dice qué puede concluirse con los documentos disponibles. Después se dice qué no puede concluirse, y por qué. Por último se identifica el documento o dato que permitiría resolverlo. Esa estructura no es una excusa: es la respuesta completa cuando la información es insuficiente.</p>
+<p>Apliquémosla al caso. Con los documentos disponibles puede concluirse que la empresa debe 555,00 dólares de IVA al SRI, siempre que las facturas de la sesión 01 estén completas y correctamente clasificadas. No puede concluirse que el efectivo de 17.420,00 dólares exista en la caja, porque no consta un arqueo. El documento que lo resolvería es el arqueo de caja al cierre del mes, firmado por quien lo realizó. Observa que la conclusión está condicionada: el supuesto «siempre que» explica la base de la afirmación.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar: ¿qué conclusión es defendible?</h4>
+<p>El asiento 7 pagó 345,00 dólares a un proveedor, pero el comprobante no dice a qué factura corresponde. Escribe, con la estructura de tres partes, qué puedes concluir sobre la deuda con ese proveedor y qué dato te falta.</p>
+<p class="ayuda">Puedes concluir que la deuda total con el proveedor, si el pago corresponde a la factura del día 3, es de 345,00 dólares. No puedes concluir que el pago corresponde a esa factura. El documento que lo resolvería es el comprobante de pago con la referencia de la factura, o la confirmación del proveedor.</p>
+</div>
+
+<h3>3. Lo que sí puede concluirse del mes</h3>
+<p>Con los datos disponibles se pueden afirmar varias cifras. Los ingresos por servicios del mes son 5.500,00 dólares: 4.000,00 de servicios a crédito y 1.500,00 cobrados al contado. El gasto de suministros es 600,00 y el gasto de arriendo es 1.200,00, de modo que la diferencia entre ingresos y gastos del mes es 3.700,00 dólares. Esa diferencia es un resultado del período; en la unidad 4 aprenderás a presentarlo en el estado de resultados. Por ahora basta con no confundirla con el efectivo: la caja tiene 17.420,00 dólares porque el aporte de los socios entró en efectivo, no porque la empresa haya ganado esa cifra en el mes. Ese es el error que más se repite en esta materia: confundir utilidad con efectivo disponible.</p>
+<p>También puede afirmarse que la liquidación del IVA es coherente con los asientos 2, 3, 4 y 5, porque el IVA cobrado de 825,00 y el crédito de 270,00 se trasladaron con las mismas cifras. Y que la retención de 120,00 es una obligación frente al SRI por el arriendo, con la base sin IVA y la tasa del 10 % que la tabla vigente aplica a este tipo de pago.</p>
+
+<div class="concepto">
+<h4>Cálculo 4. Diferencia entre ingresos y gastos del mes (anticipación no evaluable)</h4>
+<p><strong>Situación.</strong> El gerente quiere saber si el mes dejó más ingresos que gastos.</p>
+<p><strong>Supuestos y finalidad.</strong> Se usan los saldos de la tabla 2. Este cálculo es una anticipación: el estado de resultados se estudiará en la unidad 4, y no se evalúa aquí.</p>
+<p><strong>Qué buscamos.</strong> La diferencia entre el saldo acreedor de Ingresos por servicios y la suma de los saldos deudores de gastos, en dólares.</p>
+<p><strong>Datos y origen.</strong> Ingresos por servicios: 5.500,00 acreedor. Gasto de suministros: 600,00 deudor. Gasto de arriendo: 1.200,00 deudor.</p>
+<p><strong>Por qué esta operación.</strong> Los ingresos aumentan en el haber y los gastos en el debe; comparar ambos saldos da la diferencia del período.</p>
+<p><strong>Procedimiento.</strong> Gastos = 600,00 + 1.200,00 = 1.800,00. Diferencia = 5.500,00 − 1.800,00 = 3.700,00.</p>
+<p><strong>Resultado.</strong> 3.700,00 dólares de diferencia positiva.</p>
+<p><strong>Comprobación.</strong> La diferencia más los gastos debe dar los ingresos: 3.700,00 + 1.800,00 = 5.500,00. Es una comprobación de la suma, no de la clasificación.</p>
+<p><strong>Interpretación.</strong> El mes dejó 3.700,00 dólares de diferencia positiva. Esa cifra no es efectivo: la caja tiene 17.420,00 dólares, porque el aporte de los socios entró en efectivo y el cobro de la factura a crédito aún no se refleja en su totalidad.</p>
+</div>
+
+<h3>4. Un error que el balance no detecta</h3>
+<p>Imagina que el asiento 3 del arriendo se registró mal. En la versión equivocada, el total de la factura, 1.380,00 dólares, se cargó al gasto, y el IVA de 180,00 no se registró como crédito tributario. El balance seguiría cuadrado, porque el asiento tiene igual debe y haber. Nada en la aritmética del traslado lo delata. Lo descubres al revisar el documento y la naturaleza del gasto: el IVA pagado es un derecho frente al SRI, no parte del gasto del servicio.</p>
+<p>Ahora mide el efecto. El gasto de arriendo pasa de 1.200,00 a 1.380,00: sube 180,00. El crédito tributario baja de 270,00 a 90,00. Al liquidar el IVA, el IVA cobrado de 825,00 menos el crédito de 90,00 da un IVA por pagar de 735,00, es decir, 180,00 más de lo que corresponde. La caja y la retención no cambian. Es decir, el error sobreestima la obligación con el SRI y sobreestima el gasto del mes.</p>
+
+<div class="asiento">
+<h4>Asiento 9. Corrección del arriendo: el IVA pagado es crédito tributario, no gasto (corrección de error)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Servicios Logísticos Andes Global S. A. Documento: factura de arriendo del asiento 3. Corrige la clasificación del IVA registrado como gasto en la versión equivocada.</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Crédito tributario de IVA</td><td>180,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Gasto de arriendo</td><td></td><td>180,00</td></tr>
+<tr><td><em>Glosa: P/R corrección de error: el IVA de la factura de arriendo es un derecho frente al SRI, no parte del gasto.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 180,00 = haber 180,00. Después de la corrección, el gasto de arriendo vuelve a 1.200,00 y el crédito tributario a 270,00. Esta corrección no es un ajuste de cierre: corrige una clasificación errónea que ya se había registrado.</p>
+</div>
+
+<div class="concepto">
+<h4>Cálculo 5. Efecto del error sobre el IVA por pagar</h4>
+<p><strong>Situación.</strong> Antes de corregir, hay que saber cuánto se sobreestimó la obligación con el SRI.</p>
+<p><strong>Supuestos y finalidad.</strong> Se supone que la única diferencia entre la versión equivocada y la correcta es el tratamiento del IVA del arriendo, como describe el texto.</p>
+<p><strong>Qué buscamos.</strong> El IVA por pagar en la versión equivocada, en dólares, y la diferencia con la correcta.</p>
+<p><strong>Datos y origen.</strong> IVA cobrado: 825,00 (asientos 4 y 5). Crédito tributario en la versión equivocada: 90,00 (asiento 2), porque el de 180,00 se cargó al gasto.</p>
+<p><strong>Por qué esta operación.</strong> La liquidación compara el IVA cobrado con el crédito; si el crédito es menor, la diferencia es una obligación.</p>
+<p><strong>Procedimiento.</strong> IVA por pagar equivocado = 825,00 − 90,00 = 735,00. IVA por pagar correcto = 825,00 − 270,00 = 555,00. Diferencia = 735,00 − 555,00 = 180,00.</p>
+<p><strong>Resultado.</strong> El IVA por pagar estaba sobreestimado en 180,00 dólares.</p>
+<p><strong>Comprobación.</strong> La diferencia coincide con el importe del IVA mal clasificado: 180,00 = 180,00.</p>
+<p><strong>Interpretación.</strong> Un error de clasificación puede pasar el balance y, al mismo tiempo, cambiar lo que la empresa debe pagar al SRI. Por eso la revisión del documento importa tanto como la igualdad de las columnas.</p>
+</div>
+
+<h3>5. Un balance que no cuadra: cómo buscar la pista</h3>
+<p>Cuando el balance no cuadra, la diferencia es la primera pista. Si la diferencia es múltiplo de 9, puede tratarse de una trasposición de cifras, pero también puede ser una omisión de un lado. En cualquiera de los dos casos, la pista no es la conclusión: la conclusión llega cuando encuentras el movimiento en el mayor y en el documento. Una diferencia que no se explica no se corrige sumando una cifra en la columna contraria; esa corrección oculta el error.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 4. Resumen de las dos versiones del balance del caso (dólares)</caption>
+<thead><tr><th>Concepto</th><th>Versión correcta</th><th>Versión con el error del arriendo</th></tr></thead>
+<tbody>
+<tr><td>Gasto de arriendo (saldo deudor)</td><td>1.200,00</td><td>1.380,00</td></tr>
+<tr><td>Crédito tributario de IVA (saldo)</td><td>0,00 (270,00 en debe y en haber)</td><td>0,00 (90,00 en debe y en haber)</td></tr>
+<tr><td>IVA por pagar (saldo acreedor)</td><td>555,00</td><td>735,00</td></tr>
+<tr><td>Retención de renta por pagar (saldo acreedor)</td><td>120,00</td><td>120,00</td></tr>
+<tr><td>Totales de cada columna del balance</td><td>Igual en ambas columnas</td><td>Igual en ambas columnas</td></tr>
+</tbody></table></div>
+
+<p>Observa la última fila de la tabla 4. El balance del error también cuadra. Es la prueba de que la igualdad no basta: el error cambia el gasto, el IVA y la obligación, y el balance lo deja pasar porque el asiento está equilibrado. Esa es la lección que el examen suele evaluar.</p>
+
+<h3>6. Orientaciones para el examen de la semana 8</h3>
+<p>El examen del primer parcial es escrito y teórico-práctico. Cubre las unidades 1 y 2, es decir, las sesiones globales 01 a 19 del plan analítico. Según el plan, el examen pesa 3,4 de los 10 puntos del parcial. La fecha y el aula las asigna la Facultad. Estas orientaciones sirven para organizar el estudio; no describen preguntas concretas, que el docente define.</p>
+<p>Para estudiar, organiza el repaso por bloques. En la unidad 1, asegúrate de manejar la clasificación de las empresas, los usuarios de la información, la estructura del marco conceptual, la cuenta contable con su debe y su haber, la ecuación contable, el plan de cuentas y los asientos simples y compuestos. En la unidad 2, asegúrate de distinguir IVA pagado e IVA cobrado, liquidar el IVA, identificar la retención de IVA y la de renta, mayorizar, preparar el balance de comprobación y declarar datos incompletos.</p>
+<p>Una estrategia útil es responder cada pregunta con tres pasos: identificar el documento y la empresa que registra; decidir el lado y la cuenta según la naturaleza; y comprobar el resultado con una segunda vía, como la igualdad de los traslados o el orden de magnitud. Cuando una pregunta sea teórica, explica la relación entre dos conceptos, no solo la definición. Cuando sea de análisis, identifica primero qué falta: un dato, una cuenta o un documento.</p>
+<p>Evita tres errores frecuentes. El primero es confundir ingreso con cobro, o gasto con pago. El segundo es creer que un balance cuadrado está bien registrado. El tercero es llenar un dato faltante con una cifra cómoda. Si tienes dudas sobre un tema, vuelve a la sección donde se trató y a su ejercicio antes de abrir cualquier solución.</p>
+
+<h3>7. Cinco ejercicios del caso integrador</h3>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Qué documento respalda cada asiento</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad identificarás, para los asientos 4 y 6, el documento que los respalda y la información que ese documento permite confirmar. Después señala uno de los dos asientos cuyo respaldo no permite confirmar algún dato relevante.</p>
+<p class="ayuda">Usa la tabla 3. Pregúntate qué cifra del asiento aparece en el documento y cuál no.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento 4.</strong> El documento es la factura a Importadora Pacífico Sur S. A. por 4.600,00 dólares: base 4.000,00 e IVA 600,00. Permite confirmar el ingreso, el IVA cobrado y el derecho a cobrar.</p>
+<p><strong>Asiento 6.</strong> El documento es el comprobante de cobro de 2.300,00 dólares. Permite confirmar la entrada a caja y la reducción de la cuenta por cobrar. No cambia el ingreso.</p>
+<p><strong>Dato relevante no confirmable.</strong> En el asiento 4 todo consta. El caso que sí tiene un dato que el documento no confirma es el asiento 5 (cliente ocasional, sin identificación) o el asiento 7 (pago sin referencia de factura). Si eliges el asiento 7, tu explicación debe mencionar que el comprobante no indica a qué factura corresponde.</p>
+<p><strong>Comprobación.</strong> Cada cifra del asiento debe poder rastrearse a un documento. Si una cifra no aparece en ninguno, es un dato por declarar.</p>
+<p><strong>Error frecuente:</strong> dar por confirmado un asiento solo porque cuadra. Lo que confirma el documento es el dato, no la igualdad.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un documento respalda cifras concretas. Antes de registrar o de concluir, identifica qué cifra tienes respaldada y cuál no.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. La pista de una diferencia de 90,00 dólares</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad analizarás un balance que no cuadra. Un compañero mayorizó el mes y presenta un balance con debe total de 26.865,00 dólares y haber total de 26.775,00 dólares. Explica qué pista da la diferencia, en qué cuenta la buscarías y qué tipo de error podría ser. No corrijas sumando una cifra en la columna contraria.</p>
+<p class="ayuda">Calcula la diferencia. Después pregúntate qué importe del mes vale lo mismo y en qué cuenta aparece.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Diferencia.</strong> 26.865,00 − 26.775,00 = 90,00 dólares, con más debe que haber.</p>
+<p><strong>Pista.</strong> 90,00 es múltiplo de 9 (9 × 10 = 90). Eso sugiere una trasposición o una omisión de un lado. Como la diferencia es exacta y coincide con un importe del mes, la hipótesis más directa es que falta un haber de 90,00.</p>
+<p><strong>Búsqueda.</strong> El importe 90,00 aparece en el asiento 2, como IVA pagado por la compra de útiles, y en la liquidación, como crédito de 90,00 que forma parte de los 270,00. Si el compañero mayorizó el asiento 2 y no la liquidación del asiento 8 en la cuenta Crédito tributario de IVA, esa cuenta quedó con 180,00 en el haber en lugar de 270,00.</p>
+<p><strong>Corrección.</strong> Se mayoriza el haber de 90,00 que falta, en la cuenta Crédito tributario de IVA. Después se recalcula el balance: haber total 26.865,00, igual al debe.</p>
+<p><strong>Comprobación.</strong> El balance corregido cuadra porque el movimiento faltante se encontró en el mayor y en el asiento, no porque se haya sumado una cifra para igualar.</p>
+<p><strong>Error frecuente:</strong> sumar 90,00 al haber sin buscar el origen. Ese cuadre oculta la omisión y deja una cuenta con un saldo incorrecto.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La diferencia indica dónde buscar. El origen se encuentra en el mayor y en el asiento; la igualdad solo confirma que el hallazgo es coherente.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Declarar la insuficiencia en tres partes</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad redactarás la declaración de datos incompletos sobre el arriendo del asiento 3. Escribe tres frases: qué puede concluirse con los documentos, qué no puede concluirse y qué documento lo resolvería. Usa la retención de 120,00 dólares como ejemplo.</p>
+<p class="ayuda">Piensa en el comprobante de retención que la empresa debió entregar al arrendador. Si no está, ¿qué no puedes concluir?</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Qué puede concluirse.</strong> Con la factura de arriendo y el asiento 3, puede concluirse que la empresa tiene una obligación de 120,00 dólares frente al SRI por la retención del 10 % sobre la base de 1.200,00 dólares, siempre que el contrato corresponda al arriendo de un bien inmueble y la base sea la del documento.</p>
+<p><strong>Qué no puede concluirse.</strong> No puede concluirse que la retención haya sido comunicada al SRI con el comprobante correspondiente, porque no consta el comprobante de retención entregado al arrendador.</p>
+<p><strong>Documento que lo resolvería.</strong> El comprobante de retención emitido al arrendador, con la fecha del pago y el importe retenido.</p>
+<p><strong>Comprobación.</strong> La declaración tiene tres partes, cada una con su condición. Si alguna falta, la declaración queda incompleta.</p>
+<p><strong>Error frecuente:</strong> escribir «la retención está bien registrada» sin decir bajo qué condición ni qué documento falta.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La estructura de tres partes obliga a separar lo que sabes de lo que supones. Esa separación es el núcleo del pensamiento crítico contable.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Efecto de la corrección sobre el gasto y el IVA</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad medirás el efecto de un error de clasificación. Supongamos que el asiento 3 se registró con el total de la factura, 1.380,00 dólares, como gasto, y que el IVA no se registró como crédito. Escribe el asiento de corrección y calcula, antes y después, el gasto de arriendo, el crédito tributario y el IVA por pagar.</p>
+<p class="ayuda">Piensa primero en qué cuenta quedó con el importe de más y en qué cuenta falta el importe.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento de corrección.</strong> Debe Crédito tributario de IVA 180,00; Haber Gasto de arriendo 180,00. Glosa: P/R corrección de error en el IVA del arriendo.</p>
+<p><strong>Antes.</strong> Gasto de arriendo 1.380,00; crédito tributario 90,00; IVA por pagar 735,00.</p>
+<p><strong>Después.</strong> Gasto de arriendo 1.200,00; crédito tributario 270,00; IVA por pagar 555,00.</p>
+<p><strong>Comprobación.</strong> El asiento cuadra: 180,00 = 180,00. El gasto baja en 180,00, el crédito sube en 180,00 y el IVA por pagar baja en 180,00. La suma de los cambios de los saldos deudores y acreedores es coherente.</p>
+<p><strong>Interpretación.</strong> La corrección no cambia la caja ni la retención, pero reduce la obligación con el SRI y el gasto del mes. Una corrección así debe explicarse en el registro, para que quien revise el mes entienda por qué cambió el saldo.</p>
+<p><strong>Error frecuente:</strong> corregir solo el gasto y olvidar el crédito. Entonces el asiento no cuadra o el balance deja de ser coherente.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un error de clasificación casi siempre mueve dos cuentas. Antes de corregir, identifica las dos cuentas afectadas y el importe que cambia.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Transferir la idea a otro servicio</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad aplicarás el criterio a una situación parcialmente diferente. Supongamos que Servicios Logísticos Andes Global S. A. paga en efectivo un servicio de mantenimiento de sus equipos de oficina: base 300,00 dólares, IVA de 15 % y total 345,00 dólares. Supongamos que el servicio causa IVA de 15 %. Escribe el asiento y explica qué cuentas cambian frente al arriendo.</p>
+<p class="ayuda">Identifica qué recibe la empresa, cuánto se consume en el mes y qué pasa con el IVA.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Asiento.</strong> Debe Gasto de mantenimiento 300,00; Debe Crédito tributario de IVA 45,00; Haber Caja 345,00. Glosa: P/R mantenimiento de equipos de oficina pagado en efectivo, con IVA de 15 %.</p>
+<p><strong>Comprobación.</strong> Debe 300,00 + 45,00 = 345,00 = haber 345,00.</p>
+<p><strong>Qué cambia frente al arriendo.</strong> No aparece retención de renta, porque en este supuesto el pago no está en el caso como retención. La cuenta de gasto cambia por la naturaleza del servicio, y el IVA sigue siendo un derecho frente al SRI.</p>
+<p><strong>Interpretación.</strong> El criterio es el mismo: el gasto es la base del servicio recibido, el IVA pagado es un derecho y la caja sale por el total. Lo que cambia es la cuenta de gasto y la presencia de una retención.</p>
+<p><strong>Error frecuente:</strong> aplicar retención a todo pago. La retención depende del concepto y de la tabla vigente, no de que el pago exista.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>Un criterio transferible no depende de los números del caso, sino de la pregunta que te haces: qué recibe la empresa, qué consume, qué derecho u obligación nace.</p></div>
+</div>
+
+<h3>8. Cierre de la sesión</h3>
+<p>Volvamos a la pregunta del gerente. Puedes responder que la empresa debe 555,00 dólares al SRI, si el IVA del mes está bien clasificado; que la caja tiene 17.420,00 dólares, si el arqueo lo confirma; y que el balance cuadra, pero que cuadrar no prueba que cada registro sea correcto. Esa respuesta, con sus condiciones, es la conclusión del caso integrador.</p>
+<p>La idea central es que el trabajo contable no termina cuando el balance cuadra. Hay que reunir los documentos, identificar lo que confirman, declarar lo que falta y medir el efecto de cada error. Esa es la competencia que evalúa el examen de la semana 8.</p>
+<p>Para revisar por dificultad: si no sabes qué declarar, relee la sección 2 y el ejercicio 3; si una diferencia en el balance te confunde, relee la sección 5 y el ejercicio 2; si el efecto de un error no lo calculas, revisa el cálculo 5 y el ejercicio 4.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Caso integrador:</strong> situación que reúne varias unidades y pide decidir qué se sabe, qué se supone y qué falta.</li>
+<li><strong>Arqueo de caja:</strong> conteo del efectivo disponible en una fecha, para contrastarlo con el saldo de la cuenta Caja.</li>
+<li><strong>Trasposición:</strong> error en el que dos cifras se escriben en orden cambiado; produce diferencias múltiplos de 9.</li>
+<li><strong>Corrección de error:</strong> asiento que reclasifica un movimiento ya registrado de forma equivocada.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval2" data-panel="eval2" aria-labelledby="t-eval2">
+<h2 id="t-eval2">Evaluación de la sesión 02 · Caso integrador y datos incompletos</h2>
+<p class="meta">Semana 7 · Unidades 2 y 3 · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="2"></div>
+</section>
+
+<section class="pestana" id="ses03" data-panel="ses03">
+<h2>Sesión 03 · Inventarios: alcance, costo y valor neto realizable (NIC 2)</h2>
+<p class="meta">Semana 7 · Unidad 3 · Tratamiento de los inventarios: NIC 2, alcance, definiciones y medición (sesión global 20) · Tiempo orientativo: 120 minutos</p>
+
+<div class="nota-lateral">
+<h3>Antes de empezar</h3>
+<p>Comercializadora Costa Verde Cía. Ltda. compra camisetas terminadas para venderlas. Supongamos que el 4 de julio compró un lote de 100 camisetas por 1.080,00 dólares sin IVA, y que el IVA de 162,00 dólares es un derecho frente al SRI. Esas camisetas no son un gasto: la empresa las tiene para venderlas, así que son inventario. Pero ¿cuánto vale ese inventario en el balance? La respuesta depende de dos cosas: lo que costó y lo que la empresa espera recibir por venderlo. Esta sesión muestra por qué la contabilidad usa la cifra menor de ambas.</p>
+<p>Al terminar podrás distinguir qué partidas forman el costo de un inventario y cuáles no; calcular el costo unitario de un lote; explicar qué es el valor neto realizable y por qué se compara con el costo; y prever el efecto de un deterioro sin registrarlo todavía como operación del caso. El tema es una introducción: los métodos de costeo (FIFO y promedio ponderado) se estudian en la unidad 3 de las semanas siguientes.</p>
+<p><strong>Distribución orientativa:</strong> apertura 5 minutos; explicación con pausas 40; cinco ejercicios 50; evaluación y revisión 20; cierre 5.</p>
+</div>
+
+<h3>1. Qué es un inventario y para qué lo tiene la empresa</h3>
+<p>Un inventario es un activo que la empresa mantiene para venderlo en el curso normal de sus operaciones, o que está en proceso de producción para esa venta, o que consume en la prestación de servicios. Esta es la definición que usa la NIC 2. La clave está en el uso: el mismo tipo de bien puede ser inventario en una empresa y no serlo en otra. Una camiseta en la bodega de Costa Verde es inventario porque la empresa la compró para revender. La misma camiseta, comprada por una empresa de servicios para vestir a su personal, no es inventario para vender: es un bien para uso, y se trata de otra manera.</p>
+<p>Esa diferencia responde a la pregunta que ya practicaste en la sesión 01: ¿qué hace la empresa con el recurso? La NIC 2 aplica a los inventarios que se adquieren o se producen para la venta, y no a todos los bienes físicos que una empresa posee. Por eso no conviene clasificar por el nombre del objeto. Una caja de cartón puede ser inventario de un distribuidor de empaques, y un gasto de suministros para una oficina.</p>
+
+<h3>2. Qué entra en el costo</h3>
+<p>El costo de un inventario comprende los importes necesarios para llevarlo a su lugar y condición actuales. Para una compra, la NIC 2 indica que entran el precio de compra, los aranceles y otros impuestos no recuperables, y los costos de transporte, manipulación y otros directamente atribuibles a la adquisición. Se descuentan los descuentos comerciales, las rebajas y otros elementos similares. Lo que no entra en el costo son los costos de almacenamiento que no sean necesarios para el proceso, los costos de venta y, como aclararemos enseguida, el IVA que la empresa puede recuperar.</p>
+<p>El último punto es el que más confusión produce. El IVA pagado en una compra es un derecho frente al SRI, un crédito tributario, porque la empresa lo recupera al liquidar. No forma parte del costo del inventario: si lo incluyéramos, el costo estaría inflado con un importe que la empresa recibirá de vuelta. Un impuesto no recuperable, en cambio, sí es parte del costo; por ejemplo, un impuesto que la empresa no puede descontar. La línea que separa uno de otro es la posibilidad de recuperarlo.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar: ¿qué entra en el costo?</h4>
+<p>Costa Verde paga 1.080,00 dólares por las camisetas más 162,00 dólares de IVA, y 30,00 dólares de transporte hasta su bodega, transporte que no tiene IVA. Antes de seguir, decide qué importe es el costo del inventario y por qué los otros no lo son.</p>
+<p class="ayuda">Pregúntate qué importe recupera la empresa de vuelta, y qué importe es necesario para dejar las camisetas en la bodega lista para vender. El transporte sí cuenta, aunque no sea el precio del producto.</p>
+</div>
+
+<h3>3. El costo unitario de un lote</h3>
+<p>Cuando la empresa compra varias unidades en una sola operación, el costo se reparte entre ellas. El costo unitario es el costo total del lote dividido entre el número de unidades. Esa división es el primer cálculo de la sesión, y conviene escribirla con todos sus pasos. Supongamos que el costo del lote es de 1.080,00 dólares por el precio y de 30,00 dólares por el transporte; el costo total es 1.110,00 dólares, no 1.080,00. Esa precisión importa, porque el transporte es parte del costo. Para simplificar el análisis de la sección 4 usamos el costo de 1.080,00 dólares, es decir, supongamos que el transporte fue asumido por el proveedor en esa operación.</p>
+
+<div class="calc">Costo unitario = 1.080,00 ÷ 100 camisetas = 10,80 dólares por camiseta.</div>
+
+<div class="concepto">
+<h4>Cálculo 6. Costo unitario del lote</h4>
+<p><strong>Situación.</strong> Costa Verde necesita saber cuánto cuesta cada camiseta del lote para compararlo con el precio de venta.</p>
+<p><strong>Supuestos y finalidad.</strong> Supongamos que el proveedor asumió el transporte, de modo que el costo del lote es solo el precio de compra de 1.080,00 dólares sin IVA. Esto permite aislar el cálculo del costo unitario.</p>
+<p><strong>Qué buscamos.</strong> El costo unitario, en dólares por camiseta.</p>
+<p><strong>Datos y origen.</strong> Precio del lote: 1.080,00 dólares sin IVA (documento de compra del caso). Cantidad: 100 camisetas.</p>
+<p><strong>Por qué esta operación.</strong> Cuando una compra incluye varias unidades iguales, el costo se reparte en partes iguales para poder valorar cada unidad que se vende o que queda en bodega.</p>
+<p><strong>Procedimiento.</strong> 1.080,00 ÷ 100 = 10,80.</p>
+<p><strong>Resultado.</strong> 10,80 dólares por camiseta.</p>
+<p><strong>Comprobación.</strong> Multiplicar el costo unitario por la cantidad debe devolver el costo del lote: 10,80 × 100 = 1.080,00. Es una comprobación inversa, no una repetición de la división.</p>
+<p><strong>Interpretación.</strong> Si Costa Verde vende una camiseta por 15,00 dólares, el margen bruto unitario es de 4,20 dólares, sin considerar costos de venta. Ese margen no es utilidad: aún faltan los gastos del período.</p>
+</div>
+
+<h3>4. El valor neto realizable: la otra cara de la medición</h3>
+<p>El costo mide lo que la empresa pagó. Pero el inventario se mide, al cierre, por el menor entre el costo y el valor neto realizable. ¿Qué significa esto? El valor neto realizable es el precio de venta estimado en el curso normal de la operación, menos los costos estimados para terminar el producto y los costos necesarios para venderlo. La NIC 2 lo define como el precio de venta estimado en el curso ordinario del negocio, menos los costos estimados de terminación y de venta. Lo importante es la palabra estimado: el valor neto realizable no es una cifra cierta, sino una expectativa razonable a la fecha del balance.</p>
+<p>La razón de comparar con el costo es sencilla. Si el inventario va a venderse por menos de lo que costó, el balance no debe mostrarlo por encima de lo que la empresa recibirá. Llevar el inventario a su costo cuando su precio de venta cayó sería presentar un activo que no existe en esa cuantía. Esa es la prudencia que la NIC 2 exige: reconocer la pérdida cuando aparece la evidencia, no cuando se vende.</p>
+<p>Observa lo que la regla no dice. No ordena reducir el inventario por cualquier variación de precio, ni la reduce porque la venta todavía no se ha hecho. La comparación se hace a la fecha del balance y con la mejor estimación disponible. Si el precio de venta no ha cambiado y el margen es positivo, el costo se mantiene.</p>
+
+<div class="concepto">
+<h4>Pausa para razonar: ¿cuándo cambia la medición?</h4>
+<p>Costa Verde tiene el lote a 10,80 dólares por camiseta. Antes de seguir, escribe qué tendría que pasar para que la empresa tuviera que bajar el valor del lote en el balance. ¿Bastaría con que el precio de venta sea menor que el precio de compra?</p>
+<p class="ayuda">Piensa en el precio de venta estimado y en los costos necesarios para venderlo. Que el precio de compra sea mayor que el de venta no basta por sí solo: también cuentan los costos de vender y la fecha del balance.</p>
+</div>
+
+<h3>5. Dos escenarios para el mismo lote</h3>
+<p>Para comparar, supongamos que al cierre de julio hay 100 camisetas en bodega, todavía no vendidas. Supongamos que los costos necesarios para vender cada camiseta son nulos, por simplicidad del caso. El precio de venta estimado difiere entre dos escenarios. En el escenario A, el precio estimado es de 12,00 dólares por camiseta, porque el mercado se mantiene. En el escenario B, el precio estimado baja a 9,00 dólares, porque una cadena de tiendas empezó a vender camisetas similares a menor precio. Ambos escenarios son supuestos didácticos; no describen un mercado real.</p>
+
+<div class="tabla-wrap"><table>
+<caption>Tabla 5. Medición del lote de camisetas al cierre de julio en dos escenarios (dólares; supuestos didácticos)</caption>
+<thead><tr><th>Concepto</th><th>Escenario A</th><th>Escenario B</th></tr></thead>
+<tbody>
+<tr><td>Costo del lote</td><td>1.080,00</td><td>1.080,00</td></tr>
+<tr><td>Precio de venta estimado por camiseta</td><td>12,00</td><td>9,00</td></tr>
+<tr><td>Costos estimados para vender</td><td>0,00</td><td>0,00</td></tr>
+<tr><td>Valor neto realizable del lote (100 camisetas)</td><td>1.200,00</td><td>900,00</td></tr>
+<tr><td>Valor en el balance: el menor entre costo y valor neto realizable</td><td>1.080,00</td><td>900,00</td></tr>
+</tbody></table></div>
+
+<div class="concepto">
+<h4>Cálculo 7. Valor del inventario en cada escenario</h4>
+<p><strong>Situación.</strong> Costa Verde debe decidir qué valor presenta para el lote en el balance del cierre de julio.</p>
+<p><strong>Supuestos y finalidad.</strong> Se supone que los costos de venta son cero y que el precio estimado es el de cada escenario. El cálculo muestra que la comparación se hace con el lote completo, no unidad por unidad, cuando el lote es homogéneo.</p>
+<p><strong>Qué buscamos.</strong> El valor del lote en el balance, en cada escenario.</p>
+<p><strong>Datos y origen.</strong> Costo del lote: 1.080,00. Precios estimados: 12,00 (escenario A) y 9,00 (escenario B) por camiseta, según los supuestos del caso.</p>
+<p><strong>Por qué esta operación.</strong> El valor neto realizable se calcula con el precio estimado multiplicado por la cantidad, menos los costos de venta; el balance toma el menor entre costo y ese valor.</p>
+<p><strong>Procedimiento.</strong> Escenario A: valor neto realizable = 12,00 × 100 = 1.200,00; el menor entre 1.080,00 y 1.200,00 es 1.080,00. Escenario B: valor neto realizable = 9,00 × 100 = 900,00; el menor entre 1.080,00 y 900,00 es 900,00.</p>
+<p><strong>Resultado.</strong> El lote se presenta por 1.080,00 dólares en el escenario A y por 900,00 dólares en el escenario B.</p>
+<p><strong>Comprobación.</strong> La diferencia entre el costo y el valor del escenario B es 1.080,00 − 900,00 = 180,00. Ese es el monto de la pérdida de valor que el balance debería reconocer en B. Es una comprobación de la resta, no de la regla.</p>
+<p><strong>Interpretación.</strong> En el escenario A no hay ajuste. En el escenario B, el valor del lote baja en 180,00 dólares, y esa baja aparece como pérdida del período. Pero la operación de deterioro no se registra en esta sesión: aquí solo se identifica el efecto que tendría.</p>
+</div>
+
+<h3>6. La compra del lote: el asiento que sí registramos</h3>
+<p>Antes de estudiar el deterioro, registra la compra del lote. Costa Verde es la perspectiva que registra. El documento es la factura del proveedor por 1.080,00 dólares de base y 162,00 de IVA, con total 1.242,00. Supongamos que la compra se pagó de contado con transferencia bancaria. Aunque el lote es inventario, el asiento tiene una lógica ya conocida: el costo entra al activo inventario, y el IVA entra al crédito tributario. Ningún gasto nace en esta operación, porque el inventario todavía no se vendió.</p>
+
+<div class="asiento">
+<h4>Asiento 10. Compra de camisetas para vender (4 de julio)</h4>
+<div class="tabla-wrap"><table>
+<caption>Libro diario de Comercializadora Costa Verde Cía. Ltda. Documento: factura del proveedor por 100 camisetas: base 1.080,00; IVA 162,00; total 1.242,00; pagada por transferencia bancaria (supuesto del caso).</caption>
+<thead><tr><th>Cuenta y explicación</th><th>Debe (dólares)</th><th>Haber (dólares)</th></tr></thead>
+<tbody>
+<tr><td>Inventario de camisetas para la venta</td><td>1.080,00</td><td></td></tr>
+<tr><td>Crédito tributario de IVA</td><td>162,00</td><td></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Bancos</td><td></td><td>1.242,00</td></tr>
+<tr><td><em>Glosa: P/R compra de 100 camisetas para venta, con IVA de 15 %, pagada por transferencia.</em></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Comprobación: debe 1.080,00 + 162,00 = 1.242,00 = haber 1.242,00. El inventario se registra por el costo, sin el IVA, porque el IVA es recuperable. La cuenta Bancos disminuye por el total pagado, y la cuenta de inventario aumenta por lo que la empresa espera vender.</p>
+</div>
+
+<p>El asiento 10 no decide el valor del lote al cierre. Ese valor depende de la medición que acabas de estudiar. En la semana 10 verás cómo el costo de la mercadería se reconoce como costo de ventas cuando la mercadería se vende. Por ahora, el lote queda en el balance por su costo, y la pregunta sobre el deterioro queda abierta para el cierre.</p>
+
+<h3>7. Cinco ejercicios sobre el lote</h3>
+
+<div class="ejercicio">
+<h4>Ejercicio 1. Inventario o bien para uso</h4>
+<p class="tiempo">Tiempo orientativo: 8 minutos · Trabajo individual</p>
+<p>En esta actividad clasificarás tres bienes según su uso y justificarás la clasificación. Bien A: 100 camisetas que Costa Verde compró para revender. Bien B: 20 camisetas que Costa Verde compró para vestir a sus empleados de bodega. Bien C: un escritorio de oficina de la empresa. Para cada bien, indica si es inventario y explica por qué.</p>
+<p class="ayuda">Pregúntate para qué la empresa tiene cada bien y si lo vende en el curso normal de su actividad.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Bien A.</strong> Sí es inventario. La empresa lo compró para venderlo en su actividad de comercialización.</p>
+<p><strong>Bien B.</strong> No es inventario para vender. Son camisetas para uso del personal de bodega; se tratan como bienes para uso, no como mercadería. La diferencia no está en el nombre del objeto, sino en su destino.</p>
+<p><strong>Bien C.</strong> No es inventario. Es un bien de uso de la oficina, que la empresa utiliza para sus actividades. Su tratamiento corresponde a otra norma y a otra cuenta.</p>
+<p><strong>Comprobación.</strong> Cada bien se clasificó por su uso, no por el tipo de objeto. Dos camisetas pueden tener tratamientos distintos si su destino es distinto.</p>
+<p><strong>Error frecuente:</strong> clasificar como inventario todo lo que tiene la forma de un producto. Lo que decide es si la empresa lo vende.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El inventario se define por la intención de vender en el curso normal de la operación. Antes de llamar inventario a un bien, pregúntate para qué lo tiene la empresa.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 2. Costo del lote con transporte</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás el costo de un lote que incluye transporte. Supongamos que el lote de 100 camisetas cuesta 1.080,00 dólares de precio, que el transporte cuesta 30,00 dólares sin IVA y que el proveedor no lo asumió. Calcula el costo total del lote y el costo unitario. Después explica qué importe deja fuera del costo y por qué.</p>
+<p class="ayuda">Suma solo los importes que dejan el inventario en la bodega lista para vender. El IVA del transporte, si existe, es otra cosa.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Costo total.</strong> 1.080,00 + 30,00 = 1.110,00 dólares.</p>
+<p><strong>Costo unitario.</strong> 1.110,00 ÷ 100 = 11,10 dólares por camiseta.</p>
+<p><strong>Qué queda fuera.</strong> Un IVA recuperable, si lo hubiera sobre el transporte, no entra en el costo. El precio sin IVA y el transporte sí entran, porque son necesarios para tener el inventario en bodega.</p>
+<p><strong>Comprobación.</strong> 11,10 × 100 = 1.110,00. El costo total se recupera al multiplicar.</p>
+<p><strong>Interpretación.</strong> El costo unitario sube de 10,80 a 11,10 dólares, es decir, en 0,30 dólares por camiseta, porque el transporte se reparte entre las cien unidades.</p>
+<p><strong>Error frecuente:</strong> dejar el transporte fuera porque no es el precio del producto. El costo incluye lo necesario para llevar el inventario a su condición actual.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El costo de un inventario reúne lo que costó ponerlo en condición de venta. Lo que la empresa recupera de vuelta no entra.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 3. Valor neto realizable con costos de venta</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad calcularás el valor neto realizable de un lote cuando hay costos de venta. Supongamos que el precio de venta estimado es de 9,00 dólares por camiseta, y que los costos estimados de venta, como comisiones y empaque, son de 0,50 dólares por camiseta. El lote tiene 100 camisetas y su costo es 1.080,00 dólares. Calcula el valor neto realizable y el valor que debe presentar el balance.</p>
+<p class="ayuda">Resta primero los costos de venta del precio, por unidad. Después multiplica por la cantidad.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Valor neto realizable por unidad.</strong> 9,00 − 0,50 = 8,50 dólares.</p>
+<p><strong>Valor neto realizable del lote.</strong> 8,50 × 100 = 850,00 dólares.</p>
+<p><strong>Valor del balance.</strong> El menor entre 1.080,00 y 850,00 es 850,00 dólares.</p>
+<p><strong>Comprobación.</strong> La diferencia con el costo es 1.080,00 − 850,00 = 230,00. Si la comparación se hace unidad por unidad, el resultado debe coincidir: el costo unitario es 10,80 y el valor neto unitario es 8,50; la diferencia es 2,30 por 100 camisetas, es decir, 230,00.</p>
+<p><strong>Interpretación.</strong> Los costos de venta sí reducen el valor que la empresa espera recibir. Por eso el caso con costos de venta llega a un valor menor que el del escenario B de la tabla 5.</p>
+<p><strong>Error frecuente:</strong> comparar el costo con el precio de venta sin restar los costos de venta. Esa comparación sobrestima el valor del inventario.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El valor neto realizable es lo que la empresa espera cobrar, neto de lo que cuesta cobrarlo. Restar los costos de venta es parte de la definición, no un detalle.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 4. Medición del lote en otra fecha</h4>
+<p class="tiempo">Tiempo orientativo: 12 minutos · Trabajo individual</p>
+<p>En esta actividad compararás la medición del lote en dos fechas de balance. Supongamos que al cierre de julio el precio de venta estimado es de 12,00 dólares por camiseta, y al cierre de agosto baja a 9,00 dólares, sin que el costo cambie. Costos de venta: cero. Determina el valor del lote en cada cierre y explica por qué el valor cambia aunque el costo no.</p>
+<p class="ayuda">Usa la regla de la menor cifra entre costo y valor neto realizable, en cada fecha por separado.</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Cierre de julio.</strong> Valor neto realizable = 12,00 × 100 = 1.200,00. El menor entre 1.080,00 y 1.200,00 es 1.080,00.</p>
+<p><strong>Cierre de agosto.</strong> Valor neto realizable = 9,00 × 100 = 900,00. El menor entre 1.080,00 y 900,00 es 900,00.</p>
+<p><strong>Comprobación.</strong> El costo no cambió, pero el valor en agosto es 180,00 menor que el costo. La diferencia 1.080,00 − 900,00 = 180,00 coincide con la del escenario B de la tabla 5.</p>
+<p><strong>Interpretación.</strong> El costo es una cifra histórica; el valor neto realizable depende de la expectativa a la fecha del balance. Por eso el valor del inventario puede cambiar sin que la empresa compre o venda nada.</p>
+<p><strong>Error frecuente:</strong> pensar que, si el costo no cambió, el balance no puede cambiar. La regla compara dos medidas, y una de ellas cambia con el mercado.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>El costo se fija en la compra; el valor se revisa en cada cierre. El balance muestra la cifra menor de las dos.</p></div>
+</div>
+
+<div class="ejercicio">
+<h4>Ejercicio 5. Variante: IVA no recuperable</h4>
+<p class="tiempo">Tiempo orientativo: 10 minutos · Trabajo individual</p>
+<p>En esta actividad aplicarás el criterio de costo a una variante en la que el IVA no se puede recuperar. Supongamos que la compra del lote se hizo a un proveedor que no emite comprobantes que permitan usar el crédito tributario, de modo que el IVA de 162,00 dólares es un costo no recuperable. Calcula el costo del lote y el costo unitario, y explica qué cambia frente al asiento 10.</p>
+<p class="ayuda">Piensa en si la empresa puede recuperar el IVA. Si no puede, ¿dónde debe quedar?</p>
+<details class="solucion"><summary>Ver solución razonada</summary>
+<p><strong>Costo del lote.</strong> 1.080,00 + 162,00 = 1.242,00 dólares.</p>
+<p><strong>Costo unitario.</strong> 1.242,00 ÷ 100 = 12,42 dólares por camiseta.</p>
+<p><strong>Qué cambia frente al asiento 10.</strong> Ya no hay crédito tributario: el IVA entra al costo del inventario porque no se recupera. El asiento sería: debe Inventario 1.242,00; haber Bancos 1.242,00.</p>
+<p><strong>Comprobación.</strong> 12,42 × 100 = 1.242,00. El costo total coincide con lo pagado.</p>
+<p><strong>Interpretación.</strong> Un mismo pago puede tener dos tratamientos según la recuperabilidad del IVA. Si el IVA es recuperable, el costo es menor y el derecho frente al SRI aumenta.</p>
+<p><strong>Error frecuente:</strong> incluir el IVA en el costo sin verificar si es recuperable. El resultado sería un inventario sobrevalorado en el caso de un IVA que la empresa sí puede descontar.</p>
+</details>
+<div class="concepto"><h4>Cómo entender este ejercicio</h4><p>La recuperabilidad del IVA cambia el costo. Lo que la empresa puede descontar no es costo; lo que no puede descontar, sí lo es.</p></div>
+</div>
+
+<h3>8. Cierre de la sesión</h3>
+<p>Volvamos a la pregunta de la apertura: cuánto vale el lote de camisetas en el balance. La respuesta tiene dos partes. Primero, el costo se toma de los documentos: 1.080,00 dólares sin el IVA, que se recupera, es decir, 10,80 por camiseta. Después, al cierre, se compara con el valor neto realizable, el precio estimado menos los costos de venta, y se presenta la cifra menor. Si el mercado se mantiene, el lote queda en 1.080,00. Si el precio estimado cae a 9,00, el lote debe presentarse en 900,00, y la diferencia es una pérdida que la empresa tendrá que reconocer.</p>
+<p>La idea que debes llevarte es que el inventario no se valora solo por lo que costó. Se valora por la expectativa razonable de recuperarlo, y esa expectativa puede cambiar entre un balance y otro. Esta prudencia se aplicará en la semana 8 con el examen del primer parcial, donde los temas de las unidades 1 y 2 se integran, y en la unidad 3 de las semanas siguientes, con los métodos de costeo.</p>
+<p>Para revisar por dificultad: si no sabes qué entra en el costo, relee la sección 2 y el ejercicio 2; si dudas entre inventario y bien para uso, relee la sección 1 y el ejercicio 1; si el valor neto realizable te confunde, revisa la sección 4, el cálculo 7 y el ejercicio 3.</p>
+
+<div class="nota">
+<h4>Glosario breve</h4>
+<ul>
+<li><strong>Inventario:</strong> activo que la empresa tiene para vender en el curso normal de sus operaciones, o que está en proceso o se consume en la prestación de servicios.</li>
+<li><strong>Costo:</strong> importes necesarios para llevar el inventario a su lugar y condición actuales, sin el IVA recuperable.</li>
+<li><strong>Valor neto realizable:</strong> precio de venta estimado menos los costos estimados para terminar y vender el inventario.</li>
+<li><strong>Costo unitario:</strong> costo total del lote dividido entre el número de unidades que lo componen.</li>
+</ul>
+</div>
+</section>
+
+
+<section class="pestana" id="eval3" data-panel="eval3" aria-labelledby="t-eval3">
+<h2 id="t-eval3">Evaluación de la sesión 03 · Inventarios y valor neto realizable</h2>
+<p class="meta">Semana 7 · Unidades 2 y 3 · 15 preguntas de opción múltiple</p>
+<div class="quiz" data-eval="3"></div>
+</section>
+
+<section class="pestana" id="reflexion" data-panel="reflexion">
+<h2>Reflexión</h2>
+<p class="meta">Semana 7 · Cuatro reflexiones sin respuesta correcta ni calificación</p>
+
+<h3>Una factura que nadie revisó</h3>
+<p>En una oficina con mucho trabajo, una factura puede pasar de mano en mano sin que nadie se detenga en el concepto que describe. Pagarla con prisa es comprensible, pero registrarla sin leerla compromete a quien firma el balance. En esta semana viste que un error de clasificación puede dejar cuadrado el balance y, aun así, cambiar lo que la empresa debe al SRI. La reflexión invita a pensar qué responsabilidad tiene quien registra frente a quien lee los estados financieros, y qué tan lejos llega la confianza en un documento que nadie revisó.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Qué harías en tu trabajo si descubrieras que una factura ya registrada tiene un concepto que no corresponde a la operación, y el error no afecta el balance?</p>
+
+<h3>Lo que el balance no dice</h3>
+<p>Un balance cuadrado transmite tranquilidad. Quien lo recibe puede pensar que todo está en orden. Pero el cuadre solo prueba que los traslados tienen igual cifra en ambos lados. La reflexión pide considerar qué decisiones se toman con un balance que parece completo y no lo es, y quién carga con las consecuencias cuando alguien confía en él sin preguntar qué documentos lo respaldan.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Qué información adicional pedirías antes de aprobar un balance que cuadra, y a quién se la pedirías?</p>
+
+<h3>Lo que es de la empresa y lo que es de la persona</h3>
+<p>Cuando una persona usa el dinero de la empresa para un gasto personal, o registra un gasto de la familia como si fuera de la oficina, la línea entre lo empresarial y lo personal se borra. Esta semana distinguiste el aporte de los socios del ingreso por servicios y el gasto del arriendo. La reflexión invita a pensar por qué esa separación protege a la empresa, a sus socios y a quienes tienen una relación con ella, y qué pasa cuando se olvida.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Qué señales te indicarían que un gasto de la empresa tiene en realidad un destino personal, y qué documento pedirías para confirmarlo?</p>
+
+<h3>Cuando la prudencia cambia la cifra</h3>
+<p>La regla de registrar el inventario por la cifra menor entre costo y valor neto realizable expresa una actitud: reconocer las pérdidas cuando hay evidencia, no esperar a que se concreten. Esa prudencia no es pesimismo. Es una forma de no presentar a los lectores un activo que quizá no se convierta en dinero. La reflexión pregunta cómo equilibrar esa prudencia con la necesidad de no exagerar las pérdidas cuando la evidencia es todavía débil.</p>
+<p><strong>Pregunta de reflexión:</strong> ¿Cuánta evidencia de una caída de precio consideras suficiente para reducir el valor de un inventario, y qué riesgo hay si esperas demasiado o actúas demasiado pronto?</p>
+
+<h3>Práctica</h3>
+<p class="nota">Estas reflexiones son personales y abiertas. Aunque algunas preguntas se relacionan con criterios técnicos, no tienen una respuesta única que se pueda comprobar.</p>
+</section>
+
+<section class="pestana" id="ia" data-panel="ia">
+<h2>Actividad con IA</h2>
+<p class="meta">Semana 7 · Actividad individual · Tiempo orientativo: 30 minutos</p>
+
+<p>Esta actividad te pide contrastar tu razonamiento con el de una herramienta de inteligencia artificial. La respuesta de la herramienta no es una fuente verificada: es un punto de partida que debes revisar con el material de la semana. El objetivo es que evalúes tanto la aritmética como la pertinencia de las cuentas, la perspectiva, los documentos y los supuestos.</p>
+
+<h3>Trabajo inicial propio</h3>
+<p>Antes de usar la herramienta, resuelve por tu cuenta el asiento de la compra de un lote de 50 unidades por 540,00 dólares sin IVA, con IVA de 15 % pagado por transferencia, desde la perspectiva de una comercializadora que compra para vender. Escribe las cuentas, el debe y el haber, y la razón de cada lado. Anota también qué cifra representa el costo unitario del lote.</p>
+
+<h3>Prompt exacto</h3>
+<p>Copia el siguiente texto sin cambios. No incluyas datos personales, bancarios ni tributarios de nadie: el caso es de estudio.</p>
+<p><em>«Soy estudiante de Contabilidad General. Una comercializadora compra 50 camisetas por 540,00 dólares sin IVA, con IVA de 15 % pagado por transferencia, para venderlas. Explica qué cuentas usar, qué lado aumenta cada una, cuál es el asiento completo con su glosa y cuál es el costo unitario del lote. Indica cualquier supuesto que hagas.»</em></p>
+
+<h3>Contraste con el material</h3>
+<p>Compara la respuesta de la herramienta con tu trabajo inicial. Marca cada diferencia. Pregúntate si la herramienta incluyó el IVA en el costo del inventario, si usó la cuenta de inventario para la compra y si el asiento cuadra. Compara también el costo unitario con el que obtienes dividiendo el costo del lote entre el número de unidades.</p>
+
+<h3>Verificación de al menos una afirmación</h3>
+<p>Elige una afirmación de la respuesta y verifícala con el material de la sesión 03 o con la sección 3 de la sesión 01. Por ejemplo, la afirmación sobre si el IVA pagado forma parte del costo del inventario. Anota en tu cuaderno qué dice el material y si la respuesta coincide. Si no encuentras la respuesta en el material, no la des por cierta: busca primero en el texto de la semana.</p>
+
+<h3>Justificación de lo aceptado, corregido o rechazado</h3>
+<p>Escribe un párrafo por cada cosa que aceptaste, corregiste o rechazaste de la respuesta. Justifica cada decisión con el criterio del material, no con tu intuición. Si aceptaste algo que después encontraste incorrecto, explica en qué momento lo aceptaste y qué te hubiera permitido detectarlo antes.</p>
+
+<h3>Lista de autoevaluación</h3>
+<ul>
+<li>Escribí mi propio asiento antes de usar la herramienta.</li>
+<li>Usé un prompt sin datos personales, bancarios ni tributarios.</li>
+<li>Comparé cada diferencia con el material y no solo con mi intuición.</li>
+<li>Verifiqué al menos una afirmación con una fuente de la semana.</li>
+<li>Justifiqué cada decisión de aceptar, corregir o rechazar.</li>
+<li>Reconocí en qué punto la herramienta podía equivocarse y por qué.</li>
+</ul>
+</section>
+
+<section class="pestana" id="biblio" data-panel="biblio">
+<h2>Bibliografía</h2>
+<p class="meta">Semana 7 · Referencias en APA 7, en orden alfabético</p>
+
+<ul class="referencias">
+<li>IFRS Foundation. (s. f.). <em>NIC 2 Inventarios</em>. https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/</li>
+<li>Servicio de Rentas Internas. (2025). <em>Circular NAC-DGECCGC25-00000006</em>. Registro Oficial, Suplemento 192.</li>
+<li>Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009</em>. Registro Oficial, Cuarto Suplemento 233. https://www.primicias.ec/uploads/files/2026/02/27/NAC-DGERCGC26-00000009.pdf</li>
+</ul>
+
+<p class="nota">Se recomienda verificar cada referencia en Google Scholar (scholar.google.com) o en el repositorio institucional antes de citar en trabajos académicos. La vigencia de las normas se verifica en las fuentes oficiales, no en Google Scholar.</p>
+</section>
+</main>
+
+<footer>
+  <p>Universidad de Guayaquil · Facultad de Ciencias Administrativas · Paralelo NIN-SVE-1-19 · Docente: Gabriel Francisco García Gutiérrez.</p>
+  <p>Las empresas Confecciones Montubia S. A., Comercializadora Costa Verde Cía. Ltda., Servicios Logísticos Andes Global S. A. y Asesores Litoral Cía. Ltda. son ficticias. Sus cifras y hechos son supuestos didácticos.</p>
+  <p>Las puntuaciones de las evaluaciones de práctica no son notas oficiales del examen parcial.</p>
+</footer>
+
+<script>
+/* ==========================================================
+   1. Datos de evaluación (generados desde ej_semana.json)
+   ========================================================== */
+const EVALUACIONES = [{"sesion": 1, "titulo": "Evaluación de la sesión 01 · Un mes de operaciones", "items": [{"tipo": "Teórica", "pregunta": "¿Cómo se registra el aporte en efectivo de los socios para la constitución de la empresa?", "opciones": ["Como un movimiento entre la empresa y sus propietarios: aumenta Caja y el patrimonio, no el resultado.", "Como ingreso del período, porque aumenta la caja.", "Como gasto de constitución, porque el dinero sale de los socios.", "Como pasivo, porque el dinero debe devolverse a los socios."], "correcta": 0, "retro": ["CORRECTO. La explicación está en la separación patrimonial: el aporte no nace de un servicio prestado, sino de los socios hacia la empresa. Revisa la sección 1 de esta sesión.", "Incorrecto. Aumentar la caja no basta para que algo sea ingreso. Un ingreso nace de un servicio prestado a un cliente.", "Incorrecto. Un gasto disminuye el patrimonio por un consumo o un servicio recibido. El aporte aumenta el patrimonio.", "Incorrecto. Un pasivo es una obligación con un tercero. En el supuesto del caso el aporte es capital, no una deuda."], "general": "El aporte de los socios no proviene de una prestación. Pregúntate siempre quién es la contraparte de la operación."}, {"tipo": "Teórica", "pregunta": "Los útiles de oficina comprados el día 3 se consumen íntegramente durante el mismo mes. ¿Cómo se clasifica su base en el registro de la empresa?", "opciones": ["Como activo, porque la empresa recibió un bien que le pertenece.", "Como gasto del período, porque su beneficio se aprovecha en el mismo mes.", "Como pasivo, porque la factura quedó a crédito.", "Como patrimonio, porque mejora la empresa."], "correcta": 1, "retro": ["Incorrecto. Que el bien sea de la empresa no basta. Un activo debe dar beneficios en períodos futuros, y estos útiles se consumen en el mes.", "CORRECTO. Si el recurso se consume dentro del período, su beneficio ya se aprovechó y se reconoce como gasto. Revisa el ejercicio 2 de la sesión 01.", "Incorrecto. La factura a crédito genera una cuenta por pagar, pero no determina la clasificación del bien. Esa cuenta es el otro lado del asiento.", "Incorrecto. El patrimonio aumenta con aportes de socios o con resultados positivos. Un gasto de consumo no mejora el patrimonio."], "general": "La clasificación depende del uso y del momento en que el recurso beneficia a la empresa, no del objeto físico."}, {"tipo": "Análisis", "pregunta": "Importadora Pacífico Sur S. A. recibe una factura de servicios por 4.000,00 dólares de base más 600,00 de IVA, a 30 días. Paga 2.300,00 dólares después. ¿Qué afirmación es correcta?", "opciones": ["El ingreso de 4.000,00 se reconoce cuando llega el cobro de 2.300,00.", "El IVA de 600,00 es ingreso del período, porque se cobró al cliente.", "El ingreso de 4.000,00 se reconoce al prestar el servicio; el cobro de 2.300,00 solo cambia la forma del derecho.", "El cobro de 2.300,00 genera un nuevo ingreso por esa cantidad."], "correcta": 2, "retro": ["Incorrecto. Ingreso y cobro son momentos distintos. El ingreso depende de la prestación, no de la llegada del dinero.", "Incorrecto. El IVA cobrado es una obligación frente al SRI, no un ingreso de la empresa.", "CORRECTO. El servicio prestado y el derecho a cobrar fijan el ingreso. El cobro puede llegar después y no cambia el ingreso ya reconocido.", "Incorrecto. El cobro no crea ingreso: el ingreso ya se reconoció al prestar el servicio."], "general": "Ingreso y cobro no son lo mismo. El primero nace de la prestación; el segundo, del momento en que llega el dinero."}, {"tipo": "Teórica", "pregunta": "¿Qué documento prueba que una operación ocurrió y entrega las cifras que se registran en un asiento?", "opciones": ["Una cotización del proveedor, porque muestra el precio acordado.", "El asiento de diario, porque contiene el registro.", "El balance de comprobación, porque demuestra que las cifras cuadran.", "Un documento fuente, como una factura o un comprobante de pago."], "correcta": 3, "retro": ["Incorrecto. Una cotización es una propuesta. No prueba que la compra o la venta se hayan realizado.", "Incorrecto. El asiento es el registro, no la prueba de la operación que lo origina.", "Incorrecto. El balance es una comprobación posterior de traslados. No prueba por sí mismo la operación.", "CORRECTO. Un documento fuente prueba la operación y entrega sus cifras. Revisa la sección 2 de la sesión 01."], "general": "Antes de registrar, identifica el documento que prueba la operación y las cifras que contiene."}, {"tipo": "Análisis", "pregunta": "En el mes de una empresa de servicios aparecen cuatro documentos: una cotización sin compra confirmada, una factura de venta de un servicio ya prestado a crédito, una propuesta de arriendo no firmada y una orden de compra sin entrega ni factura. ¿Cuál genera un asiento en el mes?", "opciones": ["La factura de venta de un servicio ya prestado a crédito.", "La cotización de un proveedor, sin compra confirmada.", "La propuesta de arriendo no firmada.", "La orden de compra sin entrega ni factura."], "correcta": 0, "retro": ["CORRECTO. Hubo una prestación y nació un derecho a cobrar. Eso exige un asiento.", "Incorrecto. Una cotización es una propuesta: no transfiere bienes, servicios ni dinero.", "Incorrecto. Una propuesta sin firma no crea derecho ni obligación para la empresa.", "Incorrecto. Una orden de compra todavía no transfiere nada; el asiento espera la entrega o la factura."], "general": "Un documento genera asiento cuando la operación cambia recursos, derechos u obligaciones de la empresa."}, {"tipo": "Teórica", "pregunta": "¿Cuál es la naturaleza del crédito tributario de IVA y en qué lado aumenta?", "opciones": ["Acreedora; aumenta en el haber, porque es una obligación.", "Deudora; aumenta en el debe, porque es un derecho frente al SRI.", "Acreedora; aumenta en el debe, porque reduce el patrimonio.", "Deudora; aumenta en el haber, porque se compensa al cierre."], "correcta": 1, "retro": ["Incorrecto. Una obligación con el SRI tendría naturaleza acreedora, pero el IVA pagado en compras es un derecho.", "CORRECTO. El crédito tributario es un derecho de la empresa frente al SRI. Las cuentas de derecho son deudoras y aumentan en el debe.", "Incorrecto. Una cuenta acreedora aumenta en el haber. Además, el IVA pagado no reduce el patrimonio.", "Incorrecto. La compensación disminuye la cuenta en el haber; no determina el lado en que aumenta."], "general": "La naturaleza de una cuenta se decide por el tipo de derecho u obligación que representa."}, {"tipo": "Análisis", "pregunta": "Durante el mes, el IVA cobrado suma 825,00 dólares y el crédito tributario suma 270,00 dólares. ¿Qué importe queda por pagar al SRI?", "opciones": ["1.095,00 dólares, sumando el cobrado y el crédito.", "825,00 dólares, sin compensar el crédito.", "555,00 dólares.", "270,00 dólares, que es el crédito del mes."], "correcta": 2, "retro": ["Incorrecto. Sumar el IVA cobrado y el crédito no tiene sentido: uno es obligación y el otro es derecho.", "Incorrecto. Sin compensar el crédito, el importe estaría sobrestimado.", "CORRECTO. La compensación se hace por el monto menor. El saldo que queda, 825,00 menos 270,00, es la obligación del mes.", "Incorrecto. El crédito es el derecho compensado. El saldo por pagar es la diferencia."], "general": "El IVA por pagar es la diferencia entre el IVA cobrado y el crédito, cuando el cobrado es mayor."}, {"tipo": "Análisis", "pregunta": "Una oficina paga el arriendo del mes: base 1.200,00 dólares, IVA de 180,00 dólares y retención de renta del 10 % sobre la base. ¿Cuánto sale de Caja en el pago neto?", "opciones": ["1.380,00 dólares, el total de la factura.", "1.200,00 dólares, la base del servicio.", "1.080,00 dólares, la base menos la retención, sin sumar el IVA.", "1.260,00 dólares."], "correcta": 3, "retro": ["Incorrecto. El total de la factura incluye la retención, que no sale de caja en el pago. Descuéntala.", "Incorrecto. La base es el gasto, no lo que sale de caja.", "Incorrecto. Ese cálculo omite el IVA, que forma parte del total de la factura.", "CORRECTO. Del total de 1.380,00 se descuenta la retención de 120,00. El pago neto es 1.260,00."], "general": "El gasto es la base. La caja sale por el total menos la retención."}, {"tipo": "Análisis", "pregunta": "Supongamos que la retención de renta se calculara sobre el total de 1.380,00 dólares de la factura de arriendo, en lugar de sobre la base sin IVA de 1.200,00 dólares. ¿Cuál sería el monto retenido con el 10 %?", "opciones": ["138,00 dólares.", "120,00 dólares, que es la retención sobre la base.", "180,00 dólares, que es el IVA.", "1.380,00 dólares, que es el total de la factura."], "correcta": 0, "retro": ["CORRECTO. El 10 % de 1.380,00 es 138,00. Esa es la cifra que resultaría del error de base; la convención del curso usa la base sin IVA.", "Incorrecto. Ese monto corresponde a la base correcta, no al total que pregunta el enunciado.", "Incorrecto. Ese importe es el IVA del arriendo, no una retención.", "Incorrecto. Ese importe es el total de la factura, no un porcentaje."], "general": "La base del cálculo importa: la misma tasa sobre una base distinta produce un monto distinto."}, {"tipo": "Teórica", "pregunta": "¿Por qué el cobro parcial de 2.300,00 dólares no genera ingreso en el mes?", "opciones": ["Porque el cobro es siempre un gasto del período.", "Porque el ingreso ya se reconoció al prestar el servicio; el cobro solo cambia el derecho en efectivo.", "Porque el cobro pertenece al cliente hasta que liquida la factura completa.", "Porque la caja no registra entradas de dinero."], "correcta": 1, "retro": ["Incorrecto. Un cobro es una entrada de dinero que disminuye un derecho. No es un gasto.", "CORRECTO. Se trata de la distinción entre ingreso y cobro. Revisa la sección 6 de la sesión 01, asiento 6.", "Incorrecto. El dinero que la empresa recibe por una factura de venta es un cobro de la empresa, no del cliente.", "Incorrecto. La caja registra todas las entradas y salidas de efectivo."], "general": "Cobrar no es lo mismo que ganar. El ingreso se reconoce al prestar el servicio y el cobro se registra al recibir el dinero."}, {"tipo": "Análisis", "pregunta": "Al cierre del mes, la cuenta Caja tiene un debe de 19.025,00 dólares y un haber de 1.605,00 dólares. ¿Cuál es el saldo y en qué lado?", "opciones": ["20.630,00 dólares, deudor, porque se suman debe y haber.", "17.420,00 dólares, acreedor.", "17.420,00 dólares, deudor.", "1.605,00 dólares, acreedor."], "correcta": 2, "retro": ["Incorrecto. Sumar debe y haber no produce el saldo. El saldo es la diferencia.", "Incorrecto. El lado acreedor no corresponde a la naturaleza de Caja. Revisa la sección 7 de la sesión 01, con el saldo de Caja.", "CORRECTO. El saldo es la diferencia entre debe y haber, 19.025,00 menos 1.605,00. Como el debe es mayor, el saldo es deudor, de acuerdo con la naturaleza de Caja.", "Incorrecto. Ese importe es el haber, no el saldo de la cuenta."], "general": "El saldo se obtiene restando los dos lados y se presenta en el lado que corresponde a la naturaleza de la cuenta."}, {"tipo": "Teórica", "pregunta": "¿Qué prueba la igualdad entre la suma del debe y la suma del haber en el balance de comprobación?", "opciones": ["Que todas las cuentas están bien clasificadas y los documentos están completos.", "Que la empresa obtuvo utilidad en el período.", "Que el efectivo de la caja existe físicamente.", "Que los traslados tienen igual cifra en ambos lados; no prueba por sí sola que cada cuenta esté bien clasificada."], "correcta": 3, "retro": ["Incorrecto. Un balance puede cuadrar con cuentas mal clasificadas. La igualdad no lo demuestra.", "Incorrecto. El balance no mide utilidad; esa información requiere el estado de resultados.", "Incorrecto. El cuadre no verifica la existencia física del efectivo. Esa es la función del arqueo.", "CORRECTO. La igualdad confirma la aritmética del traslado. La clasificación se revisa con el documento y con la naturaleza de la operación."], "general": "La igualdad es necesaria, pero no suficiente. Un balance cuadrado puede contener errores de clasificación."}, {"tipo": "Análisis", "pregunta": "Un asiento de arriendo cargó 1.380,00 dólares al gasto y no registró el crédito de IVA de 180,00 dólares. El asiento cuadra. ¿Qué afirmación es correcta?", "opciones": ["El balance cuadrado no prueba la clasificación: un error de cuenta con igual importe en ambos lados puede pasar la prueba.", "Si el asiento cuadra, el gasto es correcto y no hay que revisar el documento.", "El error no afecta el IVA por pagar, porque el asiento está equilibrado.", "Un asiento cuadrado no puede contener errores de cuenta."], "correcta": 0, "retro": ["CORRECTO. Eso es lo que ocurre en el error del arriendo: el debe y el haber son iguales, pero la clasificación es incorrecta.", "Incorrecto. El cuadre no confirma el destino del importe. Hay que revisar el documento y la naturaleza del gasto.", "Incorrecto. El crédito no registrado cambia el IVA por pagar. El error sí afecta la obligación con el SRI.", "Incorrecto. El asiento puede estar equilibrado y tener una cuenta incorrecta. La afirmación es absoluta y no se sostiene."], "general": "La partida doble asegura que cada asiento está equilibrado. No asegura que cada cuenta sea la adecuada."}, {"tipo": "Teórica", "pregunta": "¿Cuál es la naturaleza de la cuenta Ingresos por servicios y en qué lado aumenta?", "opciones": ["Deudora; aumenta en el debe.", "Acreedora; aumenta en el haber.", "Deudora; aumenta en el haber.", "Acreedora; aumenta en el debe."], "correcta": 1, "retro": ["Incorrecto. Un ingreso no tiene naturaleza deudora. Aumentar en el debe sería disminuirlo.", "CORRECTO. Los ingresos son acreedores: aumentan en el haber y disminuyen en el debe.", "Incorrecto. Una cuenta deudora aumenta en el debe. Los ingresos no siguen esa regla.", "Incorrecto. Una cuenta acreedora aumenta en el haber, no en el debe."], "general": "Los ingresos aumentan en el haber, igual que el patrimonio y los pasivos."}, {"tipo": "Análisis", "pregunta": "La empresa paga 345,00 dólares a un proveedor de útiles, a cuenta de una factura ya registrada. ¿Qué cuentas se afectan y en qué lado?", "opciones": ["Gasto de suministros en el debe y Caja en el haber.", "Caja en el debe y Proveedores por pagar en el haber.", "Proveedores por pagar en el debe y Caja en el haber.", "Gasto de suministros en el debe y Proveedores por pagar en el haber."], "correcta": 2, "retro": ["Incorrecto. El pago no crea un gasto nuevo; la factura ya lo reconoció.", "Incorrecto. Un pago disminuye caja y disminuye la deuda. El lado de cada cuenta está invertido.", "CORRECTO. El pago disminuye la deuda con el proveedor y disminuye la caja. La factura ya generó el gasto cuando se registró.", "Incorrecto. Esa combinación registra un gasto nuevo y aumenta la deuda, algo que el pago no hace."], "general": "Un pago de una deuda ya registrada disminuye el pasivo y la caja. No vuelve a registrar el gasto."}]}, {"sesion": 2, "titulo": "Evaluación de la sesión 02 · Caso integrador y datos incompletos", "items": [{"tipo": "Teórica", "pregunta": "¿Por qué no conviene llenar un dato faltante con una cifra razonable en un balance?", "opciones": ["Porque el balance parecería completo sin serlo; la alternativa es declarar la insuficiencia y la condición que la explica.", "Porque el sistema contable no admite estimaciones en ningún registro.", "Porque la cifra razonable siempre resulta menor que la real.", "Porque el balance solo acepta cifras que tengan un documento impreso."], "correcta": 0, "retro": ["CORRECTO. Una cifra cómoda oculta lo que falta. Declarar la insuficiencia y su condición es la respuesta completa cuando el dato no existe.", "Incorrecto. Algunas cifras sí son estimaciones en la contabilidad, como el valor neto realizable. Lo que se exige es declararlas.", "Incorrecto. No hay una regla general de ese tipo. Una cifra estimada puede ser mayor o menor que la real.", "Incorrecto. Un documento impreso no es el único soporte. Lo que importa es que el dato pueda rastrearse y declararse."], "general": "Lo que no se sabe se declara con su condición y con el documento que lo resolvería."}, {"tipo": "Análisis", "pregunta": "Un comprobante de pago de 345,00 dólares a un proveedor no indica a qué factura corresponde. ¿Qué conclusión es defendible?", "opciones": ["Puede afirmarse que la factura del día 3 quedó saldada por completo.", "Puede concluirse que la empresa pagó 345,00 dólares a ese proveedor; no puede afirmarse a qué factura corresponde sin la referencia del comprobante.", "Debe registrarse la diferencia como gasto del mes sin revisar el documento.", "No puede concluirse nada, porque el pago no tiene importancia en el balance."], "correcta": 1, "retro": ["Incorrecto. El comprobante no indica la factura. Afirmar su saldo sería una suposición presentada como hecho.", "CORRECTO. La conclusión separa lo que el comprobante prueba (el pago) de lo que no prueba (la factura correspondiente).", "Incorrecto. Registrar una diferencia sin revisar el documento convierte una suposición en un asiento.", "Incorrecto. El pago afecta la caja y la deuda con el proveedor, por eso sí importa en el balance."], "general": "Una conclusión válida distingue lo que el documento prueba de lo que supone."}, {"tipo": "Teórica", "pregunta": "¿Cuáles son las tres partes de una declaración de dato incompleto?", "opciones": ["Qué asiento debe corregirse, sin justificar la condición.", "Solo el monto faltante, para completar la columna del balance.", "Qué puede concluirse, qué no puede concluirse y qué documento lo resolvería.", "La cifra estimada, con una nota de advertencia al final."], "correcta": 2, "retro": ["Incorrecto. Corregir sin justificar la condición deja la conclusión sin apoyo.", "Incorrecto. Un monto sin condición ni documento no declara la insuficiencia.", "CORRECTO. Esa estructura separa lo que se sabe, lo que no se sabe y lo que permitiría resolverlo.", "Incorrecto. Una cifra estimada con advertencia sigue siendo una cifra sin respaldo."], "general": "La declaración de insuficiencia es una respuesta completa, no una excusa."}, {"tipo": "Análisis", "pregunta": "En el mes, los ingresos por servicios suman 5.500,00 dólares y los gastos suman 1.800,00 dólares. ¿Cuál es la diferencia del mes y qué no significa?", "opciones": ["3.700,00 dólares de efectivo disponible en caja.", "7.300,00 dólares, sumando ingresos y gastos.", "1.800,00 dólares de utilidad, porque es el total de gastos.", "3.700,00 dólares; no equivale al efectivo disponible."], "correcta": 3, "retro": ["Incorrecto. La caja depende de cobros y pagos. Confundir utilidad con efectivo es un error frecuente.", "Incorrecto. Sumar ingresos y gastos no produce ninguna diferencia útil.", "Incorrecto. El total de gastos no es la utilidad; la utilidad es ingresos menos gastos.", "CORRECTO. La diferencia es 5.500,00 menos 1.800,00. Es un resultado del período, no el efectivo de la caja."], "general": "Utilidad y efectivo disponible son cosas distintas. El efectivo depende de cuándo entra y sale el dinero."}, {"tipo": "Teórica", "pregunta": "¿Por qué una utilidad positiva no garantiza que la caja tenga efectivo suficiente?", "opciones": ["Porque la utilidad es un resultado del período, mientras que la caja depende de cobros y pagos en el tiempo.", "Porque la utilidad siempre es igual al efectivo que la empresa tiene.", "Porque el efectivo de caja es la diferencia entre ingresos y gastos.", "Porque la utilidad se cobra al mismo tiempo que se registra."], "correcta": 0, "retro": ["CORRECTO. La utilidad mide ingresos devengados menos gastos. Los cobros y pagos ocurren en otros momentos.", "Incorrecto. La utilidad y el efectivo son magnitudes distintas. Su igualdad sería una coincidencia, no una regla.", "Incorrecto. El efectivo depende de cobros y pagos, no solo del resultado.", "Incorrecto. El ingreso se reconoce al prestar el servicio; el cobro puede llegar después."], "general": "Un resultado positivo puede convivir con poco efectivo si los cobros se retrasan."}, {"tipo": "Análisis", "pregunta": "Un asiento de arriendo cargó 1.380,00 dólares al gasto y no registró el crédito de IVA de 180,00 dólares. ¿Cuánto se sobreestima el gasto de arriendo?", "opciones": ["1.380,00 dólares.", "180,00 dólares.", "90,00 dólares.", "1.200,00 dólares."], "correcta": 1, "retro": ["Incorrecto. Ese es el total cargado, no el importe de más. La sobrestimación es la diferencia con la base correcta.", "CORRECTO. El gasto correcto es la base de 1.200,00. Al cargar 1.380,00 se sobreestima en la diferencia: 1.380,00 menos 1.200,00.", "Incorrecto. Ese importe corresponde a la mitad del IVA del asiento correcto, no al gasto sobrestimado.", "Incorrecto. Ese es el gasto correcto, no la sobrestimación."], "general": "Un error de clasificación se mide por la diferencia entre el importe registrado y el importe correcto."}, {"tipo": "Análisis", "pregunta": "Con el error del arriendo, el IVA cobrado es 825,00 dólares y el crédito registrado es 90,00 dólares. Después de la corrección, el crédito es 270,00 dólares. ¿Qué ocurre con el IVA por pagar?", "opciones": ["Estaba subestimado en 180,00 dólares.", "No cambia, porque solo se movió una cifra del gasto.", "Estaba sobreestimado en 180,00 dólares: pasa de 735,00 a 555,00.", "Estaba sobreestimado en 90,00 dólares."], "correcta": 2, "retro": ["Incorrecto. Un crédito menor deja una obligación mayor. El error sobrestimaba la obligación, no la subestimaba.", "Incorrecto. El IVA del arriendo era un derecho que no estaba en el crédito. Su clasificación sí cambia la liquidación.", "CORRECTO. Con 90,00 de crédito, el IVA por pagar sería 735,00. Con 270,00, sería 555,00. La diferencia es 180,00 y la obligación estaba inflada.", "Incorrecto. La diferencia de crédito es 180,00, no 90,00."], "general": "Un error de clasificación puede cambiar lo que la empresa debe al SRI aunque el balance cuadre."}, {"tipo": "Análisis", "pregunta": "¿Qué asiento corrige el error del arriendo, en el que el IVA de 180,00 dólares se cargó al gasto?", "opciones": ["Debe Gasto de arriendo 180,00; haber Crédito tributario de IVA 180,00.", "Debe Caja 180,00; haber Gasto de arriendo 180,00.", "Debe Crédito tributario de IVA 180,00; haber Caja 180,00.", "Debe Crédito tributario de IVA 180,00; haber Gasto de arriendo 180,00."], "correcta": 3, "retro": ["Incorrecto. Ese asiento empeoraría el error: aumentaría el gasto y no registraría el crédito.", "Incorrecto. La caja no cambió, porque el pago fue el mismo. El error está en la clasificación.", "Incorrecto. Ese asiento registra el crédito contra la caja, lo que no corresponde a una corrección de clasificación.", "CORRECTO. El IVA pagado es un derecho. Se reclasifica del gasto al crédito tributario, con el mismo importe en ambos lados."], "general": "Una corrección de clasificación mueve el importe de una cuenta a otra y no cambia la caja."}, {"tipo": "Teórica", "pregunta": "¿Qué afirma correctamente la sesión sobre un balance que cuadra?", "opciones": ["Un balance puede cuadrar y tener un error de clasificación; por eso la igualdad no basta.", "Un balance que cuadra garantiza que no hay errores en las cuentas.", "Un balance que no cuadra indica siempre un error de clasificación.", "La igualdad de columnas demuestra que los documentos están completos."], "correcta": 0, "retro": ["CORRECTO. La igualdad verifica la aritmética del traslado. La revisión del documento y de la naturaleza de la cuenta sigue siendo necesaria.", "Incorrecto. La igualdad no garantiza nada sobre la clasificación. Es una comprobación de la aritmética.", "Incorrecto. Un balance que no cuadra indica un error de suma o de traslado, no necesariamente de clasificación.", "Incorrecto. La igualdad no prueba la existencia de documentos. Esa comprobación requiere revisar los soportes."], "general": "El cuadre es una prueba necesaria, pero limitada."}, {"tipo": "Análisis", "pregunta": "Un compañero presenta un balance con debe total de 26.865,00 dólares y haber total de 26.775,00 dólares. ¿Qué pista da la diferencia?", "opciones": ["Que debe sumarse 90,00 dólares al haber, sin buscar el origen, para igualar.", "Que puede faltar un haber de 90,00 dólares, y debe buscarse en el mayor y en el asiento donde aparece ese importe.", "Que la diferencia no tiene relación con las cuentas del mes.", "Que el balance está mal sumado y debe rehacerse, sin buscar más."], "correcta": 1, "retro": ["Incorrecto. Sumar una cifra sin buscar el origen oculta el error y deja una cuenta con saldo incorrecto.", "CORRECTO. La diferencia de 90,00 es exacta. Ese importe debe rastrearse para encontrar la omisión.", "Incorrecto. La diferencia es exacta y coincide con un importe del mes. Tiene relación con las cuentas.", "Incorrecto. Rehacer la suma no resuelve un movimiento omitido. Hay que buscarlo en el mayor."], "general": "La diferencia en un balance es una pista que orienta la búsqueda; no se corrige sumando una cifra."}, {"tipo": "Teórica", "pregunta": "¿Qué indica, como pista, una diferencia en el balance que es múltiplo de 9?", "opciones": ["Que el balance está correcto, porque los múltiplos de 9 se compensan siempre.", "Que hay un error de centavos en la caja.", "Puede tratarse de una trasposición de cifras o de una omisión de un lado; hay que buscar el movimiento.", "Que la tarifa de IVA aplicada es incorrecta."], "correcta": 2, "retro": ["Incorrecto. No hay una compensación automática de los múltiplos de 9. Esa afirmación no tiene sustento.", "Incorrecto. Un error de centavos no produce necesariamente un múltiplo de 9 exacto.", "CORRECTO. Las trasposiciones producen diferencias múltiplos de 9. La pista orienta la búsqueda, no es la conclusión.", "Incorrecto. La tarifa no se deduce de la diferencia del balance; la pista orienta a un traslado."], "general": "Una diferencia de balance es una pista. Lo que la confirma es el movimiento encontrado en el mayor y en el documento."}, {"tipo": "Análisis", "pregunta": "Servicios Logísticos Andes Global S. A. paga en efectivo un mantenimiento de equipos: base 300,00 dólares, IVA de 45,00 dólares, total 345,00 dólares. Supongamos que el IVA es recuperable. ¿Qué asiento registra el pago?", "opciones": ["Debe Gasto de mantenimiento 345,00; haber Caja 345,00.", "Debe Inventario 300,00 e IVA 45,00; haber Caja 345,00.", "Debe Caja 345,00; haber Gasto de mantenimiento 300,00 e IVA cobrado 45,00.", "Debe Gasto de mantenimiento 300,00 y Crédito tributario de IVA 45,00; haber Caja 345,00."], "correcta": 3, "retro": ["Incorrecto. Cargar el total al gasto sobrestima el gasto e ignora el IVA recuperable.", "Incorrecto. El servicio de mantenimiento no es inventario; el gasto corresponde al servicio consumido.", "Incorrecto. El IVA pagado no es cobrado: la empresa lo registra como derecho, no como obligación, y la caja no entra.", "CORRECTO. El gasto es la base del servicio, el IVA es un derecho recuperable y la caja sale por el total."], "general": "En una compra de servicio, la base va al gasto, el IVA recuperable al crédito y el total sale de caja."}, {"tipo": "Teórica", "pregunta": "¿Por qué el IVA pagado en una compra no forma parte del gasto?", "opciones": ["Porque es un derecho frente al SRI que la empresa recupera al liquidar el IVA.", "Porque la empresa lo paga a un tercero y lo registra como utilidad.", "Porque forma parte del costo de todos los bienes comprados.", "Porque es una obligación de pago inmediato frente al proveedor."], "correcta": 0, "retro": ["CORRECTO. El IVA pagado es un crédito tributario. Se compensa con el IVA cobrado al liquidar el período.", "Incorrecto. El IVA pagado no es utilidad ni ingreso; es un derecho frente al SRI.", "Incorrecto. Ese IVA es recuperable y, por eso, no forma parte del costo del bien.", "Incorrecto. El IVA pagado se paga al proveedor, pero la obligación con el SRI no nace de ese pago."], "general": "El IVA recuperable se separa del gasto y del costo porque la empresa lo recupera."}, {"tipo": "Análisis", "pregunta": "Un contador registra el total de una factura de arriendo como gasto. ¿Qué cuenta debe revisar primero?", "opciones": ["La caja, porque el pago salió de la empresa.", "El crédito tributario de IVA, porque el IVA pagado es un derecho frente al SRI.", "El capital social, porque el arriendo lo financian los socios.", "Los ingresos por servicios, porque el arriendo los reduce."], "correcta": 1, "retro": ["Incorrecto. La caja registra la salida correcta del pago neto. El error está en la clasificación del IVA.", "CORRECTO. El primer paso es identificar si el IVA del total quedó en el gasto. Esa es la cuenta que debe revisarse.", "Incorrecto. El capital no interviene en el arriendo; el error es de clasificación del gasto y del IVA.", "Incorrecto. Los ingresos no se afectan por el gasto de arriendo. Revisa la clasificación del IVA."], "general": "Antes de corregir un gasto, revisa qué parte del total corresponde a un derecho frente al SRI."}, {"tipo": "Teórica", "pregunta": "¿Qué sesiones globales abarca el examen del primer parcial?", "opciones": ["Las sesiones globales 01 a 20, incluida la clase de inventarios.", "Solo las sesiones de la unidad 2, desde la 10 hasta la 19.", "Las sesiones globales 01 a 19, de las unidades 1 y 2.", "Las sesiones globales 20 a 41, de las unidades 3 y 4."], "correcta": 2, "retro": ["Incorrecto. La sesión global 20 pertenece a la unidad 3 y corresponde al segundo parcial.", "Incorrecto. El primer parcial cubre las unidades 1 y 2 completas, no solo la unidad 2.", "CORRECTO. El examen de la semana 8 cubre las unidades 1 y 2, según el plan analítico.", "Incorrecto. Esas sesiones corresponden al segundo parcial."], "general": "Conocer el alcance del examen permite organizar el estudio por bloques."}]}, {"sesion": 3, "titulo": "Evaluación de la sesión 03 · Inventarios y valor neto realizable", "items": [{"tipo": "Teórica", "pregunta": "¿Qué es un inventario según la NIC 2?", "opciones": ["Un activo que la empresa tiene para vender en el curso normal de sus operaciones, o que consume en la prestación de servicios.", "Cualquier bien físico que la empresa tiene en su bodega.", "Un gasto que se paga por adelantado para la operación del mes.", "Un activo fijo que se usa durante varios períodos."], "correcta": 0, "retro": ["CORRECTO. El inventario se define por la intención de vender o de consumir el bien en la operación, no por su forma física.", "Incorrecto. Un bien físico puede ser inventario o no, según su uso. La bodega no decide la clasificación.", "Incorrecto. Un pago anticipado es un activo distinto, que no se vende en la operación.", "Incorrecto. Un activo fijo se usa en la operación, no se vende. No es inventario."], "general": "La clasificación del inventario depende del destino del bien en la operación."}, {"tipo": "Análisis", "pregunta": "Costa Verde compró 100 camisetas para revender y 20 camisetas para uniforme de su personal de bodega. ¿Cuál de estos bienes es inventario?", "opciones": ["Las 120 camisetas, porque tienen la misma forma física.", "Solo las 100 camisetas compradas para revender; las 20 de uniforme son bienes para uso.", "Las 20 camisetas de uniforme, porque son ropa para el personal.", "Solo el escritorio de oficina, porque es un bien durable."], "correcta": 1, "retro": ["Incorrecto. La forma física no decide la clasificación. Dos bienes iguales pueden tener destinos distintos.", "CORRECTO. La clasificación depende del destino: las camisetas para revender son inventario; las de uniforme no se venden.", "Incorrecto. Las camisetas de uniforme se consumen en el uso del personal y no se venden.", "Incorrecto. Un escritorio de oficina es un bien de uso. No es inventario para vender."], "general": "Un mismo tipo de bien puede ser inventario en una empresa y bien para uso en otra."}, {"tipo": "Teórica", "pregunta": "¿Qué importes forman el costo de un inventario comprado?", "opciones": ["El precio de venta estimado menos el margen esperado.", "El precio de compra más el IVA, porque el IVA siempre forma parte del costo.", "El precio de compra y los costos necesarios para dejar el inventario en condición de venta, sin el IVA recuperable.", "Solo el precio de compra, sin ningún otro importe."], "correcta": 2, "retro": ["Incorrecto. El precio de venta estimado pertenece a la medición del valor neto realizable, no al costo.", "Incorrecto. El IVA recuperable se descuenta del crédito tributario. Sumarlo al costo lo inflaría.", "CORRECTO. El costo reúne lo necesario para tener el inventario listo para vender. El IVA recuperable no es costo.", "Incorrecto. Los costos necesarios para llevar el inventario a su condición actual también forman parte del costo."], "general": "Un costo incluye lo necesario para dejar el inventario listo; el IVA que la empresa recupera no entra."}, {"tipo": "Análisis", "pregunta": "Un lote de camisetas cuesta 1.080,00 dólares sin IVA, con IVA recuperable de 162,00 dólares, y 30,00 dólares de transporte sin IVA que la empresa pagó. ¿Cuál es el costo total del inventario?", "opciones": ["1.242,00 dólares, que incluye el IVA.", "1.080,00 dólares, sin el transporte.", "1.272,00 dólares, sumando todos los importes.", "1.110,00 dólares."], "correcta": 3, "retro": ["Incorrecto. El IVA recuperable no forma parte del costo, porque la empresa lo recupera.", "Incorrecto. El transporte es necesario para llevar el lote a la bodega y, por eso, forma parte del costo.", "Incorrecto. El IVA recuperable no debe sumarse al costo.", "CORRECTO. El costo suma el precio y el transporte: 1.080,00 más 30,00. El IVA recuperable queda fuera."], "general": "Al calcular el costo, el transporte entra y el IVA recuperable no."}, {"tipo": "Análisis", "pregunta": "Un lote de 100 camisetas cuesta 1.080,00 dólares sin IVA, y el proveedor asumió el transporte. ¿Cuál es el costo unitario?", "opciones": ["10,80 dólares por camiseta.", "12,00 dólares por camiseta, precio de venta del escenario A.", "11,10 dólares por camiseta, con el transporte incluido.", "9,00 dólares por camiseta, precio estimado del escenario B."], "correcta": 0, "retro": ["CORRECTO. El costo unitario es el costo total dividido entre las unidades: 1.080,00 entre 100.", "Incorrecto. Ese es un precio de venta estimado, no un costo.", "Incorrecto. Ese cálculo incluiría un transporte que el supuesto indica que asumió el proveedor.", "Incorrecto. Ese es un precio de venta estimado del escenario B, no el costo."], "general": "El costo unitario se obtiene dividiendo el costo total del lote entre las unidades que lo componen."}, {"tipo": "Teórica", "pregunta": "¿Cómo se define el valor neto realizable de un inventario?", "opciones": ["El costo histórico del lote, ajustado por la inflación.", "El precio de venta estimado en el curso ordinario de la operación, menos los costos estimados para terminar y vender.", "El precio de compra del proveedor, menos el IVA.", "El valor de mercado de cualquier bien similar en otra bodega."], "correcta": 1, "retro": ["Incorrecto. El costo histórico no es el valor neto realizable. Se compara con él.", "CORRECTO. Es una estimación del importe que la empresa espera recibir, neto de lo que cuesta terminarlo y venderlo.", "Incorrecto. El precio de compra no es una medida de lo que la empresa espera recibir.", "Incorrecto. Un bien similar en otra bodega no es la medición de la empresa en su propia operación."], "general": "El valor neto realizable es una estimación del importe de venta neto de costos, no una cifra cierta."}, {"tipo": "Análisis", "pregunta": "Un lote de 100 camisetas tiene costo de 1.080,00 dólares. El precio de venta estimado es 9,00 dólares por camiseta y no hay costos de venta. ¿Qué valor presenta el balance?", "opciones": ["1.080,00 dólares, porque el costo no cambia.", "1.200,00 dólares, usando 12,00 dólares por camiseta.", "900,00 dólares.", "180,00 dólares, que es la diferencia entre costo y valor."], "correcta": 2, "retro": ["Incorrecto. El costo no siempre es la cifra del balance; se presenta la menor entre costo y valor neto realizable.", "Incorrecto. Ese valor corresponde a otro precio estimado, no al del enunciado.", "CORRECTO. El valor neto realizable es 900,00. Como es menor que el costo, el balance presenta esa cifra.", "Incorrecto. Esa diferencia es la pérdida de valor, no el valor del inventario."], "general": "El balance presenta la cifra menor entre costo y valor neto realizable."}, {"tipo": "Teórica", "pregunta": "¿Con qué regla se presenta el inventario al cierre del período?", "opciones": ["Por el costo, siempre, porque es el importe pagado.", "Por el precio de venta, siempre, porque es la expectativa de cobro.", "Por el mayor entre costo y valor neto realizable, para no subestimar.", "Por el menor entre costo y valor neto realizable, a la fecha del balance."], "correcta": 3, "retro": ["Incorrecto. El costo no siempre es la cifra menor. Si el valor neto realizable baja, el balance debe reflejarlo.", "Incorrecto. El precio de venta no es un valor neto. Hay que restar los costos de venta.", "Incorrecto. La regla usa la cifra menor, no la mayor. Usar la mayor sobrestimaría el activo.", "CORRECTO. Esa es la regla de la NIC 2: prudencia, con la estimación de la fecha del balance."], "general": "La regla de la cifra menor expresa prudencia: no presentar un activo por encima de lo que la empresa espera recibir."}, {"tipo": "Análisis", "pregunta": "Un lote de 100 camisetas tiene costo de 10,80 dólares por unidad. El precio de venta estimado es 9,00 dólares por camiseta, y los costos de venta son 0,50 dólares por camiseta. ¿Qué valor presenta el balance?", "opciones": ["850,00 dólares.", "900,00 dólares, sin restar los costos de venta.", "1.080,00 dólares, porque el costo es menor.", "230,00 dólares, que es la diferencia."], "correcta": 0, "retro": ["CORRECTO. El valor neto realizable es (9,00 menos 0,50) por 100, es decir, 850,00. Es menor que el costo de 1.080,00.", "Incorrecto. Comparar sin restar los costos de venta sobrestima el valor del inventario.", "Incorrecto. El costo de 1.080,00 es mayor que 850,00. El balance presenta el menor de los dos.", "Incorrecto. Esa diferencia no es el valor del inventario."], "general": "Los costos de venta reducen el valor neto realizable y pueden cambiar el valor que se presenta."}, {"tipo": "Análisis", "pregunta": "Al cierre de julio, el precio estimado de cada camiseta es 12,00 dólares. Al cierre de agosto baja a 9,00 dólares. El costo del lote sigue en 1.080,00 dólares, con 100 camisetas y sin costos de venta. ¿Qué ocurre en agosto frente al costo?", "opciones": ["El valor sigue en 1.080,00 dólares, porque el costo no cambió.", "El valor del balance en agosto es 180,00 dólares menor que el costo.", "El valor sube 120,00 dólares por la caída del precio.", "El valor es 900,00 en julio y 1.080,00 en agosto."], "correcta": 1, "retro": ["Incorrecto. El costo no cambió, pero el valor neto realizable sí. La regla compara las dos medidas en cada fecha.", "CORRECTO. En agosto, el valor neto realizable es 900,00 y el balance lo presenta así. La diferencia con el costo es 180,00.", "Incorrecto. Una caída de precio reduce el valor, no lo sube.", "Incorrecto. Los valores están invertidos: en julio el balance presenta 1.080,00 y en agosto 900,00."], "general": "El costo es una cifra histórica. El valor neto realizable se revisa en cada cierre."}, {"tipo": "Teórica", "pregunta": "¿Por qué el IVA recuperable no se incluye en el costo de un inventario?", "opciones": ["Porque se paga al proveedor y no aparece en el balance.", "Porque aumenta el costo del inventario en el 15 %.", "Porque es un derecho frente al SRI que la empresa recupera; no es parte del costo del inventario.", "Porque el IVA siempre se registra como gasto del período."], "correcta": 2, "retro": ["Incorrecto. El IVA sí aparece en el balance, como crédito tributario. Lo que cambia es su clasificación.", "Incorrecto. El IVA no aumenta el costo; se recupera. Sumarlo lo inflaría.", "CORRECTO. El IVA recuperable va al crédito tributario. Si entrara al costo, el inventario quedaría sobrevalorado.", "Incorrecto. El IVA recuperable no es gasto, sino un derecho frente al SRI."], "general": "La recuperabilidad del IVA decide si forma parte del costo o es un derecho frente al SRI."}, {"tipo": "Análisis", "pregunta": "Supongamos que el IVA de 162,00 dólares de la compra del lote no es recuperable, porque el comprobante no permite usar el crédito. ¿Cuál es el costo unitario del lote de 1.080,00 dólares?", "opciones": ["10,80 dólares, porque el IVA se excluye.", "11,10 dólares, con transporte.", "13,35 dólares, aplicando un 25 %.", "12,42 dólares."], "correcta": 3, "retro": ["Incorrecto. Si el IVA no se recupera, no puede excluirse del costo.", "Incorrecto. Ese cálculo corresponde al transporte de 30,00, no al IVA no recuperable.", "Incorrecto. Ese porcentaje no corresponde al IVA del caso.", "CORRECTO. Si el IVA no es recuperable, entra al costo: 1.242,00 entre 100 camisetas es 12,42."], "general": "Cuando el IVA no es recuperable, forma parte del costo del inventario."}, {"tipo": "Análisis", "pregunta": "Costa Verde compra 100 camisetas por 1.080,00 dólares sin IVA, con IVA recuperable de 162,00 dólares, y paga 1.242,00 dólares por transferencia. ¿Qué asiento registra la compra?", "opciones": ["Debe Inventario 1.080,00 y Crédito tributario de IVA 162,00; haber Bancos 1.242,00.", "Debe Gasto de compras 1.242,00; haber Bancos 1.242,00.", "Debe Inventario 1.242,00; haber Bancos 1.242,00.", "Debe Bancos 1.242,00; haber Inventario 1.080,00 e IVA 162,00."], "correcta": 0, "retro": ["CORRECTO. El inventario entra por el costo, el IVA recuperable al crédito tributario, y el banco sale por el total pagado.", "Incorrecto. La compra de camisetas para revender es inventario, no gasto del período.", "Incorrecto. Ese asiento solo es correcto si el IVA no es recuperable; aquí sí lo es.", "Incorrecto. Ese asiento invierte los lados: el banco disminuye y el inventario aumenta."], "general": "En la compra de inventario, el costo aumenta el inventario y el IVA recuperable aumenta el crédito tributario."}, {"tipo": "Teórica", "pregunta": "¿Por qué el deterioro del lote no se registra en el asiento de la compra?", "opciones": ["Porque la NIC 2 prohíbe registrar cualquier pérdida de inventario.", "Porque la compra se registra por el costo, y la pérdida de valor depende de la medición del balance al cierre.", "Porque el deterioro se registra siempre en el momento de la compra.", "Porque el costo de la compra ya incluye la pérdida esperada."], "correcta": 1, "retro": ["Incorrecto. La NIC 2 no prohíbe reconocer pérdidas; exige reconocerlas cuando el valor neto realizable es menor que el costo.", "CORRECTO. La compra y la medición son momentos distintos. La compra fija el costo; la medición del cierre compara con el valor neto realizable.", "Incorrecto. Registrar un deterioro al comprar anticiparía una pérdida que no existe todavía.", "Incorrecto. El costo de la compra es el importe pagado. No incluye una pérdida esperada."], "general": "Costo y medición son momentos distintos. La compra no anticipa la pérdida de valor."}, {"tipo": "Análisis", "pregunta": "Un lote de camisetas tiene costo de 10,80 dólares por unidad. Al cierre, el valor neto realizable es 9,00 dólares por unidad, sin costos de venta. ¿Qué afirmación es correcta?", "opciones": ["El inventario se mantiene a 10,80 dólares, porque el costo es la única medida válida.", "El inventario sube a 10,80 dólares, porque el costo no puede bajar.", "La diferencia de 1,80 dólares por camiseta sería la pérdida de valor que el balance debería reconocer.", "El inventario se valora a 9,00 dólares, y la diferencia de 1,80 dólares se suma al IVA."], "correcta": 2, "retro": ["Incorrecto. El costo no es la única medida. La regla exige la cifra menor entre costo y valor neto realizable.", "Incorrecto. El costo no sube por sí mismo. El valor del balance es el menor de dos medidas.", "CORRECTO. Como el valor neto realizable es menor que el costo, el balance no puede presentar el lote a 10,80. La diferencia es la pérdida de valor.", "Incorrecto. La diferencia no se suma al IVA. Es una pérdida de valor del inventario."], "general": "Cuando el valor neto realizable baja del costo, el balance debe reflejar la cifra menor."}]}];
+
+/* ==========================================================
+   2. Navegación por pestañas
+   ========================================================== */
+(function () {
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('[data-panel]'));
+
+  function mostrar(id, enfocar) {
+    panels.forEach(p => { p.hidden = (p.dataset.panel !== id); });
+    tabs.forEach(t => {
+      const activa = t.dataset.target === id;
+      t.setAttribute('aria-selected', activa ? 'true' : 'false');
+      t.tabIndex = activa ? 0 : -1;
+      if (activa && enfocar) t.focus();
+    });
+    const panel = document.querySelector('[data-panel="' + id + '"]');
+    if (panel) {
+      const titulo = panel.querySelector('h2');
+      if (titulo) { titulo.setAttribute('tabindex', '-1'); titulo.focus({ preventScroll: true }); }
+    }
+    try { history.replaceState(null, '', '#' + id); } catch (e) { /* vista previa sin permiso para cambiar la URL: se ignora */ }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => mostrar(t.dataset.target, false));
+    t.addEventListener('keydown', e => {
+      let j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (j !== null) { e.preventDefault(); tabs[j].focus(); mostrar(tabs[j].dataset.target, true); }
+    });
+  });
+
+  const inicial = (location.hash || '').replace('#', '');
+  mostrar(panels.some(p => p.dataset.panel === inicial) ? inicial : 'intro', false);
+})();
+
+/* ==========================================================
+   3. Evaluaciones de práctica
+   Cada evaluación se dibuja desde EVALUACIONES. Las respuestas
+   se guardan solo en memoria de la pestaña mientras esté abierta.
+   ========================================================== */
+(function () {
+  const LETRAS = ['a', 'b', 'c', 'd'];
+
+  function dibujar(ev, raiz) {
+    const n = ev.items.length;
+    let respuestas = Array(n).fill(null);
+    const nombre = 'ev' + ev.sesion + '-';
+
+    raiz.innerHTML = '';
+
+    // 3.1 Cabecera
+    const cab = document.createElement('div');
+    cab.className = 'cabecera-eval';
+    cab.innerHTML = '<p class="nota-practica">' + (ev.diagnostica
+      ? 'Esta prueba es diagnóstica y formativa: no tiene nota. Sirve para identificar qué conviene repasar.'
+      : 'Esta evaluación es de práctica. Sus respuestas le muestran qué comprende y qué conviene revisar; no sustituye a las evaluaciones oficiales.') + '</p>';
+    const prog = document.createElement('p');
+    prog.className = 'progreso';
+    prog.setAttribute('aria-live', 'polite');
+    cab.appendChild(prog);
+    raiz.appendChild(cab);
+
+    // 3.2 Preguntas
+    const formulario = document.createElement('form');
+    formulario.setAttribute('novalidate', 'novalidate');
+    formulario.addEventListener('submit', e => e.preventDefault());
+    raiz.appendChild(formulario);
+
+    ev.items.forEach((it, i) => {
+      const fs = document.createElement('fieldset');
+      const leyenda = document.createElement('legend');
+      leyenda.innerHTML = 'Pregunta ' + (i + 1) + ' de ' + n;
+      fs.appendChild(leyenda);
+
+      const badge = document.createElement('span');
+      badge.className = 'insignia';
+      badge.textContent = '[' + it.tipo + ']';
+      fs.appendChild(badge);
+
+      const enun = document.createElement('p');
+      enun.textContent = it.pregunta;
+      fs.appendChild(enun);
+
+      const opts = document.createElement('div');
+      opts.className = 'opts';
+      it.opciones.forEach((texto, k) => {
+        const id = nombre + 'p' + i + '-' + k;
+        const etiqueta = document.createElement('label');
+        etiqueta.setAttribute('for', id);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = nombre + 'p' + i;
+        radio.id = id;
+        radio.value = String(k);
+        const letra = document.createElement('span');
+        letra.className = 'letra';
+        letra.textContent = LETRAS[k] + ')';
+        const txt = document.createElement('span');
+        txt.textContent = texto;
+        etiqueta.appendChild(radio);
+        etiqueta.appendChild(letra);
+        etiqueta.appendChild(txt);
+        opts.appendChild(etiqueta);
+        radio.addEventListener('change', () => elegir(i, k));
+      });
+      fs.appendChild(opts);
+
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.setAttribute('aria-live', 'polite');
+      fs.appendChild(fb);
+
+      const gen = document.createElement('p');
+      gen.className = 'gen';
+      gen.textContent = 'Idea que conviene recordar: ' + it.general;
+      fs.appendChild(gen);
+
+      formulario.appendChild(fs);
+    });
+
+    // 3.3 Resultado y acciones
+    const resultado = document.createElement('div');
+    resultado.className = 'resultado';
+    resultado.setAttribute('aria-live', 'polite');
+    raiz.appendChild(resultado);
+
+    const acciones = document.createElement('div');
+    acciones.className = 'acciones';
+    const btnReintento = document.createElement('button');
+    btnReintento.type = 'button';
+    btnReintento.className = 'btn principal';
+    btnReintento.textContent = 'Intentar nuevamente';
+    btnReintento.hidden = true;
+    btnReintento.addEventListener('click', () => reiniciar(false));
+    const btnReinicio = document.createElement('button');
+    btnReinicio.type = 'button';
+    btnReinicio.className = 'btn';
+    btnReinicio.textContent = 'Reiniciar cuestionario';
+    btnReinicio.addEventListener('click', () => reiniciar(true));
+    acciones.appendChild(btnReintento);
+    acciones.appendChild(btnReinicio);
+    raiz.appendChild(acciones);
+
+    // 3.4 Lógica de respuesta
+    function elegir(i, k) {
+      if (bloqueado) return;
+      respuestas[i] = k;
+      const it = ev.items[i];
+      const fieldset = formulario.querySelectorAll('fieldset')[i];
+      const fb = fieldset.querySelector('.fb');
+      const gen = fieldset.querySelector('.gen');
+      const acierto = (k === it.correcta);
+      fb.className = 'fb ' + (acierto ? 'ok' : 'mal');
+      fb.textContent = it.retro[k];
+      gen.classList.add('visible');
+      actualizar();
+    }
+
+    // 3.5 Cálculo de progreso, aciertos y bloqueo
+    let bloqueado = false;
+    function actualizar() {
+      const contestadas = respuestas.filter(x => x !== null).length;
+      const aciertos = respuestas.reduce((s, x, i) => s + (x === ev.items[i].correcta ? 1 : 0), 0);
+      prog.textContent = 'Respondidas: ' + contestadas + ' de ' + n + '. Aciertos hasta ahora: ' + aciertos + '.';
+
+      if (contestadas < n) {
+        bloqueado = false;
+        resultado.innerHTML = '';
+        btnReintento.hidden = true;
+        return;
+      }
+
+      // Evaluación completa: se bloquea la edición hasta reiniciar.
+      bloqueado = true;
+      formulario.querySelectorAll('input').forEach(inp => inp.disabled = true);
+      const porcentaje = Math.round((aciertos / n) * 100);
+      const nota = (aciertos / n * 10).toFixed(1).replace('.', ',');
+      let texto = '<strong>Resultado: ' + aciertos + ' de ' + n + ' respuestas correctas (' + porcentaje + ' %).</strong>';
+      if (ev.diagnostica) {
+        texto += '<br>Esta prueba no tiene calificación. Revise las preguntas erradas con sus retroalimentaciones.';
+      } else {
+        texto += '<br>Puntaje de práctica: ' + nota + ' sobre 10. No es una nota oficial.';
+      }
+      if (aciertos < n) {
+        texto += '<br>Revise las preguntas erradas y, si lo desea, intente nuevamente con las mismas preguntas en el mismo orden.';
+        btnReintento.hidden = false;
+      } else {
+        texto += '<br>Respondió todas las preguntas correctamente. No es necesario repetir el cuestionario.';
+        btnReintento.hidden = true;
+      }
+      resultado.innerHTML = texto;
+    }
+
+    // 3.6 Reinicio y reintento
+    function reiniciar(completo) {
+      respuestas = Array(n).fill(null);
+      bloqueado = false;
+      formulario.querySelectorAll('input').forEach(inp => { inp.disabled = false; inp.checked = false; });
+      formulario.querySelectorAll('.fb').forEach(f => { f.className = 'fb'; f.textContent = ''; });
+      formulario.querySelectorAll('.gen').forEach(g => g.classList.remove('visible'));
+      btnReintento.hidden = true;
+      resultado.innerHTML = '';
+      actualizar();
+      if (completo) {
+        const primera = formulario.querySelector('input');
+        if (primera) primera.focus();
+      }
+    }
+
+    actualizar();
+  }
+
+  document.querySelectorAll('.quiz[data-eval]').forEach(raiz => {
+    const num = parseInt(raiz.dataset.eval, 10);
+    const ev = EVALUACIONES.find(e => e.sesion === num);
+    if (ev) dibujar(ev, raiz);
+  });
+})();
+</script>
+</body>
+</html>
